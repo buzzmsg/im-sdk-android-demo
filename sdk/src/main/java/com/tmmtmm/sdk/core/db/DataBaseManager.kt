@@ -37,7 +37,7 @@ class DataBaseManager private constructor() {
     }
 
     fun init(context: Context) {
-        val dbName = TmLoginManager.getUserId()
+        val dbName = "tmmtmm/" + TmLoginManager.getUserId()
         if (TextUtils.isEmpty(dbName)) {
             return
         }
@@ -54,13 +54,13 @@ class DataBaseManager private constructor() {
     }
 
 
-    fun <T,R> splitMap(
+    fun <T, R> splitMap(
         ids: MutableList<String>,
-        block: ((ids: MutableList<String>) -> Map<T,R>)
-    ): Map<T,R> {
+        block: ((ids: MutableList<String>) -> Map<T, R>)
+    ): Map<T, R> {
         return if (ids.size > QUERY_LIMIT) {
             val splitSize = ids.chunked(QUERY_LIMIT)
-            val result = hashMapOf<T,R>()
+            val result = hashMapOf<T, R>()
             for (list in splitSize) {
                 result.putAll(block(list.toMutableList()))
             }
@@ -103,7 +103,6 @@ class DataBaseManager private constructor() {
         }
         return appDataBase as AppDataBase
     }
-
 
 
     fun close() {

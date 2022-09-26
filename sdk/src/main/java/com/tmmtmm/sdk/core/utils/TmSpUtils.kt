@@ -9,7 +9,7 @@ import com.tmmtmm.sdk.usercore.logic.TmLoginManager
  * @time 2021/3/9 8:37 下午
  * @version
  */
-object SpUtils {
+object TmSpUtils {
 
     fun putStringSet(key: String, value: Set<String>) {
         MMKV.mmkvWithID(TmLoginManager.getUserId(), MMKV.SINGLE_PROCESS_MODE)

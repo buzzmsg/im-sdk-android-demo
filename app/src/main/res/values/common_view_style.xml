@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="root_view_constraint"
+        >
+        <item name="ctb_enableStatusBar">true</item>
+        <item name="ctb_enableToolBar">true</item>
+        <item name="ctb_toolBarBackground">@color/white</item>
+        <item name="ctb_toolbar_layout">@layout/view_top_bar</item>
+        <item name="ctb_titleTextColor">@color/white</item>
+        <item name="ctb_toolBarHeight">44dp</item>
+
+    </style>
+
+    <style name="root_view_linearlayout"
+        >
+        <item name="ltb_enableStatusBar">true</item>
+        <item name="ltb_enableToolBar">true</item>
+        <item name="ltb_toolBarBackground">@color/white</item>
+        <item name="ltb_toolbar_layout">@layout/view_top_bar</item>
+        <item name="ltb_titleTextColor">@color/white</item>
+        <item name="ltb_toolBarHeight">44dp</item>
+    </style>
+
+    <style name="page_style_full"
+        parent="root_view_constraint">
+        <item name="ctb_enableStatusBar">false</item>
+        <item name="ctb_enableToolBar">false</item>
+    </style>
+
+    <style name="page_style_no_title_bar"
+        parent="root_view_constraint">
+        <item name="ctb_enableStatusBar">true</item>
+        <item name="ctb_enableToolBar">false</item>
+    </style>
+
+</resources>

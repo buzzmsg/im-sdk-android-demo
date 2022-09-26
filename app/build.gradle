@@ -29,6 +29,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -40,5 +44,30 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation module(":sdk")
+
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.activity:activity-ktx:1.2.3"
+    implementation "androidx.fragment:fragment-ktx:1.3.2"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+
+
+
+    implementation "com.github.li-xiaojun:XPopup:2.8.13"
+
+    implementation "com.contrarywind:Android-PickerView:4.1.9"
+
+    implementation "com.blankj:utilcodex:1.30.6"
+    implementation "org.client.core:core_ui:1.1.6"
+    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.6"
+
+    implementation "com.github.lygttpod:SuperTextView:2.4.5"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    implementation "com.tencent:mmkv-static:1.2.1"
+
+    implementation project(path: ":sdk")
 }
