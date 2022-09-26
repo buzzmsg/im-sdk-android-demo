@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/
+/sdk/schemas/com.tmmtmm.sdk.core.db.AppDataBase/1.json

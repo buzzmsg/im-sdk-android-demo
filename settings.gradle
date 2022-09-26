@@ -30,3 +30,11 @@ dependencyResolutionManagement {
 rootProject.name = "TMM SDK"
 include ':app'
 include ':sdk'
+include ':module:libcore'
+include ':app:style'
+include ':module:netcore'
+include ':module:libcore'
+include ':sdk:tmmcore'
+include ':app:style'
+include ':module:netcore'
+include ':sdk:netcore'
