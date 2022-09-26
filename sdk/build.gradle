@@ -54,6 +54,6 @@ dependencies {
 
     implementation 'id.zelory:compressor:3.0.1'
 
-    implementation 'com.tencent:mmkv-static:1.2.1'
+    implementation "com.tencent:mmkv-static:1.2.1"
 
 }
