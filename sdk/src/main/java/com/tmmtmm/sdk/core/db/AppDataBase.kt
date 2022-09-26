@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.db
+package com.tmmtmm.sdk.core.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -1,9 +1,9 @@
-package com.tmmtmm.sdk.db
+package com.tmmtmm.sdk.core.db
 
 import android.content.Context
 import android.text.TextUtils
 import androidx.room.Room
-import com.tmmtmm.sdk.login.TmLoginManager
+import com.tmmtmm.sdk.usercore.logic.TmLoginManager
 
 /**
  * @description

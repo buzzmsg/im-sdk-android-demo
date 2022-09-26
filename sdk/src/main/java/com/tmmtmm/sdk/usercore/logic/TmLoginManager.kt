@@ -1,4 +1,6 @@
-package com.tmmtmm.sdk.login
+package com.tmmtmm.sdk.usercore.logic
+
+import com.tmmtmm.sdk.core.utils.SpUtils
 
 /**
  * @description
