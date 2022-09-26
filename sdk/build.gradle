@@ -78,6 +78,7 @@ dependencies {
     implementation "com.tencent:mmkv-static:1.2.1"
 
     api 'com.squareup.okhttp3:okhttp:4.10.0'
+    api 'org.greenrobot:eventbus:3.2.0'
     api('com.github.ihsanbal:LoggingInterceptor:3.1.0') {
         exclude group: 'org.json', module: 'json'
     }
