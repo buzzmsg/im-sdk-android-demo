@@ -1,6 +1,7 @@
 package com.tmmtmm.sdk.db.model
 
 import androidx.annotation.Keep
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -22,26 +23,26 @@ import com.tmmtmm.sdk.constant.MessageStatus
     ), Index("chatId", "type"), Index("sequence", orders = [Index.Order.DESC])]
 )
 @Keep
-class MessageModel {
+class MessageModel(
     @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-    var mid: String = ""
-    var sequence: Long? = 0
-    var chatId: String = ""
-    var sender: String? = ""
-    var status: Int? = MessageStatus.Sending.value()
-    var type: Int? = MessageContentType.ContentType_Text
-    var content: String? = ""
-    var extra: String? = ""
-    var crateTime: Long? = 0
-    var sendTime: Long? = 0
-    var displayTime: Long? = 0
-    var isDel: Int? = MessageDeleteStatus.NOT_DEL
-    var action: String? = ""
-    var isRead: Int = MessageReadStatus.NOT_READ
-    var atType: Int? = 0
-    var isBrowse: Int? = 0
-    var isLocalSend: Boolean? = false
+    var id: Long,
+    var mid: String,
+    @ColumnInfo(defaultValue = "0")
+    var sequence: Long? = 0L,
+    var chatId: String,
+    var sender: String?,
+    var status: Int?,
+    var type: Int?,
+    var content: String?,
+    var extra: String?,
+    var crateTime: Long?,
+    var sendTime: Long?,
+    var displayTime: Long?,
+    var isDel: Int?,
+    var action: String?,
+    var isRead: Int,
+//    var atType: Int?,
+) {
 
     override fun hashCode(): Int {
         return mid.hashCode()

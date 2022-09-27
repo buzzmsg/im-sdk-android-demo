@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 public class TransferThreadPool {
 
-
     private static ExecutorService executorMainTask;
     private static ExecutorService executorPartTask;
 
