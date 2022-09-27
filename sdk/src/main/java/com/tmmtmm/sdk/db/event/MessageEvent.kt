@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.messagecore.db.event
+package com.tmmtmm.sdk.db.event
 
 import com.tmmtmm.sdk.core.event.CommonEvent
 import com.tmmtmm.sdk.core.event.EventCenter
@@ -67,7 +67,7 @@ class MessageEvent(
 
     interface MessageListener {
 
-        fun onReceiveMessage(data: MessageEvent.EventData?)
+        fun onReceiveMessage(data: EventData?)
     }
 }
 

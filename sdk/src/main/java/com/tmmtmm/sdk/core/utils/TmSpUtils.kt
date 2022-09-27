@@ -1,7 +1,7 @@
 package com.tmmtmm.sdk.core.utils
 
 import com.tencent.mmkv.MMKV
-import com.tmmtmm.sdk.usercore.logic.TmLoginManager
+import com.tmmtmm.sdk.logic.TmLoginManager
 
 /**
  * @description

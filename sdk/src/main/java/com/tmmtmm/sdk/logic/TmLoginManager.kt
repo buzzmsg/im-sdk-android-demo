@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.usercore.logic
+package com.tmmtmm.sdk.logic
 
 import com.tmmtmm.sdk.core.utils.TmSpUtils
 

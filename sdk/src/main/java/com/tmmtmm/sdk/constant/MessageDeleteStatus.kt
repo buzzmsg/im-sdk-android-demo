@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.messagecore.constant
+package com.tmmtmm.sdk.constant
 
 /**
  * @description

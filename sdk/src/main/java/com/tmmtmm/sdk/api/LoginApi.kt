@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.usercore.api
+package com.tmmtmm.sdk.api
 
 /**
  * @description

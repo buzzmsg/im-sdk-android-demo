@@ -4,10 +4,10 @@ import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.tmmtmm.sdk.messagecore.MessageContentType
-import com.tmmtmm.sdk.messagecore.constant.MessageDeleteStatus
-import com.tmmtmm.sdk.messagecore.constant.MessageReadStatus
-import com.tmmtmm.sdk.messagecore.constant.MessageStatus
+import com.tmmtmm.sdk.constant.MessageContentType
+import com.tmmtmm.sdk.constant.MessageDeleteStatus
+import com.tmmtmm.sdk.constant.MessageReadStatus
+import com.tmmtmm.sdk.constant.MessageStatus
 
 /**
  * @description

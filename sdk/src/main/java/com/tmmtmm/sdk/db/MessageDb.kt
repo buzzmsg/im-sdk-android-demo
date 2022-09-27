@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.messagecore.db
+package com.tmmtmm.sdk.db
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.room.Dao
@@ -6,10 +6,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tmmtmm.sdk.core.event.EventCenter
-import com.tmmtmm.sdk.messagecore.MessageContentType
-import com.tmmtmm.sdk.messagecore.constant.MessageDeleteStatus
-import com.tmmtmm.sdk.messagecore.constant.MessageReadStatus
-import com.tmmtmm.sdk.messagecore.db.event.MessageEvent
+import com.tmmtmm.sdk.constant.MessageContentType
+import com.tmmtmm.sdk.constant.MessageDeleteStatus
+import com.tmmtmm.sdk.constant.MessageReadStatus
+import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.messagecore.model.MessageEntity
 
 /**

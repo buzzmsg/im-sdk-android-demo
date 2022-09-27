@@ -1,7 +1,6 @@
-package com.tmmtmm.sdk.usercore.logic
+package com.tmmtmm.sdk.db
 
 import com.tmmtmm.sdk.core.db.DataBaseManager
-import com.tmmtmm.sdk.usercore.db.UserModel
 
 /**
  * @description
@@ -27,7 +26,22 @@ class TmUserDBManager private constructor() {
     }
 
 
-    fun insertUser(userModel: UserModel){
+    fun insertUser(userModel: UserModel) {
         DataBaseManager.getInstance().getDataBase()?.userDao()?.insertUser(userModel)
+    }
+
+    fun insertUser(userModels: MutableList<UserModel>) {
+        DataBaseManager.getInstance().getDataBase()?.userDao()?.insertUserList(userModels)
+    }
+
+    fun getUserList(uids: MutableList<String>?): MutableList<UserModel>? {
+        if (uids.isNullOrEmpty()) {
+            return null
+        }
+        val list = DataBaseManager.getInstance().splitArray(uids) { value ->
+            DataBaseManager.getInstance().getDataBase()?.userDao()?.queryUserList(value)
+                ?: mutableListOf()
+        }
+        return list
     }
 }

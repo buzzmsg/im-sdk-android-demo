@@ -2,6 +2,8 @@ package com.tmmtmm.sdk.vm
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.liveData
+import kotlinx.coroutines.Dispatchers
 
 /**
  * @description
@@ -9,5 +11,7 @@ import androidx.lifecycle.AndroidViewModel
  */
 class LoginViewModel(application: Application): AndroidViewModel(application) {
 
-//    fun login()
+    fun login()= liveData(Dispatchers.IO) {
+        emit("uid")
+    }
 }

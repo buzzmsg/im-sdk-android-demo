@@ -1,18 +1,7 @@
 package com.tmmtmm.sdk.core.utils
 
 import android.util.Log
-import com.blankj.utilcode.util.PathUtils
-import com.blankj.utilcode.util.TimeUtils
 import com.tmmtmm.sdk.BuildConfig
-import org.apache.logging.log4j.Level
-import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.core.appender.ConsoleAppender
-import org.apache.logging.log4j.core.config.Configurator
-import org.apache.logging.log4j.core.config.builder.api.AppenderComponentBuilder
-import org.apache.logging.log4j.core.config.builder.api.ComponentBuilder
-import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory
-import org.apache.logging.log4j.spi.ExtendedLogger
-import java.io.File
 
 
 /**

@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.messagecore
+package com.tmmtmm.sdk.logic
 
 /**
  * @description

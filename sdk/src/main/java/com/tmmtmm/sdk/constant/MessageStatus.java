@@ -2,7 +2,7 @@
  * Copyright (c) 2020 WildFireChat. All rights reserved.
  */
 
-package com.tmmtmm.sdk.messagecore.constant;
+package com.tmmtmm.sdk.constant;
 
 /**
  * Created by heavyrain lee on 2017/12/6.

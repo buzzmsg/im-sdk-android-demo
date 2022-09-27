@@ -1,6 +1,8 @@
-package com.tmmtmm.sdk.usercore.logic
+package com.tmmtmm.sdk.logic
 
-import com.tmmtmm.sdk.usercore.db.UserModel
+import androidx.annotation.WorkerThread
+import com.tmmtmm.sdk.db.TmUserDBManager
+import com.tmmtmm.sdk.db.UserModel
 
 /**
  * @description
@@ -30,15 +32,16 @@ class TmLoginLogic private constructor() {
         return TmLoginManager.getUserId().isNotBlank()
     }
 
+    @WorkerThread
     fun login(aUid: String, callBack: LoginCallBack) {
 
         val uid = ""
         TmLoginManager.setUserId(uid)
 
-        val userModel =  UserModel()
-        userModel.aUid = aUid
-        userModel.uid = uid
-        TmUserDBManager.getInstance().insertUser(userModel)
+//        val userModel =  UserModel()
+//        userModel.aUid = aUid
+//        userModel.uid = uid
+//        TmUserDBManager.getInstance().insertUser(userModel)
 
         callBack.success()
 

@@ -20,7 +20,8 @@ android {
             minifyEnabled false
             buildConfigField "String", "WS_HOST", RELEASE_WS_API
             buildConfigField "String", "SERVICE_NAME", RELEASE_IM_SERVICE_NAME 
-            buildConfigField "String", "HOST", RELEASE_IM_HOST 
+            buildConfigField "String", "HOST", RELEASE_IM_HOST
+            buildConfigField "String", "DB_NAME_PREFIX", RELEASE_DB_NAME_PREFIX
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
@@ -28,14 +29,16 @@ android {
             minifyEnabled false
             buildConfigField "String", "WS_HOST", DEV_WS_API 
             buildConfigField "String", "SERVICE_NAME", DEV_IM_SERVICE_NAME 
-            buildConfigField "String", "HOST", DEV_IM_HOST 
+            buildConfigField "String", "HOST", DEV_IM_HOST
+            buildConfigField "String", "DB_NAME_PREFIX", DEV_DB_NAME_PREFIX
         }
 
         debug {
             minifyEnabled false
             buildConfigField "String", "WS_HOST", DEBUG_WS_API 
             buildConfigField "String", "SERVICE_NAME", DEBUG_IM_SERVICE_NAME 
-            buildConfigField "String", "HOST", DEBUG_IM_HOST 
+            buildConfigField "String", "HOST", DEBUG_IM_HOST
+            buildConfigField "String", "DB_NAME_PREFIX", DEBUG_DB_NAME_PREFIX
         }
     }
     compileOptions {
