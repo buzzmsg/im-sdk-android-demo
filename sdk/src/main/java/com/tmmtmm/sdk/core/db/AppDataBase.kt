@@ -6,6 +6,7 @@ import com.tmmtmm.sdk.db.ConversationDao
 import com.tmmtmm.sdk.db.ConversationDbManager
 import com.tmmtmm.sdk.db.MessageDao
 import com.tmmtmm.sdk.db.UserDao
+import com.tmmtmm.sdk.db.model.UserLinkModel
 import com.tmmtmm.sdk.db.model.UserModel
 
 /**
@@ -15,6 +16,7 @@ import com.tmmtmm.sdk.db.model.UserModel
 @Database(
     entities =
     [
+        UserLinkModel::class,
         UserModel::class
     ],
     version = 1,

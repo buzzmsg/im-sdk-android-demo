@@ -1,6 +1,8 @@
 package com.tmmtmm.sdk.logic
 
 import androidx.annotation.WorkerThread
+import com.tmmtmm.sdk.db.UserDBManager
+import com.tmmtmm.sdk.db.model.UserLinkModel
 
 /**
  * @description
@@ -36,10 +38,10 @@ class TmLoginLogic private constructor() {
         val uid = ""
         TmLoginManager.setUserId(uid)
 
-//        val userModel =  UserModel()
-//        userModel.aUid = aUid
-//        userModel.uid = uid
-//        TmUserDBManager.getInstance().insertUser(userModel)
+        val userModel =  UserLinkModel()
+        userModel.aUid = aUid
+        userModel.uid = uid
+        UserDBManager.getInstance().insertUserLink(userModel)
 
         callBack.success()
 
