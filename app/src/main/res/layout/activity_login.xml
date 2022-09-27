@@ -3,157 +3,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/page_style_no_title_bar"
-    app:ctb_toolBarBackground="#4EB3FF"
+    style="@style/root_view_constraint"
+    app:ctb_toolBarBackground="@color/white"
+    android:background="@color/white"
     >
 
     <View
-        android:id="@+id/vTop"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/ctb_all_toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHeight_percent="0.45"
-        android:background="#4EB3FF"/>
+        android:background="#99d8d8d8"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vTop"
-        app:layout_constraintHeight_percent="0.55"
-        android:background="@color/white"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvLoginTitle"
+        android:id="@+id/tvLoginTips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/ctb_all_toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="124dp"
-        android:textSize="40sp"
-        android:textColor="@color/white"
-        android:text="@string/app_name"
-        android:includeFontPadding="false"/>
+        android:layout_marginTop="210dp"
+        android:layout_marginStart="42dp"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:text="手机号码"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvLoginDes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLoginTitle"
-        android:includeFontPadding="false"
-        android:textSize="13sp"
-        android:textColor="@color/white"
-        android:text=""/>
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card"
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etPhone"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLoginDes"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="60dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="4dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        app:layout_constraintTop_toBottomOf="@id/tvLoginTips"
+        android:background="@drawable/login_edit_view_bg"
+        android:layout_marginStart="44dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginTop="22dp"
+        android:textColor="#333333"
+        android:textSize="26sp"/>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/layoutPhone"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="46dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp"
-                android:background="@color/white"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/etPhone"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:layout_marginStart="8dp"
-                    android:textSize="16sp"
-                    android:textColor="#3D3D3D"
-                    android:textColorHint="#803D3D3D"
-                    android:hint="input phone"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/layoutCode"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutPhone"
-                android:layout_marginTop="35dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp"
-                android:background="@color/white"
-                android:orientation="horizontal">
-
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/etCode"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:layout_marginStart="16dp"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical"
-                    android:textColor="#3D3D3D"
-                    android:textColorHint="#803D3D3D"
-                    android:inputType="number"
-                    android:maxLength="6"
-                    android:hint="input code"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogin"
+        android:layout_width="230dp"
+        android:layout_height="44dp"
+        app:layout_constraintTop_toBottomOf="@id/etPhone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/login_btn_bg"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:text="登录"/>
 
 
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/btnLogin"
-                android:layout_width="148dp"
-                android:layout_height="44dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutCode"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="40dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/white"
-                android:gravity="center"
-                android:textSize="24sp"
-                android:textColor="#4EB3FF"
-                android:text="Login"/>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
 
 
 </org.client.core.ui.layout.StateToolBarConstraintLayout>

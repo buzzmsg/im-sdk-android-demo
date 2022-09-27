@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.databinding.ActivityLoginBinding
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.ext.click
+import com.tmmtmm.demo.ui.view.TitleBarView
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.demo.vm.LoginViewModel
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +41,13 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun initViews() {
+
+        val titleBarView = TitleBarView()
+        titleBarView.showTitleBar(
+            cRoot = mBinding.root,
+            title = "TmmTmm SDK",
+        )
+
         mBinding.btnLogin.click {
             login()
         }
@@ -48,26 +57,24 @@ class LoginActivity : BaseActivity() {
     override fun fetchData() {
     }
 
-    private fun login(){
-        mViewModel.login().observe(this){ uid ->
+    private fun login() {
+        mViewModel.login(mBinding.etPhone.text.toString()).observe(this) { uid ->
 
             loginSdk(uid)
         }
     }
 
-    private fun loginSdk(uid: String){
-        lifecycleScope.launch(Dispatchers.IO){
-            TmLoginLogic.getInstance().login(uid, object : TmLoginLogic.LoginCallBack{
-                override fun success() {
+    private fun loginSdk(uid: String) {
+        TmLoginLogic.getInstance().login(uid, object : TmLoginLogic.LoginCallBack {
+            override fun success() {
 
-                }
+            }
 
-                override fun fail(code: Int, errorMsg: String) {
+            override fun fail(code: Int, errorMsg: String) {
 
-                }
+            }
 
-            })
-        }
+        })
     }
 
 }

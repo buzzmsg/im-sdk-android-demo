@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
  */
 class LoginViewModel(application: Application): AndroidViewModel(application) {
 
-    fun login()= liveData(Dispatchers.IO) {
+    fun login(phone: String)= liveData(Dispatchers.IO) {
         emit("uid")
     }
 }

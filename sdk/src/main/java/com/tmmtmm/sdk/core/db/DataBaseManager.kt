@@ -5,6 +5,7 @@ import android.text.TextUtils
 import androidx.room.Room
 import com.tmmtmm.sdk.BuildConfig
 import com.tmmtmm.sdk.cache.LoginCache
+import com.tmmtmm.sdk.logic.TmLoginLogic
 
 /**
  * @description
@@ -38,7 +39,7 @@ class DataBaseManager private constructor() {
     }
 
     fun init(context: Context) {
-        val dbName = "tmmtmm/" +BuildConfig.DB_NAME_PREFIX + LoginCache.getUserId()
+        val dbName = "tmmtmm/" +BuildConfig.DB_NAME_PREFIX + TmLoginLogic.getInstance().getUserId()
         if (TextUtils.isEmpty(dbName)) {
             return
         }
