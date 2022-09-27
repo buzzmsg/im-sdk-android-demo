@@ -50,7 +50,7 @@ class TmLoginLogic private constructor() {
 
         try {
             TransferThreadPool.submitTask {
-                val uid = ""
+                val uid = "a"
                 setUserId(uid)
 
                 val userModel = UserLinkModel()

@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.tmmtmm.demo.R
+import com.tmmtmm.demo.api.ResponseResult
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.databinding.ActivityLoginBinding
 import com.tmmtmm.demo.ui.ext.bindView
@@ -58,16 +59,20 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun login() {
-        mViewModel.login(mBinding.etPhone.text.toString()).observe(this) { uid ->
+        mViewModel.login(mBinding.etPhone.text.toString()).observe(this) { response ->
 
-            loginSdk(uid)
+
+            if (response is ResponseResult.Success) {
+                loginSdk("")
+            }
         }
     }
 
     private fun loginSdk(uid: String) {
         TmLoginLogic.getInstance().login(uid, object : TmLoginLogic.LoginCallBack {
             override fun success() {
-
+                MainActivity.newInstance(this@LoginActivity)
+                finish()
             }
 
             override fun fail(code: Int, errorMsg: String) {
