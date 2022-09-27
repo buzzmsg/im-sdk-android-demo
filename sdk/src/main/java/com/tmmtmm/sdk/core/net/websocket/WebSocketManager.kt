@@ -4,7 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
-import com.tmmtmm.sdk.core.utils.TmLogUtils
+import com.tmmtmm.sdk.core.utils.LogUtils
 import okhttp3.*
 import okio.ByteString
 import java.util.concurrent.TimeUnit
@@ -109,7 +109,7 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
         }
 
         if (isConnect()) {
-            TmLogUtils.getInstance().w(content = "WebSocket connected")
+            LogUtils.getInstance().w(content = "WebSocket connected")
             return
         }
         client?.newWebSocket(request, createListener())
@@ -125,7 +125,7 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
                 e.printStackTrace()
             }
         } else {
-            TmLogUtils.getInstance()
+            LogUtils.getInstance()
                 .w(tag = TAG, "reconnect over $maxNum,please check url or network")
         }
     }
@@ -162,9 +162,9 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
         val listener = object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 super.onOpen(webSocket, response)
-                TmLogUtils.getInstance().w(TAG, "webSocket onOpen response = $response")
+                LogUtils.getInstance().w(TAG, "webSocket onOpen response = $response")
 
-                TmLogUtils.getInstance().w("webSocket onOpen", content = response.toString())
+                LogUtils.getInstance().w("webSocket onOpen", content = response.toString())
 
                 mWebSocket = webSocket
                 isConnect = response.code == 101
@@ -172,7 +172,7 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
                     reconnect()
                 } else {
                     connectNum = 0
-                    TmLogUtils.getInstance().w(TAG, "webSocket connect success")
+                    LogUtils.getInstance().w(TAG, "webSocket connect success")
                     iReceiveMessageImpMap.forEach { map ->
                         map.value.onConnectSuccess()
                     }
@@ -185,9 +185,9 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
 
             override fun onMessage(webSocket: WebSocket, text: String) {
                 super.onMessage(webSocket, text)
-                TmLogUtils.getInstance().w(TAG, "webSocket onMessage text = $text")
+                LogUtils.getInstance().w(TAG, "webSocket onMessage text = $text")
 
-                TmLogUtils.getInstance().w("webSocket onMessage", content = text)
+                LogUtils.getInstance().w("webSocket onMessage", content = text)
                 iReceiveMessageImpMap.forEach { map ->
                     map.value.onMessage(text)
                 }
@@ -195,7 +195,7 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
 
             override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
                 super.onMessage(webSocket, bytes)
-                TmLogUtils.getInstance().w(TAG, "webSocket onMessage")
+                LogUtils.getInstance().w(TAG, "webSocket onMessage")
                 iReceiveMessageImpMap.forEach { map ->
                     map.value.onMessage(bytes.base64())
                 }
@@ -203,9 +203,9 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
                 super.onClosing(webSocket, code, reason)
-                TmLogUtils.getInstance().w(TAG, "webSocket onClosing reason = $reason")
+                LogUtils.getInstance().w(TAG, "webSocket onClosing reason = $reason")
 
-                TmLogUtils.getInstance()
+                LogUtils.getInstance()
                     .w("webSocket onClosing", content = "code: $code   reason = $reason")
 
                 mWebSocket = null
@@ -221,9 +221,9 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 super.onClosed(webSocket, code, reason)
-                TmLogUtils.getInstance().w(TAG, "webSocket onClosed reason = $reason")
+                LogUtils.getInstance().w(TAG, "webSocket onClosed reason = $reason")
 
-                TmLogUtils.getInstance()
+                LogUtils.getInstance()
                     .w("webSocket onClosed", content = "code: $code   reason = $reason")
 
                 mWebSocket = null
@@ -240,15 +240,15 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 super.onFailure(webSocket, t, response)
                 if (response != null) {
-                    TmLogUtils.getInstance()
+                    LogUtils.getInstance()
                         .w(TAG, "webSocket onFailure message response = ${response.message}")
 
-                    TmLogUtils.getInstance()
+                    LogUtils.getInstance()
                         .w("webSocket onFailure", content = "response message: ${response.message}")
                 }
-                TmLogUtils.getInstance()
+                LogUtils.getInstance()
                     .w(TAG, "webSocket onFailure message throwable= ${t.message}")
-                TmLogUtils.getInstance()
+                LogUtils.getInstance()
                     .w("webSocket onFailure", content = "throwable message: ${t.message}")
                 isConnect = false
 //                if (mHandler != null) {

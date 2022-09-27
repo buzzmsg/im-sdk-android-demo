@@ -1,6 +1,7 @@
 package com.tmmtmm.sdk.logic
 
 import androidx.annotation.WorkerThread
+import com.tmmtmm.sdk.cache.LoginCache
 import com.tmmtmm.sdk.db.UserDBManager
 import com.tmmtmm.sdk.db.model.UserLinkModel
 
@@ -29,14 +30,14 @@ class TmLoginLogic private constructor() {
 
 
     fun isLogin(): Boolean {
-        return TmLoginManager.getUserId().isNotBlank()
+        return LoginCache.getUserId().isNotBlank()
     }
 
     @WorkerThread
     fun login(aUid: String, callBack: LoginCallBack) {
 
         val uid = ""
-        TmLoginManager.setUserId(uid)
+        LoginCache.setUserId(uid)
 
         val userModel =  UserLinkModel()
         userModel.aUid = aUid

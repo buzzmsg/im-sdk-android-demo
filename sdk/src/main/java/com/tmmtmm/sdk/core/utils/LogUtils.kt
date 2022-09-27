@@ -9,7 +9,7 @@ import com.tmmtmm.sdk.BuildConfig
  * @time 2022/5/11 17:00
  * @version
  */
-class TmLogUtils private constructor() {
+class LogUtils private constructor() {
 
     private var logFilePath = ""
 
@@ -23,17 +23,17 @@ class TmLogUtils private constructor() {
 //    private val logcat = LoggerFactory.getLogger(LogUtils::class.java)
 
     companion object {
-        private var instance: TmLogUtils? = null
+        private var instance: LogUtils? = null
         private const val TAG = "LogUtils"
         private const val MAX_FILE_COUNT = 20
         private const val MAX_FILE_SIZE = "5MB"
 
         @JvmStatic
-        fun getInstance(): TmLogUtils {
+        fun getInstance(): LogUtils {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {
-                        instance = TmLogUtils()
+                        instance = LogUtils()
                     }
                 }
             }
