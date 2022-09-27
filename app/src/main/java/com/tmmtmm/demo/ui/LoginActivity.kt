@@ -1,15 +1,15 @@
-package com.tmmtmm.sdk.ui
+package com.tmmtmm.demo.ui
 
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.tmmtmm.sdk.base.BaseActivity
-import com.tmmtmm.sdk.databinding.ActivityLoginBinding
-import com.tmmtmm.sdk.ui.ext.bindView
-import com.tmmtmm.sdk.ui.ext.click
+import com.tmmtmm.demo.base.BaseActivity
+import com.tmmtmm.demo.databinding.ActivityLoginBinding
+import com.tmmtmm.demo.ui.ext.bindView
+import com.tmmtmm.demo.ui.ext.click
 import com.tmmtmm.sdk.logic.TmLoginLogic
-import com.tmmtmm.sdk.vm.LoginViewModel
+import com.tmmtmm.demo.vm.LoginViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

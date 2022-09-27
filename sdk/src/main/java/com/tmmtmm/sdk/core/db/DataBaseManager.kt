@@ -38,7 +38,7 @@ class DataBaseManager private constructor() {
     }
 
     fun init(context: Context) {
-        val dbName = "tmmtmm/" +BuildConfig.SERVICE_NAME + TmLoginManager.getUserId()
+        val dbName = "tmmtmm/" +BuildConfig.DB_NAME_PREFIX + TmLoginManager.getUserId()
         if (TextUtils.isEmpty(dbName)) {
             return
         }

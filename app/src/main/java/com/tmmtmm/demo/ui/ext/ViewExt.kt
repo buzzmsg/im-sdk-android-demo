@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.ui.ext
+package com.tmmtmm.demo.ui.ext
 
 import android.os.SystemClock
 import android.view.View

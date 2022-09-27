@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.messagecore.model
+package com.tmmtmm.sdk.db.model
 
 import androidx.annotation.Keep
 import androidx.room.Entity

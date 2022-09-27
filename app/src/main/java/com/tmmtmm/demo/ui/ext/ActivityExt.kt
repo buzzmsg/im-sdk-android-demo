@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.ui.ext
+package com.tmmtmm.demo.ui.ext
 
 import android.app.Activity
 import android.view.View

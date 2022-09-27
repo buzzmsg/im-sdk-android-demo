@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.db
+package com.tmmtmm.sdk.db.model
 
 import androidx.room.Entity
 import androidx.room.Index

@@ -10,7 +10,7 @@ import com.tmmtmm.sdk.constant.MessageContentType
 import com.tmmtmm.sdk.constant.MessageDeleteStatus
 import com.tmmtmm.sdk.constant.MessageReadStatus
 import com.tmmtmm.sdk.db.event.MessageEvent
-import com.tmmtmm.sdk.messagecore.model.MessageEntity
+import com.tmmtmm.sdk.db.model.MessageEntity
 
 /**
  * @description

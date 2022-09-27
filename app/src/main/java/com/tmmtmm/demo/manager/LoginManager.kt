@@ -1,7 +1,7 @@
-package com.tmmtmm.sdk.manager
+package com.tmmtmm.demo.manager
 
 
-import com.tmmtmm.sdk.utils.SpUtils
+import com.tmmtmm.demo.utils.SpUtils
 
 /**
  * @description

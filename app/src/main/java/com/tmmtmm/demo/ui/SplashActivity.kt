@@ -1,8 +1,8 @@
-package com.tmmtmm.sdk.ui
+package com.tmmtmm.demo.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.tmmtmm.sdk.manager.LoginManager
+import com.tmmtmm.demo.manager.LoginManager
 
 
 /**

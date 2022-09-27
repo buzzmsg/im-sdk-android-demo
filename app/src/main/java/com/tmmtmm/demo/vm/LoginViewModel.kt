@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.vm
+package com.tmmtmm.demo.vm
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

@@ -1,7 +1,7 @@
-package com.tmmtmm.sdk.utils
+package com.tmmtmm.demo.utils
 
 import com.tencent.mmkv.MMKV
-import com.tmmtmm.sdk.manager.LoginManager
+import com.tmmtmm.demo.manager.LoginManager
 
 /**
  * @description

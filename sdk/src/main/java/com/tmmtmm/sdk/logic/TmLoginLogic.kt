@@ -1,8 +1,6 @@
 package com.tmmtmm.sdk.logic
 
 import androidx.annotation.WorkerThread
-import com.tmmtmm.sdk.db.TmUserDBManager
-import com.tmmtmm.sdk.db.UserModel
 
 /**
  * @description
