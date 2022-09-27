@@ -22,7 +22,7 @@ import com.tmmtmm.sdk.constant.MessageStatus
     ), Index("chatId", "type"), Index("sequence", orders = [Index.Order.DESC])]
 )
 @Keep
-class MessageEntity {
+class MessageModel {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
     var mid: String = ""
@@ -52,7 +52,7 @@ class MessageEntity {
             return false
         }
 
-        if (other !is MessageEntity) {
+        if (other !is MessageModel) {
             return false
         }
 

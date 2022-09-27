@@ -11,25 +11,24 @@ import com.tmmtmm.sdk.db.model.UserModel
  * @description
  * @version
  */
-class TmUserDBManager private constructor() {
+class UserDBManager private constructor() {
     companion object {
 
-        private var instance: TmUserDBManager? = null
+        private var instance: UserDBManager? = null
 
 
         @JvmName("getInstance1")
-        fun getInstance(): TmUserDBManager {
+        fun getInstance(): UserDBManager {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {
-                        instance = TmUserDBManager()
+                        instance = UserDBManager()
                     }
                 }
             }
             return instance!!
         }
     }
-
 
     fun insertUser(userModel: UserModel) {
         DataBaseManager.getInstance().getDataBase()?.userDao()?.insertUser(userModel)
