@@ -73,22 +73,21 @@ data class MessageInfoItem(
 //        }
         val isRead =
             if (senderId == THIRD_USER_ID || type == MessageContentType.ContentType_Read_Receipt) MessageReadStatus.IS_READ else isRead
-        return MessageModel(
-            id = 0,
-            mid = mid ?: "",
-            chatId = chatId ?: "",
-            sender = senderId ?: "",
-            content = content,
-            status = MessageStatus.Sent.value(),
-            type = type ?: MessageContentType.ContentType_Text,
-            crateTime = createTime,
-            sendTime = sendTime,
-            extra = extra,
-            displayTime = createTime,
-            isRead = isRead ?: NOT_READ,
-            isDel = status,
-            action = action?.toJson()?.toString(),
-        )
+        val messageModel = MessageModel()
+        messageModel.id = 0
+        messageModel.mid = mid ?: ""
+        messageModel.chatId = chatId ?: ""
+        messageModel.sender = senderId ?: ""
+        messageModel.content = content
+        messageModel.status = MessageStatus.Sent.value()
+        messageModel.crateTime = createTime
+        messageModel.sendTime = sendTime
+        messageModel.extra = extra
+        messageModel.displayTime = createTime
+        messageModel.readStatus = isRead ?: NOT_READ
+        messageModel.delStatus = status
+        messageModel.action = action?.toJson()?.toString()
+        return messageModel
     }
 }
 

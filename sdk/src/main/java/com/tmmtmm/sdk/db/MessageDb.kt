@@ -9,6 +9,8 @@ import com.tmmtmm.sdk.core.event.EventCenter
 import com.tmmtmm.sdk.constant.MessageContentType
 import com.tmmtmm.sdk.constant.MessageDeleteStatus
 import com.tmmtmm.sdk.constant.MessageReadStatus
+import com.tmmtmm.sdk.core.db.DataBaseManager
+import com.tmmtmm.sdk.db.event.ConversationEvent
 import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.db.model.MessageModel
 
@@ -37,6 +39,49 @@ class MessageDb private constructor(){
         EventCenter.handle<MessageEvent>(lifecycleOwner)
             .removeCallback()
 
+    fun updateStatus(message: MessageModel, status: Int) {
+        message.status = status
+        //update message status to sending
+        DataBaseManager.getInstance().getDataBase()
+            ?.messageDao()?.updateStatus(message.mid, status)
+
+        //update message send time
+        DataBaseManager.getInstance().getDataBase()
+            ?.messageDao()
+            ?.updateCreateTime(message.mid, message.crateTime ?: System.currentTimeMillis())
+
+        val lastMessage = DataBaseManager.getInstance().getDataBase()
+            ?.messageDao()
+            ?.queryMessageLimit(message.id, message.chatId)
+
+        val displayTime = if (lastMessage != null) {
+            if ((message.crateTime
+                    ?: 0) > (lastMessage.displayTime ?: 0)
+            ) {
+                message.crateTime
+            } else {
+                lastMessage.displayTime
+            }
+        } else {
+            message.crateTime
+        }
+
+        //update displayTime
+        DataBaseManager.getInstance().getDataBase()
+            ?.messageDao()
+            ?.updateDisplayTime(message.mid, displayTime ?: System.currentTimeMillis())
+
+        //send event
+        if (message.type != MessageContentType.ContentType_Read_Receipt) {
+            DataBaseManager.getInstance().getDataBase()?.conversationDao()
+                ?.updateConversationTimeStamp(
+                    message.chatId,
+                    displayTime ?: System.currentTimeMillis()
+                )
+            MessageEvent.send(mutableSetOf(message.mid), message.chatId)
+            ConversationEvent.send(mutableSetOf(message.chatId))
+        }
+    }
 
 }
 
@@ -57,7 +102,7 @@ interface MessageDao {
         count: Int
     ): MutableList<MessageModel>?
 
-    @Query("SELECT * FROM tmm_message where id > :lastId and chatId = :chatId and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ORDER BY id LIMIT :count")
+    @Query("SELECT * FROM tmm_message where id > :lastId and chatId = :chatId and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ORDER BY id LIMIT :count")
     fun loadMoreMessagesFromBottom(
         chatId: String?,
         lastId: Long,
@@ -73,16 +118,16 @@ interface MessageDao {
     @Query("SELECT sequence FROM tmm_message where id == :id")
     fun queryMessageSequenceByIndex(id: Long?): Long?
 
-    @Query("update tmm_message set isDel = ${MessageDeleteStatus.IS_DEL} where mid in (:mids)")
+    @Query("update tmm_message set delStatus = ${MessageDeleteStatus.IS_DEL} where mid in (:mids)")
     fun deleteMessagesByMids(mids: MutableSet<String>?)
 
-    @Query("update tmm_message set isDel = ${MessageDeleteStatus.IS_DEL} where chatId == :chatId and mid not in (:mids)")
+    @Query("update tmm_message set delStatus = ${MessageDeleteStatus.IS_DEL} where chatId == :chatId and mid not in (:mids)")
     fun deleteMessagesByChatId(chatId: String?, mids: MutableList<String>?)
 
-    @Query("update tmm_message set isDel = ${MessageDeleteStatus.IS_DEL} where chatId == :chatId and sender == :uid and mid not in (:mids)")
+    @Query("update tmm_message set delStatus = ${MessageDeleteStatus.IS_DEL} where chatId == :chatId and sender == :uid and mid not in (:mids)")
     fun deleteMyMessagesByChatId(chatId: String?, uid: String?, mids: MutableList<String>?)
 
-    @Query("SELECT * FROM tmm_message where isDel != ${MessageDeleteStatus.IS_DEL} ORDER BY sequence DESC LIMIT 1")
+    @Query("SELECT * FROM tmm_message where delStatus != ${MessageDeleteStatus.IS_DEL} ORDER BY sequence DESC LIMIT 1")
     fun queryLocalSequence(): List<MessageModel>
 
     @Query("SELECT * FROM tmm_message where chatId == :chatId and type != ${MessageContentType.ContentType_Read_Receipt} ORDER BY sequence DESC LIMIT 1")
@@ -106,77 +151,77 @@ interface MessageDao {
     @Query("update tmm_message set sequence = :sequence Where mid = :mid")
     fun updateSequence(mid: String, sequence: Long?)
 
-    @Query("SELECT * FROM tmm_message where id < :lastId and chatId = :chatId and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ORDER BY id Desc LIMIT :count")
+    @Query("SELECT * FROM tmm_message where id < :lastId and chatId = :chatId and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ORDER BY id Desc LIMIT :count")
     fun loadMoreMessagesFromTop(
         chatId: String?,
         lastId: Long,
         count: Int
     ): MutableList<MessageModel>?
 
-    @Query("SELECT * from tmm_message where status = :status and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT * from tmm_message where status = :status and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryMessagesByStatus(status: Int): MutableList<MessageModel>
 
     @Query("SELECT * FROM tmm_message where mid in (:mids) and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryMessagesByMidsIncludeDel(mids: MutableList<String>?): MutableList<MessageModel>
 
-    @Query("SELECT * FROM tmm_message where mid in (:mids) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT * FROM tmm_message where mid in (:mids) and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryMessagesByMids(mids: MutableSet<String>?): MutableList<MessageModel>
 
-    @Query("SELECT * FROM tmm_message where mid = :mid and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT * FROM tmm_message where mid = :mid and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryMessagesByMid(mid: String?): MessageModel?
 
-    @Query("SELECT id FROM tmm_message where mid = :mid and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT id FROM tmm_message where mid = :mid and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryMessageIndexByMid(mid: String?): Long?
 
-    @Query("SELECT * FROM tmm_message where chatId == :chatId and sender == :uid and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT * FROM tmm_message where chatId == :chatId and sender == :uid and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryMyMessagesByChatId(chatId: String?, uid: String?): MutableList<MessageModel>
 
-    @Query("SELECT * FROM tmm_message where chatId == :chatId and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT * FROM tmm_message where chatId == :chatId and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryAllMessagesByChatId(chatId: String?): MutableList<MessageModel>
 
-    @Query("SELECT * from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and isDel != ${MessageDeleteStatus.IS_DEL}")
+    @Query("SELECT * from tmm_message where readStatus = ${MessageReadStatus.NOT_READ} and delStatus != ${MessageDeleteStatus.IS_DEL}")
     fun queryMessagesByUnRead(): MutableList<MessageModel>?
 
-    @Query("SELECT * from tmm_message where id <:lastId and chatId = :chatId and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt}  ORDER BY id desc limit 1 ")
+    @Query("SELECT * from tmm_message where id <:lastId and chatId = :chatId and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt}  ORDER BY id desc limit 1 ")
     fun queryMessageLimit(lastId: Long?, chatId: String?): MessageModel?
 
-    @Query("SELECT * from tmm_message where chatId in (:chatIds) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt}  ORDER BY id desc limit 1 ")
+    @Query("SELECT * from tmm_message where chatId in (:chatIds) and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt}  ORDER BY id desc limit 1 ")
     fun queryMessagesLimit(chatIds: MutableSet<String>?): MutableList<MessageModel>?
 
-    @Query("SELECT * from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and chatId = :chatId and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT * from tmm_message where readStatus = ${MessageReadStatus.NOT_READ} and chatId = :chatId and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryUnReadConversationMessagesByChatId(chatId: String?): MutableList<MessageModel>?
 
-    @Query("SELECT * from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and chatId in (:chatIds) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT * from tmm_message where readStatus = ${MessageReadStatus.NOT_READ} and chatId in (:chatIds) and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryUnReadConversationMessages(chatIds: MutableList<String>): MutableList<MessageModel>?
 
-//    @Query("SELECT count(*) from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and chatId = :chatId and atType in (:atTypes) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+//    @Query("SELECT count(*) from tmm_message where readStatus = ${MessageReadStatus.NOT_READ} and chatId = :chatId and atType in (:atTypes) and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
 //    fun queryAtMessagesByChatId(chatId: String?, atTypes: MutableList<Int>): Int?
 
-    @Query("SELECT * from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and chatId in (:chatIds) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+    @Query("SELECT * from tmm_message where readStatus = ${MessageReadStatus.NOT_READ} and chatId in (:chatIds) and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryUnReadConversationMessagesByChatIds(chatIds: MutableSet<String>?): MutableList<MessageModel>?
 
-    @Query("update tmm_message set isRead = :isRead Where chatId = :chatId and type != ${MessageContentType.ContentType_Read_Receipt}")
-    fun updateMessageReadByChatId(chatId: String, isRead: Int)
+    @Query("update tmm_message set readStatus = :readStatus Where chatId = :chatId and type != ${MessageContentType.ContentType_Read_Receipt}")
+    fun updateMessageReadByChatId(chatId: String, readStatus: Int)
 
     @Query("update tmm_message set content = :content Where mid = :mid")
     fun updateMessageContent(mid: String?, content: String?)
 
-    @Query("update tmm_message set isRead = ${MessageReadStatus.IS_READ} Where mid in (:mids) and type != ${MessageContentType.ContentType_Read_Receipt}")
+    @Query("update tmm_message set readStatus = ${MessageReadStatus.IS_READ} Where mid in (:mids) and type != ${MessageContentType.ContentType_Read_Receipt}")
     fun updateMessageIsReadByMids(mids: MutableSet<String>?)
 
-    @Query("update tmm_message set isDel = ${MessageDeleteStatus.IS_DEL} where chatId in (:chatIds)")
+    @Query("update tmm_message set delStatus = ${MessageDeleteStatus.IS_DEL} where chatId in (:chatIds)")
     fun clearMessagesByChatIds(chatIds: MutableList<String>?)
 
-    @Query("SELECT * from tmm_message where chatId in (:chatIds) and isDel != ${MessageDeleteStatus.IS_DEL}  and type != ${MessageContentType.ContentType_Read_Receipt} group by chatId having id = max(id)")
+    @Query("SELECT * from tmm_message where chatId in (:chatIds) and delStatus != ${MessageDeleteStatus.IS_DEL}  and type != ${MessageContentType.ContentType_Read_Receipt} group by chatId having id = max(id)")
     fun queryMessageIndexByChatIds(chatIds: MutableSet<String>?): MutableList<MessageModel>?
 
     @Query("SELECT * from tmm_message where chatId in (:chatIds) and type != ${MessageContentType.ContentType_Read_Receipt} group by chatId having sequence = max(sequence)")
     fun queryMessageSequenceByChatIds(chatIds: MutableSet<String>?): MutableList<MessageModel>?
 
-    @Query("SELECT * from tmm_message where chatId in (:chatIds) and isDel != ${MessageDeleteStatus.IS_DEL} and type in (:types) ORDER BY id desc")
+    @Query("SELECT * from tmm_message where chatId in (:chatIds) and delStatus != ${MessageDeleteStatus.IS_DEL} and type in (:types) ORDER BY id desc")
     fun queryMessagesByType(chatIds: String?, types: MutableList<Int>): MutableList<MessageModel>?
 
-    @Query("SELECT mid from tmm_message where mid not in (:mids) and chatId = :chatId and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt}  ORDER BY id desc limit 1 ")
+    @Query("SELECT mid from tmm_message where mid not in (:mids) and chatId = :chatId and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt}  ORDER BY id desc limit 1 ")
     fun queryMaxMessageMidByChatId(chatId: String?, mids: MutableList<String>?): String?
 
 }

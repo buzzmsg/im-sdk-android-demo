@@ -21,36 +21,32 @@ data class LoginByPhoneRequest(
 
 @Keep
 data class LoginByPhoneResponse(
-    @SerializedName("items")
-    var items: ItemsDto? = ItemsDto(),
-
-    var status: Int? = 0
-)
-
-@Keep
-data class ItemsDto(
-    @SerializedName("code")
     var code: Int? = 0, // 0
-    @SerializedName("expires_in")
-    var expiresIn: Int? = 0, // 1626879625
-    @SerializedName("id")
-    var id: String? = "", // 2x2qlr88wdcz
-    @SerializedName("language")
-    var language: String? = "",
-    @SerializedName("refresh_token")
-    var refreshToken: String? = "", // 0B57B8B476532038339F2C82DF9E7081
-    @SerializedName("token")
-    var token: String? = "" // C32716F237ABFD43D298C276E1F0B30FMngycWxyODh3ZGN6
+    @SerializedName("akey")
+    var akey: Int? = 0, // 1626879625
+    @SerializedName("auid")
+    var auid: String? = "", // 2x2qlr88wdcz
+    @SerializedName("nonce")
+    var nonce: String? = "",
+    var timestamp: Long? = 0L,
+    var signature: String? = "", // 0B57B8B476532038339F2C82DF9E7081
 )
+
 
 object LoginByPhone {
+
+    const val host = "https://dev-im-api.tmmtmm.com.tr:7100"
+
+    const val api = "/demoLogin"
 
     fun execute(requestLoginByPhone: LoginByPhoneRequest): ResponseResult<LoginByPhoneResponse?> {
         try {
             val requestBody: RequestBody =
-                requestLoginByPhone.toJson().toString().toRequestBody("application/json".toMediaType())
+                requestLoginByPhone.toJson().toString()
+                    .toRequestBody("application/json".toMediaType())
+            val url = host + api
             val req =
-                Request.Builder().url("")
+                Request.Builder().url(url)
                     .post(requestBody)
                     .build()
 
@@ -66,7 +62,6 @@ object LoginByPhone {
                 GsonUtils.getType(
                     BaseResponseEntity::class.java,
                     LoginByPhoneResponse::class.java,
-                    ItemsDto::class.java
                 )
             val responseData: BaseResponseEntity<LoginByPhoneResponse>? =
                 response.body?.string()?.responseToEntity(type)
@@ -83,13 +78,13 @@ object LoginByPhone {
                 return result
             }
 
-            val status = result.value?.status
+            val status = result.value?.code
             if (status != null && status != 0) {
                 return ResponseResult.Failure(TmException(status, ""))
             }
 
             return result
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             return ResponseResult.Failure(TmException(500, ""))
         }

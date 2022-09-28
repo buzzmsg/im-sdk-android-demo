@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.activity.viewModels
 import com.tmmtmm.demo.api.ResponseResult
 import com.tmmtmm.demo.base.BaseActivity
+import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityLoginBinding
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.ext.click
@@ -57,18 +58,18 @@ class LoginActivity : BaseActivity() {
 
     private fun login() {
         mViewModel.login(mBinding.etPhone.text.toString()).observe(this) { response ->
-
-
             if (response is ResponseResult.Success) {
-                loginSdk("")
+                val value = response.value
+                TmApplication.instance().loginResponse = value
+                loginSdk(value?.auid ?: "")
                 MainActivity.newInstance(this@LoginActivity)
                 finish()
             }
         }
     }
 
-    private fun loginSdk(uid: String) {
-        TMM.initUser(uid)
+    private fun loginSdk(auid: String) {
+        TMM.INSTANCE.initUser(auid)
     }
 
 }

@@ -9,14 +9,12 @@
         android:id="@+id/ivConversationStatus"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        tools:src="@drawable/ic_conversation_message_received"
         />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvConversationUnReadCount"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
-        android:background="@drawable/shape_round_rect_bg_message_count_16"
         android:gravity="center"
         android:minWidth="18dp"
         android:textColor="@color/white"

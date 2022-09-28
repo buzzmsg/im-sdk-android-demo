@@ -6,8 +6,6 @@ import kotlinx.parcelize.Parcelize
 
 /**
  * @description
- *
- * @time 2021/5/26 11:52 下午
  * @version
  */
 @Parcelize

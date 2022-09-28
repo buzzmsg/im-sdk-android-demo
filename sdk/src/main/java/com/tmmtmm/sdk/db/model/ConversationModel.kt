@@ -46,7 +46,7 @@ import androidx.room.PrimaryKey
     tableName = "tmm_conversation",
     indices = [Index("timeStamp"), Index("topTime")]
 )
-data class ConversationEntity(
+data class ConversationModel(
     @PrimaryKey
     var chatId: String = "",
     var uid: String = "",
@@ -71,7 +71,7 @@ data class ConversationEntity(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ConversationEntity
+        other as ConversationModel
 
         if (chatId != other.chatId) return false
 

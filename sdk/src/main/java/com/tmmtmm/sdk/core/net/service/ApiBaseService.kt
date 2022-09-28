@@ -13,6 +13,7 @@ import java.lang.reflect.Type
  * @version
  */
 object ApiBaseService {
+
     private const val SERVICE_NAME = ""
 
     private const val DEFAULT_HOST = ""
@@ -33,6 +34,11 @@ object ApiBaseService {
         NetFactory.getInstance()
             .getOrCreateNetByServiceName(serviceName = SERVICE_NAME, host = DEFAULT_HOST).set401Delegate(delegate401)
     }
+
+    fun getDelegate() = NetFactory.getInstance().getNetByServiceName(SERVICE_NAME)?.get401Delegate()
+
+    fun getNet()= NetFactory.getInstance().getNetByServiceName(SERVICE_NAME)
+
 
     fun removeDelegate() {
         NetFactory.getInstance().removeNetWith401Delegate()

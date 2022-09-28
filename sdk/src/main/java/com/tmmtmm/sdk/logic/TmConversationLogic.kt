@@ -5,7 +5,7 @@ import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.id.ChatId
 import com.tmmtmm.sdk.db.ConversationDbManager
 import com.tmmtmm.sdk.db.event.ConversationEvent
-import com.tmmtmm.sdk.db.model.ConversationEntity
+import com.tmmtmm.sdk.db.model.ConversationModel
 import com.tmmtmm.sdk.db.model.MessageModel
 
 /**
@@ -40,7 +40,7 @@ class TmConversationLogic private constructor() {
     fun saveOrUpdateConversations(messageList: MutableList<MessageModel>?) {
         val messageMap = messageList
             ?.filter { messageEntity ->
-                messageEntity.isDel != IS_DEL
+                messageEntity.delStatus != IS_DEL
             }?.groupBy(keySelector = { it.chatId }, valueTransform = { messageEntity ->
                 messageEntity
             })
@@ -48,7 +48,7 @@ class TmConversationLogic private constructor() {
         if (messageMap.isNullOrEmpty()) {
             return
         }
-        val receiveConversations: MutableList<ConversationEntity> = mutableListOf()
+        val receiveConversations: MutableList<ConversationModel> = mutableListOf()
         //get last message in conversation group and generate a new conversation list
         for ((_, value) in messageMap) {
             val maxMessageEntity = value.maxByOrNull { messageEntity ->
@@ -69,13 +69,13 @@ class TmConversationLogic private constructor() {
             val timestamp =
                 if (maxMessageEntity.sender == TmLoginLogic.getInstance().getUserId()) maxMessageEntity.displayTime
                     ?: 0 else maxMessageEntity.sendTime ?: 0L
-            val conversationEntity = ConversationEntity(
+            val conversationModel = ConversationModel(
                 chatId = chatId,
                 uid = uid,
                 timeStamp = timestamp,
                 lastMid = maxMessageEntity.mid
             )
-            receiveConversations.add(conversationEntity)
+            receiveConversations.add(conversationModel)
         }
 
         val existConversations = ConversationDbManager.INSTANCE.queryRawConversations()
@@ -120,6 +120,37 @@ class TmConversationLogic private constructor() {
 //        globalIO {
 //            ConversationManager.refreshRemoteConversationList(groupIds, forceUpdate = false)
 //        }
+    }
+
+    fun insertOrUpdateConversation(messageEntity: MessageModel) {
+        val receiveConversations: MutableList<ConversationModel> = mutableListOf()
+
+        val timestamp =
+            if (messageEntity.sender == TmLoginLogic.getInstance().getUserId()) messageEntity.crateTime
+                ?: 0 else messageEntity.sendTime ?: 0
+        val localConversation = ConversationDbManager.INSTANCE.queryRawConversations(mutableSetOf(messageEntity.chatId))?.elementAtOrNull(0)
+
+        if (localConversation == null) {
+            val mChatId = ChatId.createById(messageEntity.chatId)
+            val uid = if (mChatId.isSingle()) mChatId.getTargetId() else mChatId.encode()
+            val conversationModel = ConversationModel(
+                chatId = messageEntity.chatId,
+                uid = uid,
+                timeStamp = timestamp,
+                lastMid = messageEntity.mid,
+                lastMessageIndex = -1
+            )
+            receiveConversations.add(conversationModel)
+        } else {
+            localConversation.lastMid = messageEntity.mid
+            localConversation.timeStamp = timestamp
+            localConversation.lastMessageIndex = -1
+            receiveConversations.add(localConversation)
+        }
+
+        //insert
+        DataBaseManager.getInstance().getDataBase()?.conversationDao()
+            ?.insertGroupConversations(receiveConversations)
     }
 
 

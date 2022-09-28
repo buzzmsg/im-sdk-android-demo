@@ -6,7 +6,7 @@ import com.tmmtmm.sdk.constant.ConversationIntroduceConstant
 import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.event.EventCenter
 import com.tmmtmm.sdk.db.event.ConversationEvent
-import com.tmmtmm.sdk.db.model.ConversationEntity
+import com.tmmtmm.sdk.db.model.ConversationModel
 import com.tmmtmm.sdk.db.result.ConversationInfoResult
 
 /**
@@ -35,7 +35,7 @@ class ConversationDbManager private constructor() {
             .removeCallback()
 
 
-    fun loadMoreConversations(timeStamp: Long?, count: Int): MutableList<ConversationEntity>? {
+    fun loadMoreConversations(timeStamp: Long?, count: Int): MutableList<ConversationModel>? {
         val conversationEntities = DataBaseManager.getInstance().getDataBase()
             ?.conversationDao()
             ?.loadMoreConversations(timeStamp, count)
@@ -44,7 +44,7 @@ class ConversationDbManager private constructor() {
         return conversationEntities
     }
 
-    fun queryConversations(): MutableList<ConversationEntity>? {
+    fun queryConversations(): MutableList<ConversationModel>? {
         val conversationEntities = DataBaseManager.getInstance().getDataBase()
             ?.conversationDao()
             ?.queryConversations()
@@ -53,7 +53,7 @@ class ConversationDbManager private constructor() {
         return conversationEntities
     }
 
-    fun queryRawConversations(): MutableList<ConversationEntity>? {
+    fun queryRawConversations(): MutableList<ConversationModel>? {
 
         return DataBaseManager.getInstance().getDataBase()
             ?.conversationDao()
@@ -61,7 +61,7 @@ class ConversationDbManager private constructor() {
     }
 
 
-    fun queryTopConversations(): MutableList<ConversationEntity>? {
+    fun queryTopConversations(): MutableList<ConversationModel>? {
         val conversationEntities = DataBaseManager.getInstance().getDataBase()
             ?.conversationDao()
             ?.queryAllTopConversations()
@@ -71,7 +71,7 @@ class ConversationDbManager private constructor() {
     }
 
 
-    fun queryConversations(chatIds: MutableSet<String>?): MutableList<ConversationEntity>? {
+    fun queryConversations(chatIds: MutableSet<String>?): MutableList<ConversationModel>? {
         val conversationEntities = DataBaseManager.getInstance().getDataBase()
             ?.conversationDao()
             ?.queryConversationList(chatIds)
@@ -80,7 +80,7 @@ class ConversationDbManager private constructor() {
         return conversationEntities
     }
 
-    fun queryRawConversations(chatIds: MutableSet<String>?): MutableList<ConversationEntity>? {
+    fun queryRawConversations(chatIds: MutableSet<String>?): MutableList<ConversationModel>? {
         val conversationEntities = DataBaseManager.getInstance().getDataBase()
             ?.conversationDao()
             ?.queryConversationList(chatIds)
@@ -93,25 +93,25 @@ class ConversationDbManager private constructor() {
 @Dao
 interface ConversationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGroupConversation(conversationEntity: ConversationEntity?)
+    fun insertGroupConversation(conversationModel: ConversationModel?)
 
-    @Update(entity = ConversationEntity::class)
+    @Update(entity = ConversationModel::class)
     fun updateConversationInfoList(conversationResults: MutableList<ConversationInfoResult>?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGroupConversations(conversationEntities: MutableList<ConversationEntity>?)
+    fun insertGroupConversations(conversationEntities: MutableList<ConversationModel>?)
 
     @Query("SELECT * FROM tmm_conversation where timeStamp < :timeStamp and topTime = 0 or topTime is null ORDER BY timeStamp DESC LIMIT :count")
-    fun loadMoreConversations(timeStamp: Long?, count: Int): MutableList<ConversationEntity>?
+    fun loadMoreConversations(timeStamp: Long?, count: Int): MutableList<ConversationModel>?
 
     @Query("select * from tmm_conversation")
-    fun queryConversations(): MutableList<ConversationEntity>?
+    fun queryConversations(): MutableList<ConversationModel>?
 
     @Query("select * from tmm_conversation where topTime != 0")
-    fun queryAllTopConversations(): MutableList<ConversationEntity>?
+    fun queryAllTopConversations(): MutableList<ConversationModel>?
 
     @Query("select * from tmm_conversation where chatId in (:chatIds) ORDER BY timeStamp desc")
-    fun queryConversationList(chatIds: MutableSet<String>?): MutableList<ConversationEntity>?
+    fun queryConversationList(chatIds: MutableSet<String>?): MutableList<ConversationModel>?
 
 
     @Query("update tmm_conversation set isTop = :isTop, topTime = :topTime Where chatId = :chatId")

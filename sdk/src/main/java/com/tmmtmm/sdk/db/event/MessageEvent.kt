@@ -7,7 +7,6 @@ import com.tmmtmm.sdk.core.event.EventCenter
 /**
  * @description
  *
- * @time 2021/5/14 5:39 下午
  * @version
  */
 class MessageEvent(

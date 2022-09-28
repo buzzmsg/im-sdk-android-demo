@@ -1,5 +1,6 @@
 package com.tmmtmm.sdk.cache
 
+import android.text.TextUtils
 import com.tmmtmm.sdk.core.utils.SpUtils
 
 /**
@@ -10,22 +11,34 @@ import com.tmmtmm.sdk.core.utils.SpUtils
  */
 object LoginCache {
 
-    private const val MMKV_ID_USER = "mmkv_user"
-
-    private const val KEY_UID = "key_uid"
+    private const val CURRENT_USER = "current_user"
 
     private const val KEY_AK = "key_ak"
 
     private const val KEY_ENV = "key_env"
 
+    var currentUserId: String? = ""
 
-    fun getUserId() = SpUtils.getString(MMKV_ID_USER, KEY_UID)
-
-    fun setUserId(uid: String) {
-        SpUtils.putString(MMKV_ID_USER, KEY_UID, uid)
+    fun getUserId(): String {
+        return if (TextUtils.isEmpty(currentUserId)) {
+            currentUserId = (getUser().entries.first().value as? String) ?: ""
+            currentUserId ?: ""
+        } else {
+            currentUserId ?: ""
+        }
     }
 
+    fun getAUserId():String {
+        return (getUser().entries.first().key as? String) ?: ""
+    }
 
+    fun setUser(auid: String, uid: String) {
+        SpUtils.putString(CURRENT_USER, auid, uid)
+    }
+
+    fun getUser(): Map<String, *> {
+        return SpUtils.getMap(CURRENT_USER)
+    }
 
     fun getAk() = SpUtils.getString(KEY_AK)
 

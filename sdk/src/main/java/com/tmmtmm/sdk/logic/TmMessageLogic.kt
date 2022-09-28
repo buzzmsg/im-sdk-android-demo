@@ -1,5 +1,6 @@
 package com.tmmtmm.sdk.logic
 
+import android.util.Log
 import com.tmmtmm.sdk.intercept.MessageInsertInterceptor
 import com.tmmtmm.sdk.api.*
 import com.tmmtmm.sdk.cache.MessageCache
@@ -7,20 +8,25 @@ import com.tmmtmm.sdk.constant.MessageContentType
 import com.tmmtmm.sdk.constant.MessageDeleteStatus.IS_DEL
 import com.tmmtmm.sdk.constant.MessageDeleteStatus.NOT_DEL
 import com.tmmtmm.sdk.constant.MessageReadStatus
+import com.tmmtmm.sdk.constant.MessageStatus
 import com.tmmtmm.sdk.constant.UserConstant
 import com.tmmtmm.sdk.core.db.DataBaseManager
+import com.tmmtmm.sdk.core.id.MessageId
 import com.tmmtmm.sdk.core.net.ResponseResult
+import com.tmmtmm.sdk.db.MessageDb
+import com.tmmtmm.sdk.db.event.ConversationEvent
 import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.db.model.MessageModel
 import com.tmmtmm.sdk.dto.TmMessage
 import com.tmmtmm.sdk.intercept.MessageInterceptorChain
+import com.tmmtmm.sdk.message.content.TmTextMessageContent
 import kotlinx.coroutines.sync.Mutex
 
 /**
  * @description
  * @version
  */
-class TmMessageLogic private constructor(){
+class TmMessageLogic private constructor() {
 
     private val mutex = Mutex()
 
@@ -78,11 +84,13 @@ class TmMessageLogic private constructor(){
             }
             var messageList = messageInfoItems?.map { messageInfoResponseItem ->
                 val toMessageEntity = messageInfoResponseItem.toMessageEntity()
-                if (toMessageEntity.sender == TmLoginLogic.getInstance().getUserId() || toMessageEntity.sender == UserConstant.THIRD_USER_ID) {
-                    toMessageEntity.isRead = MessageReadStatus.IS_READ
+                if (toMessageEntity.sender == TmLoginLogic.getInstance()
+                        .getUserId() || toMessageEntity.sender == UserConstant.THIRD_USER_ID
+                ) {
+                    toMessageEntity.readStatus = MessageReadStatus.IS_READ
                 }
                 toMessageEntity.sequence = sequenceMap[toMessageEntity.mid]?.sequence ?: 0
-                toMessageEntity.isRead = sequenceMap[toMessageEntity.mid]?.isRead ?: 0
+                toMessageEntity.readStatus = sequenceMap[toMessageEntity.mid]?.isRead ?: 0
                 val messageInfoStatus = messageInfoResponseItem.status
                 val messageSequenceStatus = sequenceMap[toMessageEntity.mid]?.status ?: 0
                 val isDelete =
@@ -91,7 +99,7 @@ class TmMessageLogic private constructor(){
                     } else {
                         NOT_DEL
                     }
-                toMessageEntity.isDel = isDelete
+                toMessageEntity.delStatus = isDelete
                 toMessageEntity
             }?.toMutableList()
 
@@ -133,6 +141,31 @@ class TmMessageLogic private constructor(){
         }
 
         return ResponseResult.Success(Any())
+    }
+
+    fun insert(message: MessageModel): Long? {
+        message.displayTime = message.crateTime
+//        val result = try {
+//            DataBaseManager.getInstance().getDataBase()
+//                ?.messageDao()?.insertMessage(message)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            0
+//        }
+        val result = try {
+//            FtsDataMigrationLogic.INSTANCE.writeMessages(mutableListOf(message))
+            DataBaseManager.getInstance().getDataBase()
+                ?.messageDao()?.insertMessage(message)
+
+        } catch (e: android.database.sqlite.SQLiteConstraintException) {
+            Log.w("OnConflictButOK", "object: ${message.mid} " + e.toString())
+            0
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.w("MessageInsertOnConflict", e.toString())
+            0
+        }
+        return result
     }
 
     fun insert(messageList: MutableList<MessageModel>?): MutableList<MessageModel>? {
@@ -219,5 +252,97 @@ class TmMessageLogic private constructor(){
         val messageEntity = DataBaseManager.getInstance().getDataBase()
             ?.messageDao()?.queryMessagesByMid(mid)
         return MessageContentLogic.getInstance().convertToTmMessage(messageEntity)
+    }
+
+    fun sendTextMessage(
+        content: String,
+        chatId: String?,
+        mids: MutableList<String>? = null
+    ) {
+        val tmMessage = TmMessage.create()
+//        if (!mids.isNullOrEmpty()) {
+//            val extra = TmMessageExtra(
+//                mids = mids,
+//                act = TmMessage.MESSAGE_ACT_REFERENCE,
+//                op = OpCodeUtil.getOpCodeString(),
+//                ids = mids
+//            )
+//            tmMessage.extra = extra
+//        }
+        //create message
+        tmMessage.content =
+            TmTextMessageContent(content)
+        sendMessage(tmMessage, groupId = chatId ?: "")
+//        if (!ChatId.createById(chatId ?: "").isSingle()) {
+//
+//        } else {
+//            sendMessage(tmMessage, ChatId.createById(chatId ?: "").getTargetId() ?: "")
+//        }
+    }
+
+
+    fun sendMessage(message: TmMessage,groupId: String = "", mid: String = "") {
+//        delDraftMessage(uid, groupId, mid)
+
+        val messageEntity = createMessageEntity(message = message,groupId =  groupId, mid)
+        TmConversationLogic.INSTANCE.insertOrUpdateConversation(messageEntity)
+
+        //send event
+        MessageEvent.send(mutableSetOf(messageEntity.mid), messageEntity.chatId)
+        ConversationEvent.send(mutableSetOf(messageEntity.chatId))
+
+        val result = SendMessage.send(messageEntity)
+        if (result is ResponseResult.Success) {
+            messageEntity.crateTime = System.currentTimeMillis()
+            MessageDb.INSTANCE
+                .updateStatus(messageEntity, MessageStatus.Sent.value())
+            Log.w("sendMessage - success", "$messageEntity")
+        } else if (result is ResponseResult.Failure) {
+
+        }
+    }
+
+    //create message
+    fun createMessageEntity(
+        message: TmMessage,
+        groupId: String,
+        mid: String = ""
+    ): MessageModel {
+        val mUid = TmLoginLogic.getInstance().getUserId()
+        val messageEntity: MessageModel = MessageContentLogic.getInstance().transform(message)
+        val messageId: String = mid.ifBlank {
+            MessageId.create(mUid)
+        }
+
+//        val chatId = if (TextUtils.isEmpty(groupId)) {
+//            ChatId.createSingle(mUid, uid).encode()
+//        } else {
+//            groupId
+//        }
+
+        //create message
+        messageEntity.status = MessageStatus.Sending.value()
+        messageEntity.sender = mUid
+        messageEntity.chatId = groupId
+        messageEntity.mid = messageId
+//        if (message.extra != null) {
+//            message.extra?.from = MessageFromConstant.FROM_ANDROID
+//            messageEntity.extra = message.extra?.toJson().toString()
+//        } else {
+//            val messageExtra = TmMessageExtra()
+//            messageExtra.from = MessageFromConstant.FROM_ANDROID
+//            messageEntity.extra = message.extra?.toJson().toString()
+//        }
+        messageEntity.type = message.content?.getMessageContentType()
+        messageEntity.crateTime = System.currentTimeMillis()
+        messageEntity.sendTime = System.currentTimeMillis()
+        messageEntity.readStatus = MessageReadStatus.IS_READ
+//        messageEntity.isLocalSend = true
+//        messageEntity.isBrowse = MessageBrowseConstant.ALREADY_BROWSED
+
+        //save message,status=sending
+        val id = insert(messageEntity)
+        messageEntity.id = id ?: 0
+        return messageEntity
     }
 }

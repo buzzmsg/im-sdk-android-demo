@@ -135,18 +135,18 @@ class MessageContentLogic {
         return message
     }
 
-//    fun transform(tmMessage: TmMessage): MessageModel {
+    fun transform(tmMessage: TmMessage): MessageModel {
 
-//        return MessageModel(
-//            mid = tmMessage.mid,
-//            sequence = tmMessage.sequence,
-//            chatId = tmMessage.chatId,
-//            sender = tmMessage.chatId,
-//            status = tmMessage.status?.value(),
-//            type = tmMessage.content?.getMessageContentType(),
-//            content = exclusionContent(tmMessage.content),
-//        )
-//    }
+        val messageModel = MessageModel()
+        messageModel.mid = tmMessage.mid
+        messageModel.sequence = tmMessage.sequence
+        messageModel.chatId = tmMessage.chatId
+        messageModel.sender = tmMessage.sender
+        messageModel.status = tmMessage.status?.value()
+        messageModel.type = tmMessage.content?.getMessageContentType()
+        messageModel.content = exclusionContent(tmMessage.content)
+        return messageModel
+    }
 
     fun messageContentFromPayload(
         contentType: Int,
