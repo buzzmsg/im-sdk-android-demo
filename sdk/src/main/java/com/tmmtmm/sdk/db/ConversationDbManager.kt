@@ -6,6 +6,7 @@ import com.tmmtmm.sdk.constant.ConversationIntroduceConstant
 import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.event.EventCenter
 import com.tmmtmm.sdk.db.event.ConversationEvent
+import com.tmmtmm.sdk.db.model.ConversationLinkModel
 import com.tmmtmm.sdk.db.model.ConversationModel
 import com.tmmtmm.sdk.db.result.ConversationInfoResult
 
@@ -88,6 +89,21 @@ class ConversationDbManager private constructor() {
         return conversationEntities
     }
 
+
+    fun insertGroupConversation(conversationModel: ConversationModel?){
+        DataBaseManager.getInstance().getDataBase()
+            ?.conversationDao()
+            ?.insertGroupConversation(conversationModel)
+    }
+
+    fun insertGroupConversationLink(conversationLinkModel: ConversationLinkModel?){
+        DataBaseManager.getInstance().getDataBase()
+            ?.conversationDao()
+            ?.insertGroupConversationLink(conversationLinkModel)
+    }
+
+
+
 }
 
 @Dao
@@ -167,5 +183,9 @@ interface ConversationDao {
 
     @Query("select introduce from tmm_conversation Where chatId = :chatId")
     fun queryGroupIntroduce(chatId: String): String?
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertGroupConversationLink(conversationLinkModel: ConversationLinkModel?)
 
 }

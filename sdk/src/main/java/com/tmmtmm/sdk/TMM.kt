@@ -9,6 +9,7 @@ import com.tmmtmm.sdk.core.net.listener.impl.TmConnectionListenerImpl
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
 import com.tmmtmm.sdk.core.utils.TmUtils
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
+import com.tmmtmm.sdk.logic.TmGroupLogic
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.sdk.logic.TmMessageLogic
 import java.util.concurrent.ConcurrentHashMap
@@ -60,6 +61,11 @@ class TMM private constructor() {
                 }
             }
         })
+    }
+
+
+    fun createGroup(aChatId: String, auids: MutableList<String>){
+        TmGroupLogic.INSTANCE.createGroup(aChatId, auids)
     }
 
 }

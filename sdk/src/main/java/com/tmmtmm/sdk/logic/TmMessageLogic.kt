@@ -345,4 +345,52 @@ class TmMessageLogic private constructor() {
         messageEntity.id = id ?: 0
         return messageEntity
     }
+
+//    fun queryMaxMessageIndexByChatId(chatId: MutableSet<String>?): MutableList<MessageModel> {
+//        return DataBaseManager.getInstance()
+//            .splitArray(chatId?.toMutableList() ?: mutableListOf()) {
+//                DataBaseManager.getInstance().getDataBase()
+//                    ?.messageDao()
+//                    ?.queryMessageIndexByChatIds(it.toMutableSet()) ?: mutableListOf()
+//            }
+//    }
+//
+//    fun queryMaxMessageSequenceByChatId(chatId: MutableSet<String>?): MutableList<MessageModel> {
+//        return DataBaseManager.getInstance()
+//            .splitArray(chatId?.toMutableList() ?: mutableListOf()) {
+//                DataBaseManager.getInstance().getDataBase()
+//                    ?.messageDao()
+//                    ?.queryMessageSequenceByChatIds(it.toMutableSet()) ?: mutableListOf()
+//            }
+//    }
+
+    fun queryTmMessageMapByMids(mids: MutableSet<String>?): Map<String, TmMessage>? {
+        if (mids.isNullOrEmpty()) {
+            return null
+        }
+        val messageEntities =
+            DataBaseManager.getInstance().splitArray(mids.toMutableList()) { value ->
+                DataBaseManager.getInstance().getDataBase()
+                    ?.messageDao()?.queryMessagesByMids(value.toMutableSet()) ?: mutableListOf()
+            }
+        val tmMessages = messageEntities.map { messageEntity ->
+            MessageContentLogic.getInstance().convertToTmMessage(messageEntity)
+        }.toMutableList()
+        return tmMessages.associateBy({ it.mid }, { it })
+    }
+
+    fun getUnreadCount(chatIds: MutableList<String>?): Map<String, Int?> {
+        val mChatIds = chatIds?: mutableListOf()
+        val messageList = DataBaseManager.getInstance()
+            .splitArray(mChatIds) { ids ->
+                DataBaseManager.getInstance().getDataBase()
+                    ?.messageDao()
+                    ?.queryUnReadConversationMessages(ids) ?: mutableListOf()
+            }.filter {
+                it.sender != UserConstant.THIRD_USER_ID
+            }
+
+        return messageList.groupBy { it.chatId }.mapValues { it.value.size }
+
+    }
 }

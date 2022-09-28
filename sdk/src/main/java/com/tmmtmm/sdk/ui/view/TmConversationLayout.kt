@@ -3,15 +3,36 @@ package com.tmmtmm.sdk.ui.view
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ThreadUtils
 import com.chad.library.adapter.base.BaseDifferAdapter
+import com.chad.library.adapter.base.QuickAdapterHelper
+import com.chad.library.adapter.base.loadState.LoadState
+import com.chad.library.adapter.base.loadState.trailing.TrailingLoadStateAdapter
+import com.tmmtmm.sdk.R
+import com.tmmtmm.sdk.core.event.EventCenter
+import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.databinding.ConversationLayoutViewBinding
 import com.tmmtmm.sdk.databinding.ItemConversationBinding
+import com.tmmtmm.sdk.db.ConversationDbManager
+import com.tmmtmm.sdk.db.event.ConversationEvent
+import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.dto.TmConversation
+import com.tmmtmm.sdk.logic.TmConversationLogic
+import com.tmmtmm.sdk.logic.TmMessageLogic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * @description
@@ -26,24 +47,229 @@ class TmConversationLayout @JvmOverloads constructor(
     val KEY_LAST_MESSAGE = "lastMessage"
     private var mBinding: ConversationLayoutViewBinding
 
-    private var mAdapter: ConversationAdapter? = null
+    private lateinit var mAdapter: ConversationAdapter
+    private var helper: QuickAdapterHelper? = null
+
+    private var mConversationEvent: EventCenter<ConversationEvent>? = null
+
+    private val mutex = Mutex()
+
+    private val TAG = "TmConversationLayout"
 
     init {
         val inflater = LayoutInflater.from(context)
         mBinding = ConversationLayoutViewBinding.inflate(inflater, this)
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        mConversationEvent = ConversationDbManager.INSTANCE.addConversationCallback(null, object :
+            ConversationEvent.ConversationListener {
+            override fun onConversationChanged(data: ConversationEvent.EventData?) {
+                Log.w(TAG, "onConversationChanged: 111111111111111111 chatIds = ${data?.chatIds}")
+                updateConversation(data?.chatIds)
+            }
+        })
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mConversationEvent?.removeCallback()
+        mConversationEvent = null
+    }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
 
         mAdapter = ConversationAdapter()
+        mBinding.conversationListView.layoutManager = LinearLayoutManager(context)
+        mBinding.conversationListView.setHasFixedSize(true)
+        mBinding.conversationListView.setItemViewCacheSize(0)
 
+        helper = QuickAdapterHelper.Builder(mAdapter)
+            .setTrailingLoadStateAdapter(object : TrailingLoadStateAdapter.OnTrailingListener {
+                override fun onLoad() {
+                    request()
+                }
 
+                override fun onFailRetry() {
+                    request()
+                }
+
+                override fun isAllowLoading(): Boolean {
+                    return true
+                }
+            }).build()
+
+        // 设置预加载，请调用以下方法
+        helper?.trailingLoadStateAdapter?.preloadSize = 1
+        mBinding.conversationListView.adapter = helper?.adapter
+        mBinding.conversationListView.itemAnimator = null
+
+        request()
+    }
+
+    fun request(){
+        if (mAdapter.items.isEmpty()){
+            TransferThreadPool.submitTask {
+               val list = TmConversationLogic.INSTANCE.loadConversationList(Long.MAX_VALUE, 20)
+
+                ThreadUtils.runOnUiThread {
+                    setAdapterData(list)
+                }
+            }
+
+            return
+        }
+
+        val lastIndex = mAdapter.items.lastIndex
+        val lastConversation = mAdapter.getItem(lastIndex)
+        val conversationList = TmConversationLogic.INSTANCE.loadConversationList(lastConversation?.timestamp ?: Long.MAX_VALUE, 20)
+
+        ThreadUtils.runOnUiThread {
+            if (conversationList.isEmpty()) {
+                helper?.trailingLoadState = LoadState.NotLoading(true)
+            }else {
+                helper?.trailingLoadState = LoadState.NotLoading(false)
+            }
+            val currentConversationList =
+                CopyOnWriteArrayList(mAdapter.items)
+            val result = conversationList.minus(currentConversationList)
+            mAdapter.addAll(result)
+        }
 
     }
 
+    val lock = Any()
+    private fun updateConversation(chatIds: MutableSet<String>?) {
+        TransferThreadPool.submitTask {
+            synchronized(lock) {
+                var list =
+                    TmConversationLogic.INSTANCE.getConversationCombination(chatIds)
+                        ?: mutableListOf()
 
-    inner class ConversationAdapter: BaseDifferAdapter<TmConversation, ConversationAdapter.VH>(Differ()){
+                val unReadMap =
+                    TmMessageLogic.INSTANCE.getUnreadCount(chatIds?.toMutableList())
+
+                val result: MutableList<TmConversation>
+                val currentConversationList =
+                    CopyOnWriteArrayList(mAdapter.items.toMutableList())
+
+                Log.w(TAG, "updateConversation: 333333333")
+
+                if (list.isEmpty()) {
+                    //conversation remove
+                    list = currentConversationList.filter { tmmConversation ->
+                        chatIds?.contains(tmmConversation.chatId) == true
+                    }.toMutableList()
+                    result =
+                        currentConversationList.subtract(list.toSet()).toMutableList()
+                } else {
+
+                    val sorted = kotlin.Comparator<TmConversation> { o1, o2 ->
+                        if (o1.topTimestamp > o2.topTimestamp) {
+                            -1
+                        } else if (o1.topTimestamp < o2.topTimestamp) {
+                            1
+                        } else {
+                            if (o1.timestamp > o2.timestamp) {
+                                -1
+                            } else if (o1.timestamp < o2.timestamp) {
+                                1
+                            } else {
+                                1
+                            }
+                        }
+                    }
+                    //conversation add or update
+
+                    if (list.size == chatIds?.size) {
+                        result = list.union(currentConversationList).toMutableList()
+                            .sortedWith(sorted) as MutableList<TmConversation>
+                    } else {
+                        val listChatIds = list.map { it.chatId ?: "" }.toMutableSet()
+                        val needRemoveChatIds = chatIds?.subtract(listChatIds)
+
+
+                        //conversation remove
+                        val needRemoveList = currentConversationList.filter { tmmConversation ->
+                            needRemoveChatIds?.contains(tmmConversation.chatId) == true
+                        }.toMutableList()
+
+                        val needAddList = list.subtract(needRemoveList.toSet()).toMutableList()
+
+                        val updateList =
+                            currentConversationList.subtract(needRemoveList.toSet()).toMutableList()
+
+                        result = needAddList.union(updateList).toMutableList()
+                            .sortedWith(sorted) as MutableList<TmConversation>
+                    }
+                }
+
+                for (tmmConversationVo in result) {
+                    val unreadCount = unReadMap[tmmConversationVo.chatId]
+                    if (unreadCount != null) {
+                        tmmConversationVo.unReadCount = unreadCount
+                    }
+                }
+
+                ThreadUtils.runOnUiThread {
+//                TmLogUtils.getInstance()
+//                    .i(
+//                        content = "chatIds = $chatIds   lastEventMessage = ${
+//                            GsonUtils.toJson(
+//                                eventList.take(3)
+//                            )
+//                        }",
+//                        printConsoleLog = false
+//                    )
+//
+//                TmLogUtils.getInstance()
+//                    .i(
+//                        content = "chatIds = $chatIds   lastResultMessage = ${
+//                            GsonUtils.toJson(
+//                                resultList.take(3)
+//                            )
+//                        }",
+//                        printConsoleLog = false
+//                    )
+                    Log.w(TAG, "updateConversation: 44444444444 ${unReadMap}")
+
+                    setAdapterData(result.toMutableList())
+                }
+            }
+        }
+
+    }
+
+    private fun setAdapterData(result: MutableList<TmConversation>) {
+        mAdapter.submitList(list = (result)) {
+            if (!mBinding.conversationListView.canScrollVertically(-1)) {
+                val state =
+                    mBinding.conversationListView.layoutManager?.onSaveInstanceState()
+                mBinding.conversationListView.layoutManager?.onRestoreInstanceState(state)
+            }
+
+        }
+//        mAdapter?.setEmptyViewLayout(context, R.layout.view_conversation_empty)
+//        mConversationAdapter.emptyLayout?.findViewById<View>(R.id.tvEmptyStartChat)?.click {
+//            val type = SelectChatActivity.TYPE_INVITE_USER
+//            SelectChatsUtils.getInstance()
+//                .select(type = type)
+//                .setLifeCycle(this)
+//                .setSelectChatsCallBack(selectChatsCallBackWeakReference.get())
+//                .setSelectChatsStrategy(CreateGroupChatStrategy())
+//                .request()
+//        }
+//
+//        mConversationAdapter.emptyLayout?.findViewById<View>(R.id.tvEmptyInviteFriends)?.click {
+//            Launcher.navigation(IUserService::class.java)?.startPhoneContacts()
+//        }
+    }
+
+
+    inner class ConversationAdapter :
+        BaseDifferAdapter<TmConversation, ConversationAdapter.VH>(Differ()) {
 
         inner class VH(
             parent: ViewGroup,
