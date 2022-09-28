@@ -34,11 +34,11 @@ class TmLoginLogic private constructor() {
     }
 
 
-    fun getUserId(): String{
+    fun getUserId(): String {
         return LoginCache.getUserId()
     }
 
-    fun setUserId(uid: String){
+    fun setUserId(uid: String) {
         LoginCache.setUserId(uid)
     }
 
@@ -46,19 +46,19 @@ class TmLoginLogic private constructor() {
         return getUserId().isNotBlank()
     }
 
-    fun getAk(): String{
+    fun getAk(): String {
         return LoginCache.getAk()
     }
 
-    fun setAk(ak: String){
+    fun setAk(ak: String) {
         LoginCache.setAk(ak)
     }
 
-    fun getEnv(): String{
+    fun getEnv(): String {
         return LoginCache.getEnv()
     }
 
-    fun setEnv(env: String){
+    fun setEnv(env: String) {
         LoginCache.setEnv(env)
     }
 
@@ -90,23 +90,17 @@ class TmLoginLogic private constructor() {
 
     }
 
-    fun logout(aUid: String, callBack: LoginOutCallBack) {
+    fun logout(aUid: String) {
 
         setUserId("")
         NetDbManager.getInstance().clearAll()
         DataBaseManager.getInstance().close()
 
-        callBack.success()
 
     }
 
-    interface LoginCallBack {
-        fun success()
-        fun fail(code: Int, errorMsg: String)
+    interface TmConnectionDelegate {
+        fun onConnectLost(auid: String, resolve: ((auid: String, pwd: String, ak: String) -> Unit))
     }
 
-    interface LoginOutCallBack {
-        fun success()
-        fun fail(code: Int, errorMsg: String)
-    }
 }
