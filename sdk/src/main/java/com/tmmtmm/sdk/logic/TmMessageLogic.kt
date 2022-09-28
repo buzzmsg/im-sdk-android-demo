@@ -12,6 +12,7 @@ import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.net.ResponseResult
 import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.db.model.MessageModel
+import com.tmmtmm.sdk.dto.TmMessage
 import com.tmmtmm.sdk.intercept.MessageInterceptorChain
 import kotlinx.coroutines.sync.Mutex
 
@@ -211,5 +212,12 @@ class TmMessageLogic private constructor(){
             }
         }
         return diffList
+    }
+
+
+    fun queryMessagesByMid(mid: String?): TmMessage {
+        val messageEntity = DataBaseManager.getInstance().getDataBase()
+            ?.messageDao()?.queryMessagesByMid(mid)
+        return MessageContentLogic.getInstance().convertToTmMessage(messageEntity)
     }
 }

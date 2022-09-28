@@ -6,84 +6,12 @@
     android:layout_height="72dp"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivConversationAvatar"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@color/theme_color_blue"
-        android:background="@color/theme_color_blue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:shapeAppearanceOverlay="@style/circleImageViewStyle"
-        android:scaleType="centerCrop"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvConversationName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="100dp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textColor="@color/text_0D1324"
-        android:textSize="16sp"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@+id/tvMessage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivConversationAvatar"
-        app:layout_constraintTop_toTopOf="@+id/ivConversationAvatar"
-        tools:text="卡死办法发顺丰科技阿白癜风静安寺·1的时刻能发了啥办法快结束了" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:lines="2"
-        android:textColor="@color/text_message"
-        android:textSize="14sp"
-        android:includeFontPadding="false"
-        app:layout_constraintBottom_toBottomOf="@+id/ivConversationAvatar"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="55dp"
-        android:layout_marginBottom="2dp"
-        app:layout_constraintStart_toStartOf="@+id/tvConversationName"
-        app:layout_constraintTop_toBottomOf="@id/tvConversationName"
-        tools:text="死办法发顺丰科技阿白癜风静安寺·1的时刻能发了啥办法快结束了 It’s raining here " />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@color/text_time"
-        app:layout_constraintTop_toTopOf="@+id/tvConversationName"
-        app:layout_constraintBottom_toBottomOf="@+id/tvConversationName"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="09:32" />
-
-    <com.tmmtmm.sdk.ui.view.ConversationStatusView
-        android:id="@+id/message_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/message"
-        tools:src="@drawable/ic_conversation_message_received"
+    <com.tmmtmm.sdk.ui.view.ConversationView
+        android:id="@+id/conversation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/state_pressed_drawable"
+        android:paddingHorizontal="12dp"
         />
-
-<!--    <androidx.appcompat.widget.AppCompatImageView-->
-<!--        android:id="@+id/ivAt"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="@dimen/dp_2"-->
-<!--        android:layout_marginEnd="@dimen/dp_4"-->
-<!--        app:layout_constraintEnd_toStartOf="@id/message_status"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/message"-->
-<!--        android:visibility="invisible"-->
-<!--        android:src="@drawable/ic_chat_at" />-->
-
-
 
 </merge>

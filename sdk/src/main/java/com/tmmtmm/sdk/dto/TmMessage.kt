@@ -18,7 +18,6 @@ class TmMessage(
     var mid: String,
 
     var content: TmMessageContent? = null,
-    var direction: MessageDirection? = MessageDirection.Send,
     var status: MessageStatus? = MessageStatus.Sending,
 
     //    public Integer fileStatus = FileMessageDownloadStatus.Not_Require.value();
@@ -74,7 +73,6 @@ class TmMessage(
 //                ", toUsers=" + Arrays.toString(toUsers) +
                 ", content=" + content?.digest(this) +
                 ", contentType=" + content!!.getMessageContentType() +
-                ", direction=" + direction +
                 ", status=" + status +
                 ", messageUid=" + messageUid +
                 ", serverTime=" + serverTime +

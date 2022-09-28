@@ -113,16 +113,6 @@ class MessageContentLogic {
         message.sender = messageEntity?.sender
         message.chatId = messageEntity?.chatId ?: ""
         message.mid = messageEntity?.mid ?: ""
-        val direction = if (messageEntity?.sender == TmLoginLogic.getInstance().getUserId()) {
-            MessageDirection.direction(
-                MessageDirection.Send.value()
-            )
-        } else {
-            MessageDirection.direction(
-                MessageDirection.Receive.value()
-            )
-        }
-        message.direction = direction
         message.status =
             MessageStatus.status(messageEntity?.status ?: MessageStatus.Sent.value())
         message.content = contentOfType(messageEntity?.type ?: ContentType_Unknown)

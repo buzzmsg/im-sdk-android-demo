@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseDifferAdapter
 import com.tmmtmm.sdk.databinding.ConversationLayoutViewBinding
 import com.tmmtmm.sdk.databinding.ItemConversationBinding
 import com.tmmtmm.sdk.dto.TmConversation
@@ -26,13 +26,25 @@ class TmConversationLayout @JvmOverloads constructor(
     val KEY_LAST_MESSAGE = "lastMessage"
     private var mBinding: ConversationLayoutViewBinding
 
+    private var mAdapter: ConversationAdapter? = null
+
     init {
         val inflater = LayoutInflater.from(context)
         mBinding = ConversationLayoutViewBinding.inflate(inflater, this)
     }
 
+    override fun onFinishInflate() {
+        super.onFinishInflate()
 
-    inner class ConversationAdapter: BaseQuickAdapter<TmConversation,ConversationAdapter.VH>(){
+        mAdapter = ConversationAdapter()
+
+
+
+    }
+
+
+    inner class ConversationAdapter: BaseDifferAdapter<TmConversation, ConversationAdapter.VH>(Differ()){
+
         inner class VH(
             parent: ViewGroup,
             val viewBinding: ItemConversationBinding = ItemConversationBinding.inflate(
@@ -41,7 +53,7 @@ class TmConversationLayout @JvmOverloads constructor(
         ) : RecyclerView.ViewHolder(viewBinding.root)
 
         override fun onBindViewHolder(holder: VH, position: Int, item: TmConversation?) {
-//            holder.viewBinding.conversation.setConversation(data)
+            holder.viewBinding.conversation.setConversation(item)
         }
 
         override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
