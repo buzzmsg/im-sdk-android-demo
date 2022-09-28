@@ -1,6 +1,6 @@
 package com.tmmtmm.sdk.logic
 
-import com.tmmtmm.im.core.model.message.intercept.MessageInsertInterceptor
+import com.tmmtmm.sdk.intercept.MessageInsertInterceptor
 import com.tmmtmm.sdk.api.*
 import com.tmmtmm.sdk.cache.MessageCache
 import com.tmmtmm.sdk.constant.MessageContentType

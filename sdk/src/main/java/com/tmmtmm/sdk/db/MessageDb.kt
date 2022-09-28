@@ -149,8 +149,8 @@ interface MessageDao {
     @Query("SELECT * from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and chatId in (:chatIds) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryUnReadConversationMessages(chatIds: MutableList<String>): MutableList<MessageModel>?
 
-    @Query("SELECT count(*) from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and chatId = :chatId and atType in (:atTypes) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
-    fun queryAtMessagesByChatId(chatId: String?, atTypes: MutableList<Int>): Int?
+//    @Query("SELECT count(*) from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and chatId = :chatId and atType in (:atTypes) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
+//    fun queryAtMessagesByChatId(chatId: String?, atTypes: MutableList<Int>): Int?
 
     @Query("SELECT * from tmm_message where isRead = ${MessageReadStatus.NOT_READ} and chatId in (:chatIds) and isDel != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ")
     fun queryUnReadConversationMessagesByChatIds(chatIds: MutableSet<String>?): MutableList<MessageModel>?

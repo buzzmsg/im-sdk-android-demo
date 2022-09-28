@@ -1,7 +1,7 @@
-package com.tmmtmm.im.core.utils.id
+package com.tmmtmm.sdk.core.id
 
-import com.tmmtmm.im.core.utils.Random
-import com.tmmtmm.im.core.utils.hash.MD5
+import com.tmmtmm.sdk.core.hash.MD5
+import com.tmmtmm.sdk.core.utils.Random
 
 /**
  * @description

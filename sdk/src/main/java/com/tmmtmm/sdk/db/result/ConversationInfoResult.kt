@@ -4,7 +4,6 @@ import com.tmmtmm.sdk.constant.ConversationMuteConstant
 import com.tmmtmm.sdk.constant.ConversationQuitStatus
 
 data class ConversationInfoResult(
-    var id: Long = 0,
     var chatId: String = "",
 //    var uid: String = "",
     var name: String? = null,

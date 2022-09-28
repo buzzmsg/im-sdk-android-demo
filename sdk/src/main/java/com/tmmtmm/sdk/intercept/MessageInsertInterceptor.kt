@@ -1,7 +1,8 @@
-package com.tmmtmm.im.core.model.message.intercept
+package com.tmmtmm.sdk.intercept
 
-import com.tmmtmm.im.core.model.message.MessageEntity
-import com.tmmtmm.netcore.ResponseResult
+
+import com.tmmtmm.sdk.core.net.ResponseResult
+import com.tmmtmm.sdk.db.model.MessageModel
 
 /**
  * @description
@@ -10,10 +11,10 @@ import com.tmmtmm.netcore.ResponseResult
  */
 interface MessageInsertInterceptor {
 
-    fun intercept(chain: Chain): ResponseResult<MutableList<MessageEntity>>
+    fun intercept(chain: Chain): ResponseResult<MutableList<MessageModel>>
 
     interface Chain {
-        fun proceed(messages: MutableList<MessageEntity>): ResponseResult<MutableList<MessageEntity>>
+        fun proceed(messages: MutableList<MessageModel>): ResponseResult<MutableList<MessageModel>>
     }
 }
 

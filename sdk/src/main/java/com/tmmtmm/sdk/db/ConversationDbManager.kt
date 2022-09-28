@@ -168,9 +168,4 @@ interface ConversationDao {
     @Query("select introduce from tmm_conversation Where chatId = :chatId")
     fun queryGroupIntroduce(chatId: String): String?
 
-    @Query("delete from tmm_conversation_snapshot where groupId in (:groupIds)")
-    fun deleteConversationSnapshot(groupIds: MutableList<String>?)
-
-    @Query("SELECT groupId from tmm_conversation_snapshot where groupId in (:groupIds)")
-    fun queryExistConversationSnapshotIdList(groupIds: MutableList<String>?): MutableList<String>?
 }

@@ -1,6 +1,5 @@
 package com.tmmtmm.sdk.intercept
 
-import com.tmmtmm.im.core.model.message.intercept.MessageInsertInterceptor
 import com.tmmtmm.sdk.core.net.ResponseResult
 import com.tmmtmm.sdk.db.model.MessageModel
 
