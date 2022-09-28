@@ -1,5 +1,8 @@
 package com.tmmtmm.sdk.dto
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 
 /**
  * @description
@@ -7,6 +10,7 @@ package com.tmmtmm.sdk.dto
  * @time 2021/5/26 11:52 下午
  * @version
  */
+@Parcelize
 class TmConversation(
     var id: Long,
     var chatId: String,
@@ -30,7 +34,7 @@ class TmConversation(
     var introduceIsRead: Boolean = false,
     var lastBrowseIndex: Long? = 0,
     var isExistInGroup: Int? = 0,
-    ) {
+    ) : Parcelable {
 
     fun isMute() = isMute == 1
 
