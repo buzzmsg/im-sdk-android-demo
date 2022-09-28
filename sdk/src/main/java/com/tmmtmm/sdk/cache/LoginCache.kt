@@ -14,6 +14,10 @@ object LoginCache {
 
     private const val KEY_UID = "key_uid"
 
+    private const val KEY_AK = "key_ak"
+
+    private const val KEY_ENV = "key_env"
+
 
     fun getUserId() = SpUtils.getString(MMKV_ID_USER, KEY_UID)
 
@@ -21,5 +25,18 @@ object LoginCache {
         SpUtils.putString(MMKV_ID_USER, KEY_UID, uid)
     }
 
+
+
+    fun getAk() = SpUtils.getString(KEY_AK)
+
+    fun setAk(ak: String) {
+        SpUtils.putString(KEY_AK, ak)
+    }
+
+    fun getEnv() = SpUtils.getString(KEY_ENV)
+
+    fun setEnv(env: String) {
+        SpUtils.putString(KEY_ENV, env)
+    }
 
 }

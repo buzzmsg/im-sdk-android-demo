@@ -3,8 +3,6 @@ package com.tmmtmm.demo.ui
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.tmmtmm.demo.R
 import com.tmmtmm.demo.api.ResponseResult
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.databinding.ActivityLoginBinding
@@ -13,8 +11,7 @@ import com.tmmtmm.demo.ui.ext.click
 import com.tmmtmm.demo.ui.view.TitleBarView
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.demo.vm.LoginViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.tmmtmm.sdk.TMM
 
 /**
  * @description
@@ -64,22 +61,14 @@ class LoginActivity : BaseActivity() {
 
             if (response is ResponseResult.Success) {
                 loginSdk("")
+                MainActivity.newInstance(this@LoginActivity)
+                finish()
             }
         }
     }
 
     private fun loginSdk(uid: String) {
-        TmLoginLogic.getInstance().login(uid, object : TmLoginLogic.LoginCallBack {
-            override fun success() {
-                MainActivity.newInstance(this@LoginActivity)
-                finish()
-            }
-
-            override fun fail(code: Int, errorMsg: String) {
-
-            }
-
-        })
+        TMM.initUser(uid)
     }
 
 }

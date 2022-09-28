@@ -4,6 +4,8 @@ import androidx.annotation.WorkerThread
 import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.net.manager.NetDbManager
 import com.tmmtmm.sdk.cache.LoginCache
+import com.tmmtmm.sdk.core.net.config.Net
+import com.tmmtmm.sdk.core.net.service.ApiBaseService
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.db.UserDBManager
 import com.tmmtmm.sdk.db.model.UserLinkModel
@@ -44,8 +46,28 @@ class TmLoginLogic private constructor() {
         return getUserId().isNotBlank()
     }
 
+    fun getAk(): String{
+        return LoginCache.getAk()
+    }
 
-    fun login(aUid: String, callBack: LoginCallBack) {
+    fun setAk(ak: String){
+        LoginCache.setAk(ak)
+    }
+
+    fun getEnv(): String{
+        return LoginCache.getEnv()
+    }
+
+    fun setEnv(env: String){
+        LoginCache.setEnv(env)
+    }
+
+    fun setTokenErrorCallback(delegate401: Net.Delegate_401) {
+        ApiBaseService.setDelegate(delegate401)
+    }
+
+
+    fun login(aUid: String) {
 
 
         try {
@@ -58,11 +80,11 @@ class TmLoginLogic private constructor() {
                 userModel.uid = uid
                 UserDBManager.getInstance().insertUserLink(userModel)
 
-                callBack.success()
+//                callBack.success()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            callBack.fail(500, "")
+//            callBack.fail(500, "")
         }
 
 
