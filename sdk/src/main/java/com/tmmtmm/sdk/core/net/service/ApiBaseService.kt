@@ -14,9 +14,9 @@ import java.lang.reflect.Type
  */
 object ApiBaseService {
 
-    private const val SERVICE_NAME = ""
+    private const val SERVICE_NAME = "https://dev-im-api.tmmtmm.com.tr:7100"
 
-    private const val DEFAULT_HOST = ""
+    private const val DEFAULT_HOST = "https://dev-im-api.tmmtmm.com.tr:7100"
 
     fun getServiceName() = SERVICE_NAME
 
