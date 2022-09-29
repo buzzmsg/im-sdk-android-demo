@@ -106,10 +106,21 @@ class TmConversationLayout @JvmOverloads constructor(
         mBinding.conversationListView.adapter = helper?.adapter
         mBinding.conversationListView.itemAnimator = null
 
+        mAdapter.setOnItemClickListener { adapter, view, position ->
+            val item = mAdapter.items[position]
+            TransferThreadPool.submitTask {
+                val aChatId = TmConversationLogic.INSTANCE.getAChatId(item.chatId)
+
+                ThreadUtils.runOnUiThread {
+                    itemClickCallBack?.onItemClick(aChatId)
+                }
+            }
+        }
+
         request()
     }
 
-    fun request(){
+    private fun request(){
         if (mAdapter.items.isEmpty()){
             TransferThreadPool.submitTask {
                val list = TmConversationLogic.INSTANCE.loadConversationList(Long.MAX_VALUE, 20)
@@ -267,8 +278,18 @@ class TmConversationLayout @JvmOverloads constructor(
 //        }
     }
 
+    private var itemClickCallBack: ItemClickCallBack? = null
 
-    inner class ConversationAdapter :
+    public fun setItemClickCallBack(callBack: ItemClickCallBack){
+        this.itemClickCallBack = callBack
+    }
+
+    public interface ItemClickCallBack {
+        fun onItemClick(chatId: String?)
+    }
+
+
+    private inner class ConversationAdapter :
         BaseDifferAdapter<TmConversation, ConversationAdapter.VH>(Differ()) {
 
         inner class VH(
@@ -288,7 +309,7 @@ class TmConversationLayout @JvmOverloads constructor(
     }
 
 
-    inner class Differ : DiffUtil.ItemCallback<TmConversation>() {
+    private inner class Differ : DiffUtil.ItemCallback<TmConversation>() {
         override fun areItemsTheSame(
             oldItem: TmConversation,
             newItem: TmConversation

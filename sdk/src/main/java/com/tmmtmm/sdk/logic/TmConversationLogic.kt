@@ -68,7 +68,9 @@ class TmConversationLogic private constructor() {
             }
 //            val timestamp = maxMessageEntity.displayTime
             val timestamp =
-                if (maxMessageEntity.sender == TmLoginLogic.getInstance().getUserId()) maxMessageEntity.displayTime
+                if (maxMessageEntity.sender == TmLoginLogic.getInstance()
+                        .getUserId()
+                ) maxMessageEntity.displayTime
                     ?: 0 else maxMessageEntity.sendTime ?: 0L
             val conversationModel = ConversationModel(
                 chatId = chatId,
@@ -127,9 +129,13 @@ class TmConversationLogic private constructor() {
         val receiveConversations: MutableList<ConversationModel> = mutableListOf()
 
         val timestamp =
-            if (messageEntity.sender == TmLoginLogic.getInstance().getUserId()) messageEntity.crateTime
+            if (messageEntity.sender == TmLoginLogic.getInstance()
+                    .getUserId()
+            ) messageEntity.crateTime
                 ?: 0 else messageEntity.sendTime ?: 0
-        val localConversation = ConversationDbManager.INSTANCE.queryRawConversations(mutableSetOf(messageEntity.chatId))?.elementAtOrNull(0)
+        val localConversation =
+            ConversationDbManager.INSTANCE.queryRawConversations(mutableSetOf(messageEntity.chatId))
+                ?.elementAtOrNull(0)
 
         if (localConversation == null) {
             val mChatId = ChatId.createById(messageEntity.chatId)
@@ -153,7 +159,6 @@ class TmConversationLogic private constructor() {
         DataBaseManager.getInstance().getDataBase()?.conversationDao()
             ?.insertGroupConversations(receiveConversations)
     }
-
 
 
     fun getConversationCombination(chatIds: MutableSet<String>?): MutableList<TmConversation>? {
@@ -193,7 +198,8 @@ class TmConversationLogic private constructor() {
 
         val conversationList =
             DataBaseManager.getInstance().splitArray(chatIds.toMutableList()) { value ->
-                ConversationDbManager.INSTANCE.queryConversations(value.toMutableSet()) ?: mutableListOf()
+                ConversationDbManager.INSTANCE.queryConversations(value.toMutableSet())
+                    ?: mutableListOf()
             }
 
 
@@ -246,21 +252,21 @@ class TmConversationLogic private constructor() {
 //                            || userInfo?.isFriend == UserRelationChangeLogic.FRIEND_SHIP_SINGLE_DELETE_YOU)
 //                    && !RelationShipManager.isBlockUser(userInfo.blockStatus ?: 0)
 //                ) {
-                    val conversationInfo = TmConversation(
-                        id = 0,
-                        chatId = conversationEntity.chatId,
-                        uid = conversationEntity.uid,
-                        lastMid = conversationEntity.lastMid,
-                        topTimestamp = conversationEntity.topTime ?: 0,
-                        timestamp = conversationEntity.timeStamp ?: 0,
-                        lastTmMessage = lastMessage,
-                        isMute = conversationEntity.isMute,
-                        isMuteShow = false,
-                        headIndex = conversationEntity.lastMessageIndex,
-                        hideSequence = conversationEntity.hideSequence,
-                        name = conversationEntity.uid,
-                    )
-                    conversationInfoList.add(conversationInfo)
+            val conversationInfo = TmConversation(
+                id = 0,
+                chatId = conversationEntity.chatId,
+                uid = conversationEntity.uid,
+                lastMid = conversationEntity.lastMid,
+                topTimestamp = conversationEntity.topTime ?: 0,
+                timestamp = conversationEntity.timeStamp ?: 0,
+                lastTmMessage = lastMessage,
+                isMute = conversationEntity.isMute,
+                isMuteShow = false,
+                headIndex = conversationEntity.lastMessageIndex,
+                hideSequence = conversationEntity.hideSequence,
+                name = conversationEntity.uid,
+            )
+            conversationInfoList.add(conversationInfo)
 //                }
 //            } else {
 //                val userInfo = conversationUserInfoMap[conversationEntity.chatId]
@@ -340,22 +346,22 @@ class TmConversationLogic private constructor() {
 //                            || userInfo?.isFriend == UserRelationChangeLogic.FRIEND_SHIP_SINGLE_DELETE_YOU)
 //                    && !RelationShipManager.isBlockUser(userInfo.blockStatus ?: 0)
 //                ) {
-                    val conversationInfo = TmConversation(
-                        id = 0,
-                        chatId = conversationEntity.chatId,
-                        uid = conversationEntity.uid,
-                        lastMid = conversationEntity.lastMid,
-                        timestamp = conversationEntity.timeStamp ?: 0,
-                        topTimestamp = conversationEntity.topTime ?: 0,
-                        lastTmMessage = lastMessage,
-                        isMute = conversationEntity.isMute,
-                        isMuteShow = false,
-                        headIndex = conversationEntity.lastMessageIndex,
-                        hideSequence = conversationEntity.hideSequence,
+            val conversationInfo = TmConversation(
+                id = 0,
+                chatId = conversationEntity.chatId,
+                uid = conversationEntity.uid,
+                lastMid = conversationEntity.lastMid,
+                timestamp = conversationEntity.timeStamp ?: 0,
+                topTimestamp = conversationEntity.topTime ?: 0,
+                lastTmMessage = lastMessage,
+                isMute = conversationEntity.isMute,
+                isMuteShow = false,
+                headIndex = conversationEntity.lastMessageIndex,
+                hideSequence = conversationEntity.hideSequence,
 //                        name = userInfo.getShowName() ?: conversationEntity.uid,
 //                        avatarInfo = userInfo.avatarInfo,
-                    )
-                    conversationInfoList.add(conversationInfo)
+            )
+            conversationInfoList.add(conversationInfo)
 //                }
 //            } else {
 //                val userInfo = conversationUserInfoMap[conversationEntity.chatId]
@@ -383,9 +389,9 @@ class TmConversationLogic private constructor() {
     }
 
 
-
     private fun loadConversations(timeStamp: Long, count: Int): MutableList<TmConversation> {
-        val conversationList = ConversationDbManager.INSTANCE.loadMoreConversations(timeStamp, count)
+        val conversationList =
+            ConversationDbManager.INSTANCE.loadMoreConversations(timeStamp, count)
 
         return loadConversationCombinationList(conversationList)
     }
@@ -440,6 +446,12 @@ class TmConversationLogic private constructor() {
         return result
     }
 
+
+    fun getAChatId(chatId: String): String? {
+        return DataBaseManager.getInstance().getDataBase()
+            ?.conversationDao()
+            ?.queryAChatId(chatId)
+    }
 
 
 }

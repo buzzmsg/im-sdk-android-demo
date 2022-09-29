@@ -5,10 +5,7 @@ import androidx.room.RoomDatabase
 import com.tmmtmm.sdk.db.ConversationDao
 import com.tmmtmm.sdk.db.MessageDao
 import com.tmmtmm.sdk.db.UserDao
-import com.tmmtmm.sdk.db.model.ConversationModel
-import com.tmmtmm.sdk.db.model.MessageModel
-import com.tmmtmm.sdk.db.model.UserLinkModel
-import com.tmmtmm.sdk.db.model.UserModel
+import com.tmmtmm.sdk.db.model.*
 
 /**
  * @description
@@ -20,7 +17,8 @@ import com.tmmtmm.sdk.db.model.UserModel
         UserLinkModel::class,
         UserModel::class,
         MessageModel::class,
-        ConversationModel::class
+        ConversationModel::class,
+        ConversationLinkModel::class
     ],
     version = 1,
     exportSchema = true,

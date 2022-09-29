@@ -7,6 +7,7 @@ import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.databinding.ActivityMainBinding
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.view.TitleBarView
+import com.tmmtmm.sdk.ui.view.TmConversationLayout
 
 class MainActivity : BaseActivity() {
 
@@ -34,6 +35,12 @@ class MainActivity : BaseActivity() {
             cRoot = mBinding.root,
             title = "聊天",
         )
+
+        mBinding.conversationLayout.setItemClickCallBack(object : TmConversationLayout.ItemClickCallBack{
+            override fun onItemClick(chatId: String?) {
+
+            }
+        })
     }
 
     override fun fetchData() {

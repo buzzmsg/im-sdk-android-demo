@@ -188,4 +188,7 @@ interface ConversationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGroupConversationLink(conversationLinkModel: ConversationLinkModel?)
 
+    @Query("select aChatId from tmm_conversation_link Where chatId = :chatId ")
+    fun queryAChatId(chatId: String): String
+
 }
