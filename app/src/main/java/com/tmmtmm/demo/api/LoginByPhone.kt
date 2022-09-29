@@ -26,10 +26,7 @@ data class LoginByPhoneResponse(
     var akey: String? = "", // 1626879625
     @SerializedName("auid")
     var auid: String? = "", // 2x2qlr88wdcz
-    @SerializedName("nonce")
-    var nonce: String? = "",
-    var timestamp: Long? = 0L,
-    var signature: String? = "", // 0B57B8B476532038339F2C82DF9E7081
+    var authcode: String? = "",
 )
 
 

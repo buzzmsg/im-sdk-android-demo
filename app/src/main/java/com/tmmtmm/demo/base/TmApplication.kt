@@ -3,6 +3,7 @@ package com.tmmtmm.demo.base
 import android.app.Application
 import com.tencent.mmkv.MMKV
 import com.tmmtmm.demo.api.LoginByPhoneResponse
+import com.tmmtmm.demo.manager.LoginManager
 import com.tmmtmm.sdk.TMM
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import kotlin.properties.Delegates
@@ -26,18 +27,13 @@ class TmApplication : Application() {
         super.onCreate()
         MMKV.initialize(this)
         instance = this
+        TMM.INSTANCE.getInstance(this, LoginManager.INSTANCE.getAKey(), "test")
         TMM.INSTANCE.setConnectionDelegate(object : TmLoginLogic.TmConnectionDelegate {
-            override fun onConnectLost(
-                auid: String,
-                resolve: (time: Long, nonce: String, signature: String) -> Unit
-            ) {
-                val timeStamp = loginResponse?.timestamp ?: 0
-                val nonce = loginResponse?.nonce ?: ""
-                val signature = loginResponse?.signature ?: ""
+
+            override fun getAuth(auid: String, resolve: (auth: String) -> Unit) {
+                val authcode = loginResponse?.authcode ?: ""
                 resolve.invoke(
-                    timeStamp,
-                    nonce,
-                    signature
+                    authcode
                 )
             }
         })

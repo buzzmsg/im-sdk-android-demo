@@ -1,7 +1,8 @@
 package com.tmmtmm.sdk.cache
 
-import android.text.TextUtils
+import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.utils.SpUtils
+import com.tmmtmm.sdk.db.model.ShareMeModel
 
 /**
  * @description
@@ -17,23 +18,32 @@ object LoginCache {
 
     private var akey = ""
 
-    var currentUserId: String? = ""
+    var me: ShareMeModel? = null
+
 
     fun getUserId(): String {
-        return if (TextUtils.isEmpty(currentUserId)) {
-            currentUserId = SpUtils.getString(akey, getAUserId())
-            currentUserId ?: ""
+        return if (me == null) {
+            me = DataBaseManager.getInstance().getShareDb()?.shareDao()?.getMe()
+            me?.uid ?: ""
         } else {
-            currentUserId ?: ""
+            me?.uid ?: ""
         }
     }
 
     fun getAUserId(): String {
-        return SpUtils.getMap(akey).first()
+        return if (me == null) {
+            me = DataBaseManager.getInstance().getShareDb()?.shareDao()?.getMe()
+            me?.aUid ?: ""
+        } else {
+            me?.aUid ?: ""
+        }
     }
 
     fun setUser(auid: String, uid: String) {
-        SpUtils.putString(akey, auid, uid)
+        val shareMeModel = ShareMeModel()
+        shareMeModel.uid = uid
+        shareMeModel.aUid = auid
+        DataBaseManager.getInstance().getShareDb()?.shareDao()?.insertMe(shareMeModel)
     }
 
     fun getAKey() = akey

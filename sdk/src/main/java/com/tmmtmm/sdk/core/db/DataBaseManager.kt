@@ -3,9 +3,12 @@ package com.tmmtmm.sdk.core.db
 import android.content.Context
 import android.text.TextUtils
 import androidx.room.Room
+import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.PathUtils
 import com.tmmtmm.sdk.BuildConfig
 import com.tmmtmm.sdk.cache.LoginCache
 import com.tmmtmm.sdk.logic.TmLoginLogic
+import java.io.File
 
 /**
  * @description
@@ -15,7 +18,7 @@ import com.tmmtmm.sdk.logic.TmLoginLogic
 class DataBaseManager private constructor() {
 
     private var appDataBase: AppDataBase? = null
-
+    private var shareDataBase: ShareDataBase? = null
 
     companion object {
 
@@ -41,7 +44,18 @@ class DataBaseManager private constructor() {
     fun init(context: Context) {
         val aKey = LoginCache.getAKey()
         val env = LoginCache.getEnv()
-        val dbName = "${aKey}/${env}/" + BuildConfig.DB_NAME_PREFIX + TmLoginLogic.getInstance().getUserId()
+//        val dbName =
+//            PathUtils.getInternalAppDbPath(aKey + File.separator + env + File.separator + BuildConfig.DB_NAME_PREFIX + TmLoginLogic.getInstance())
+//        val dbName =
+//            "database" + File.separator + aKey + File.separator + env + File.separator +  BuildConfig.DB_NAME_PREFIX + TmLoginLogic.getInstance()
+//                .getUserId()
+        val dbPath = File.separator + aKey + File.separator + env + File.separator
+        val dbRootPath = PathUtils.getInternalAppDbsPath()
+        val path = dbRootPath + dbPath
+        FileUtils.createOrExistsDir(path)
+        val dbName = path + BuildConfig.DB_NAME_PREFIX + TmLoginLogic.getInstance().getUserId() + ".db"
+
+
         if (TextUtils.isEmpty(dbName)) {
             return
         }
@@ -49,6 +63,34 @@ class DataBaseManager private constructor() {
             try {
                 appDataBase = Room
                     .databaseBuilder(context, AppDataBase::class.java, dbName)
+                    .allowMainThreadQueries()
+                    .build()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun initShare(context: Context) {
+        val aKey = LoginCache.getAKey()
+        val env = LoginCache.getEnv()
+//        val dbName =
+//            "${aKey}/${env}/" + BuildConfig.DB_NAME_PREFIX + "share"
+//        val dbName =
+//            PathUtils.getInternalAppDbPath(aKey + File.separator + env + File.separator + BuildConfig.DB_NAME_PREFIX + "share.db")
+        val dbPath = File.separator + aKey + File.separator + env + File.separator
+        val dbRootPath = PathUtils.getInternalAppDbsPath()
+        val path = dbRootPath + dbPath
+        FileUtils.createOrExistsDir(path)
+        val dbName = path + BuildConfig.DB_NAME_PREFIX + "share.db"
+
+        if (TextUtils.isEmpty(dbName)) {
+            return
+        }
+        if (shareDataBase == null) {
+            try {
+                shareDataBase = Room
+                    .databaseBuilder(context, ShareDataBase::class.java, dbName)
                     .allowMainThreadQueries()
                     .build()
             } catch (e: Exception) {
@@ -108,12 +150,15 @@ class DataBaseManager private constructor() {
         return appDataBase as AppDataBase
     }
 
+    fun getShareDb(): ShareDataBase? {
+        if (shareDataBase == null) {
+            return null
+        }
+        return shareDataBase as ShareDataBase
+    }
+
 
     fun close() {
         appDataBase = null
-    }
-
-    fun clearDataBase() {
-        appDataBase?.clearAllTables()
     }
 }

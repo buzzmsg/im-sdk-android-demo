@@ -7,6 +7,7 @@ import com.tmmtmm.demo.api.ResponseResult
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityLoginBinding
+import com.tmmtmm.demo.manager.LoginManager
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.ext.click
 import com.tmmtmm.demo.ui.view.TitleBarView
@@ -63,7 +64,9 @@ class LoginActivity : BaseActivity() {
                 if (value?.auid.isNullOrBlank()) {
                     return@observe
                 }
-                TMM.INSTANCE.getInstance(TmApplication.instance(),value?.akey?:"","test")
+                LoginManager.INSTANCE.setUserId(value?.auid ?: "")
+                LoginManager.INSTANCE.setAKey(value?.akey ?: "")
+                TMM.INSTANCE.getInstance(TmApplication.instance(), value?.akey ?: "", "test")
                 TmApplication.instance().loginResponse = value
                 loginSdk(value?.auid ?: "")
                 MainActivity.newInstance(this@LoginActivity)

@@ -11,9 +11,8 @@ import java.lang.reflect.Type
  * @version
  */
 object ApiNoTokenService {
-    const val SERVICE_NAME = ""
-
-    private const val DEFAULT_HOST = ""
+    const val SERVICE_NAME = "https://dev-im-api.tmmtmm.com.tr:7100"
+    private const val DEFAULT_HOST = "https://dev-im-api.tmmtmm.com.tr:7100"
 
     fun <T> post(data: String, path: String, type: Type): ResponseResult<T?> {
         val net = NetFactory.getInstance().getOrCreateNetByServiceName(SERVICE_NAME, host = DEFAULT_HOST)

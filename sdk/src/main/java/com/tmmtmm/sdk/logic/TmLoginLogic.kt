@@ -1,19 +1,18 @@
 package com.tmmtmm.sdk.logic
 
 import com.tmmtmm.sdk.TMM
-import com.tmmtmm.sdk.api.Login
-import com.tmmtmm.sdk.api.LoginRequest
+import com.tmmtmm.sdk.api.GetAuth
+import com.tmmtmm.sdk.api.GetAuthRequest
 import com.tmmtmm.sdk.cache.LoginCache
 import com.tmmtmm.sdk.core.db.DataBaseManager
-import com.tmmtmm.sdk.core.net.config.Net
 import com.tmmtmm.sdk.core.net.config.NetFactory
 import com.tmmtmm.sdk.core.net.manager.NetDbManager
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
+import com.tmmtmm.sdk.core.utils.TmUtils
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.core.utils.onSuccess
 import com.tmmtmm.sdk.db.UserDBManager
 import com.tmmtmm.sdk.db.event.LoginSuccessEvent
-import com.tmmtmm.sdk.db.model.UserLinkModel
 import com.tmmtmm.sdk.db.model.UserModel
 import java.util.concurrent.ConcurrentHashMap
 
@@ -73,8 +72,8 @@ class TmLoginLogic private constructor() {
     fun initUser(auid: String) {
         if (getUserId().isBlank()) {
             //start to login
-            tmConnectionMap[TMM::class.java.name]?.onConnectLost(auid) { time, nonce, signature ->
-                login(auid, time, nonce, signature)
+            tmConnectionMap[TMM::class.java.name]?.getAuth(auid) { auth ->
+                login(auid, auth)
             }
             return
         }
@@ -82,22 +81,20 @@ class TmLoginLogic private constructor() {
 
     }
 
-    fun login(auid: String, time: Long, nonce: String, signature: String) {
+    fun login(auid: String,auth: String) {
         try {
             TransferThreadPool.submitTask {
-                val request = LoginRequest(
+                val request = GetAuthRequest(
                     auid = auid,
                     akey = getAk(),
-                    nonce = nonce,
-                    timestamp = time,
-                    signature = signature
+                    authcode = auth,
                 )
-                Login.execute(request).onSuccess { loginResponse ->
+                GetAuth.execute(request).onSuccess { loginResponse ->
                     val uid = loginResponse?.userId ?: ""
                     val token = loginResponse?.token ?: ""
+                    DataBaseManager.getInstance().initShare(TmUtils.sApp)
                     setUser(auid = auid, uid = uid)
-
-
+                    DataBaseManager.getInstance().init(TmUtils.sApp)
                     val userModel = UserModel()
                     userModel.uid = uid
                     userModel.aUid = auid
@@ -122,7 +119,6 @@ class TmLoginLogic private constructor() {
         NetDbManager.getInstance().clearAll()
         DataBaseManager.getInstance().close()
 
-
     }
 
     fun addConnectionListener(
@@ -137,9 +133,9 @@ class TmLoginLogic private constructor() {
     }
 
     interface TmConnectionDelegate {
-        fun onConnectLost(
+        fun getAuth(
             auid: String,
-            resolve: ((time: Long, nonce: String, signature: String) -> Unit)
+            resolve: ((auth: String) -> Unit)
         )
     }
 

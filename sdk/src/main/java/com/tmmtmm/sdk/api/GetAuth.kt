@@ -11,16 +11,14 @@ import com.tmmtmm.sdk.core.net.service.ApiNoTokenService
 import com.tmmtmm.sdk.core.net.toJson
 
 @Keep
-data class LoginRequest(
+data class GetAuthRequest(
     var auid: String? = null,
     var akey: String? = null,
-    var nonce: String? = null,
-    var timestamp: Long? = 0L,
-    var signature: String? = null,
+    var authcode: String? = null,
 )
 
 @Keep
-data class LoginResponse(
+data class GetAuthResponse(
     @SerializedName("code")
     var code: Int? = BUSINESS_SUCCESS_CODE, // 0
     @SerializedName("expires_in")
@@ -51,17 +49,17 @@ data class LoginResponse(
 //    var token: String? = "" // C32716F237ABFD43D298C276E1F0B30FMngycWxyODh3ZGN6
 //)
 
-object Login {
+object GetAuth {
     private const val ERROR_CAPTCHA_UNAVAILABLE = 400017
-    private const val LOGIN_API = "/Login"
+    private const val LOGIN_API = "/getAuth"
 
-    fun execute(requestLogin: LoginRequest): ResponseResult<LoginResponse?> {
+    fun execute(requestLogin: GetAuthRequest): ResponseResult<GetAuthResponse?> {
         val type =
             GsonUtils.getType(
                 BaseResponseEntity::class.java,
-                LoginResponse::class.java,
+                GetAuthResponse::class.java,
             )
-        val result = ApiNoTokenService.post<LoginResponse>(
+        val result = ApiNoTokenService.post<GetAuthResponse>(
             requestLogin.toJson().toString(),
             LOGIN_API,
             type

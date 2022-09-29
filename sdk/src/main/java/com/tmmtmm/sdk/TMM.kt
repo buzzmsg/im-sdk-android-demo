@@ -5,15 +5,12 @@ import com.tmmtmm.sdk.cache.LoginCache
 import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.id.ChatId
 import com.tmmtmm.sdk.core.net.config.Net
-import com.tmmtmm.sdk.core.net.listener.impl.TmConnectionListenerImpl
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
 import com.tmmtmm.sdk.core.utils.TmUtils
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.logic.TmGroupLogic
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.sdk.logic.TmMessageLogic
-import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.sign
 
 /**
  * @description
@@ -30,10 +27,14 @@ class TMM private constructor() {
     fun getInstance(context: Application, ak: String, env: String): TMM {
         TmLoginLogic.getInstance().setAk(ak)
         TmLoginLogic.getInstance().setEnv(env)
+        TmUtils.init(context)
+        if (ak.isBlank() || env.isBlank()) {
+            return this
+        }
+        DataBaseManager.getInstance().initShare(context)
         if (TmLoginLogic.getInstance().getUserId().isBlank()) {
             return this
         }
-        TmUtils.init(context)
         DataBaseManager.getInstance().init(context)
         return this
     }
@@ -53,12 +54,12 @@ class TMM private constructor() {
     }
 
     fun setConnectionDelegate(delegate: TmLoginLogic.TmConnectionDelegate) {
-        TmLoginLogic.getInstance().addConnectionListener(this::javaClass.name, delegate)
+        TmLoginLogic.getInstance().addConnectionListener(TMM::class.java.name, delegate)
         ApiBaseService.setDelegate(object : Net.Delegate_401 {
             override fun onTokenError(net: Net?) {
                 val auid = LoginCache.getAUserId()
-                delegate.onConnectLost(auid) { time, nonce, signature ->
-                    TmLoginLogic.getInstance().login(auid, time, nonce, signature)
+                delegate.getAuth(auid) { auth ->
+                    TmLoginLogic.getInstance().login(auid, auth)
                 }
             }
         })
