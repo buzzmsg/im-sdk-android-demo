@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutQuoteMessage"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginEnd="12dp"
+    android:background="@drawable/drawable_bg_quote_text_message_box"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:visibility="gone"
+    app:layout_constrainedWidth="true"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:visibility="gone"
+    tools:showIn="@layout/chat_message_text_item_view"
+    >
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvQuoteMessageName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="12dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/text_0D1324_30"
+        android:textSize="14sp"
+        android:visibility="invisible"
+        tools:text="adadadadadad"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvQuoteMessageContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/text_0D1324"
+        android:textSize="14sp"
+        tools:text="时间1111"
+        />
+</androidx.appcompat.widget.LinearLayoutCompat>
+
+        

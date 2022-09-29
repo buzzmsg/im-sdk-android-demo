@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MessageContentView">
+        <attr name="message_gravity">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+            <enum name="top" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
+        <attr name="message_color" format="color" />
+        <attr name="message_line_color" format="color" />
+        <attr name="message_radius" format="dimension" />
+        <attr name="message_offset" format="dimension" />
+        <attr name="message_trgWidth" format="dimension" />
+        <attr name="message_trgHeight" format="dimension" />
+        <attr name="message_show_bottom" format="boolean" />
+        <attr name="message_bottom_offset" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="MessageItemView">
+        <attr name="messageContainerView" format="reference" />
+    </declare-styleable>
+
+</resources>

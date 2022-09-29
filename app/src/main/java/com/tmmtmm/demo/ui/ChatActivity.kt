@@ -41,7 +41,11 @@ class ChatActivity : BaseActivity() {
             leftBlock = {
                 finish()
             },
-            leftRes = R.drawable.ic_back_black,
+            leftRes = R.drawable.ic_demo_back,
+            rightRes = R.drawable.ic_demo_set_bg,
+            rightBlock = {
+
+            },
             title = "聊天",
         )
         binding.btnSendMessage.setOnClickListener {
@@ -54,5 +58,6 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun fetchData() {
+        binding.conversationLayout.createChat(aChatId)
     }
 }

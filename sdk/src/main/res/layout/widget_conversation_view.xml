@@ -63,7 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="09:32" />
 
-    <com.tmmtmm.sdk.ui.view.ConversationStatusView
+    <com.tmmtmm.sdk.ui.view.conversation.ConversationStatusView
         android:id="@+id/message_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

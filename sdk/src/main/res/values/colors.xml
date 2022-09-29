@@ -211,6 +211,7 @@
     <color name="c_8888">#888888</color>
 
     <color name="c_3333_alpha50">#80333333</color>
+    <color name="c_3333">#333333</color>
 
     <color name="color_F8F9FB_transparent">#EFF0F3</color>
     <!--    <color name="color_F8F9FB_transparent">#F3F5F9</color>-->

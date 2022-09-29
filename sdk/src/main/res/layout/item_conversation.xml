@@ -6,7 +6,7 @@
     android:layout_height="72dp"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <com.tmmtmm.sdk.ui.view.ConversationView
+    <com.tmmtmm.sdk.ui.view.conversation.ConversationView
         android:id="@+id/conversation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

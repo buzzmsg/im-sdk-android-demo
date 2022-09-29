@@ -1,10 +1,8 @@
-package com.tmmtmm.sdk.ui.view
+package com.tmmtmm.sdk.ui.view.conversation
 
 import android.content.Context
 import android.graphics.Color
-import android.text.SpannableStringBuilder
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +16,6 @@ import com.tmmtmm.sdk.constant.MessageContentType
 import com.tmmtmm.sdk.constant.MessageStatus
 import com.tmmtmm.sdk.core.event.EventCenter
 import com.tmmtmm.sdk.core.id.ChatId
-import com.tmmtmm.sdk.databinding.ViewConversationStatusBinding
 import com.tmmtmm.sdk.databinding.WidgetConversationViewBinding
 import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.dto.TmConversation

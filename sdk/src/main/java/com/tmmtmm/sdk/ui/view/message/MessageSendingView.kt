@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.ui.view
+package com.tmmtmm.sdk.ui.view.message
 
 import android.animation.ObjectAnimator
 import android.content.Context
@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.widget.AppCompatImageView
 import com.tmmtmm.sdk.R
+import com.tmmtmm.sdk.constant.MessageStatus
 import com.tmmtmm.sdk.ui.ext.gone
 import com.tmmtmm.sdk.ui.ext.visible
 
@@ -22,29 +23,29 @@ class MessageSendingView @JvmOverloads constructor(
     private var animator: ObjectAnimator? = null
 
 
-//    fun showMessageStatus(status: Int, isSingle: Boolean) {
-//        when (status) {
-//            TmMessageStatus.Readed.value() -> {
-//                animator?.end()
+    fun showMessageStatus(status: Int) {
+        when (status) {
+            MessageStatus.Readed.value() -> {
+                animator?.end()
 //                if (isSingle) {
 //                    setImageResource(R.drawable.ic_conversation_message_readed)
 //                } else {
-//                    setImageResource(R.drawable.ic_conversation_message_received)
+                    setImageResource(R.drawable.ic_conversation_message_received)
 //                }
-//            }
-//            TmMessageStatus.Sent.value() -> {
-//                animator?.end()
-//                setImageResource(R.drawable.ic_conversation_message_received)
-//            }
-//            TmMessageStatus.Sending.value() -> {
-//                showLoading()
-//            }
-//            else -> {
-//                animator?.end()
-//                setImageResource(R.drawable.ic_conversation_message_error)
-//            }
-//        }
-//    }
+            }
+            MessageStatus.Sent.value() -> {
+                animator?.end()
+                setImageResource(R.drawable.ic_conversation_message_received)
+            }
+            MessageStatus.Sending.value() -> {
+                showLoading()
+            }
+            else -> {
+                animator?.end()
+                setImageResource(R.drawable.ic_conversation_message_error)
+            }
+        }
+    }
 
     override fun setImageResource(resId: Int) {
         super.setImageResource(resId)

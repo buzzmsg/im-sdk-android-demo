@@ -1,4 +1,4 @@
-package com.tmmtmm.sdk.ui.view
+package com.tmmtmm.sdk.ui.view.conversation
 
 import android.content.Context
 import android.util.AttributeSet

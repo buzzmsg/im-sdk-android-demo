@@ -1,7 +1,6 @@
 package com.tmmtmm.sdk.logic
 
 import android.util.Log
-import com.tmmtmm.sdk.intercept.MessageInsertInterceptor
 import com.tmmtmm.sdk.api.*
 import com.tmmtmm.sdk.cache.MessageCache
 import com.tmmtmm.sdk.constant.MessageContentType
@@ -18,8 +17,10 @@ import com.tmmtmm.sdk.db.event.ConversationEvent
 import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.db.model.MessageModel
 import com.tmmtmm.sdk.dto.TmMessage
+import com.tmmtmm.sdk.intercept.MessageInsertInterceptor
 import com.tmmtmm.sdk.intercept.MessageInterceptorChain
 import com.tmmtmm.sdk.message.content.TmTextMessageContent
+import com.tmmtmm.sdk.ui.view.vo.TmmMessageVo
 import kotlinx.coroutines.sync.Mutex
 
 /**
@@ -392,5 +393,135 @@ class TmMessageLogic private constructor() {
 
         return messageList.groupBy { it.chatId }.mapValues { it.value.size }
 
+    }
+
+
+    fun loadMessage(
+        lastMessageId: Long,
+        chatId: String?,
+    ): MutableList<TmmMessageVo> {
+        val messageList = loadMessage(
+                chatId = chatId, lastId = lastMessageId, messageCount = 20
+            )
+        return handleMessages(chatId, messageList)
+    }
+
+    fun loadMoreMessages(
+        lastMessageId: Long,
+        chatId: String?
+    ): MutableList<TmmMessageVo> {
+        val messageList = loadMoreMessages(
+                chatId = chatId, lastId = lastMessageId, messageCount = 20
+            )
+
+        return handleMessages(chatId, messageList)
+    }
+
+    fun handleMessages(
+        chatId: String?,
+        messageList: MutableList<TmMessage>
+    ): MutableList<TmmMessageVo> {
+//        val quoteMessageVoMap = hashMapOf<String, TmmMessageVo>()
+//
+//        val atTmMessageVoList = mutableListOf<AtMessageContentItemVo>()
+//        val quoteMids = mutableSetOf<String>()
+//
+//        val tmmMessageVoList = mutableListOf<TmmMessageVo>()
+//        messageList.forEachIndexed { index, tmMessage ->
+//            val tmmMessageVo = tmMessage.transformToTmmMessage()
+//            val quoteMid = tmMessage.extra?.mids?.elementAtOrNull(0) ?: ""
+//            if (!CollectionUtils.isEmpty(tmMessage.extra?.mids)) {
+//                quoteMids.add(quoteMid)
+//                quoteMessageVoMap[quoteMid] =
+//                    TmmMessageVo(messageId = 0, mid = quoteMid, uid = "", messageBody = "")
+//            }
+//
+//            if (tmMessage.type == TmMessageContentType.ContentType_At) {
+//                val atMessageContentItemVo = AtMessageContentItemVo()
+//                atMessageContentItemVo.mid = tmMessage.mid
+//                atMessageContentItemVo.items = tmmMessageVo.tmmAtMessageContent?.items
+//                atTmMessageVoList.add(atMessageContentItemVo)
+//            }
+//        }
+//
+//        val quoteMessageMap =
+//            MessageManager.getInstance().queryTmMessageMapByMids(quoteMids) ?: hashMapOf()
+//
+//        quoteMessageMap.values.toMutableList().filter {
+//            it.type == TmMessageContentType.ContentType_At
+//        }.forEach { tmMessage ->
+//            val tmmMessageVo = tmMessage.transformToTmmMessage()
+//            val atMessageContentItemVo = AtMessageContentItemVo()
+//            atMessageContentItemVo.mid = tmMessage.mid
+//            atMessageContentItemVo.items = tmmMessageVo.tmmAtMessageContent?.items
+//            atTmMessageVoList.add(atMessageContentItemVo)
+//        }
+//
+//        val atMessageMap =
+//            TmAtMessageManager.getInstance().getAtMessageList(chatId, atTmMessageVoList)
+//
+//        for (mutableEntry in quoteMessageMap) {
+//            val mid = mutableEntry.value.mid
+//
+//            val quoteMessageVo = quoteMessageMap[mid]?.transformToTmmMessage() ?: continue
+//            if (atMessageMap.keys.contains(quoteMessageVo.mid)) {
+//                quoteMessageVo.atUserList = atMessageMap[mid]
+//            }
+//            quoteMessageVoMap[mid] = quoteMessageVo
+//        }
+
+        val tmmMessageVoList = messageList.map { tmMessage ->
+            val tmmMessageVo = MessageContentLogic.getInstance().transformToTmmMessage(tmMessage)
+//            val mid = tmmMessageVo.mid
+//            val quoteMid = tmMessage.extra?.mids?.elementAtOrNull(0) ?: ""
+//            if (atMessageMap.keys.contains(tmMessage.mid)) {
+//                tmmMessageVo.atUserList = atMessageMap[mid]
+//            }
+//
+//            if (quoteMessageVoMap.keys.contains(quoteMid)) {
+//                tmmMessageVo.quoteMessageVo?.tmmMessageVo = quoteMessageVoMap[quoteMid]
+//            }
+
+            tmmMessageVo
+        }.toMutableList()
+
+        return tmmMessageVoList
+    }
+
+    private fun loadMessage(
+        chatId: String?,
+        lastId: Long,
+        messageCount: Int
+    ): MutableList<TmMessage> {
+        val moreMessageEntityList =
+            DataBaseManager.getInstance().getDataBase()
+                ?.messageDao()
+                ?.loadMoreMessagesFromTop(chatId, lastId, messageCount)
+                ?.reversed()
+        val moreMessageList = mutableListOf<TmMessage>()
+        moreMessageEntityList
+            ?.forEach {
+                val message = MessageContentLogic.getInstance().convertToTmMessage(it)
+                moreMessageList.add(message)
+            }
+        return moreMessageList
+    }
+
+    private fun loadMoreMessages(
+    chatId: String?,
+    lastId: Long,
+    messageCount: Int
+    ): MutableList<TmMessage> {
+        val moreMessageEntityList =
+            DataBaseManager.getInstance().getDataBase()
+                ?.messageDao()
+                ?.loadMoreMessagesFromBottom(chatId, lastId, messageCount)
+        val moreMessageList = mutableListOf<TmMessage>()
+        moreMessageEntityList
+            ?.forEach {
+                val message = MessageContentLogic.getInstance().convertToTmMessage(it)
+                moreMessageList.add(message)
+            }
+        return moreMessageList
     }
 }

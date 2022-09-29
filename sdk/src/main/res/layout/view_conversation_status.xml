@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     tools:parentTag="android.widget.FrameLayout">
 
-    <com.tmmtmm.sdk.ui.view.MessageSendingView
+    <com.tmmtmm.sdk.ui.view.message.MessageSendingView
         android:id="@+id/ivConversationStatus"
         android:layout_width="18dp"
         android:layout_height="18dp"
