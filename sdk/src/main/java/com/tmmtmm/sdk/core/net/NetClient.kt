@@ -8,6 +8,7 @@ import com.tmmtmm.sdk.core.net.config.Net
 import com.tmmtmm.sdk.core.net.exception.TmException
 import com.tmmtmm.sdk.core.net.exception.TmmError
 import com.tmmtmm.sdk.core.net.id.SnowflakeDistributeId
+import com.tmmtmm.sdk.logic.TmLoginLogic
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -133,6 +134,7 @@ class NetClient {
             builder.url(net.getHost() + path)
 //            builder.addHeader("version", BuildConfig.VERSION_NAME)
             builder.addHeader("req-id", idWorker.nextId().toString())
+            builder.addHeader("ak", TmLoginLogic.getInstance().getAk())
             builder.addHeader("over", "Android${DeviceUtils.getSDKVersionName()}")
 //            builder.addHeader("lang", TmLanguageUtil.getCurrentLanguage())
             builder.addHeader("os", "android")
