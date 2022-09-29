@@ -14,11 +14,9 @@ import com.tmmtmm.sdk.db.model.*
 @Database(
     entities =
     [
-        UserLinkModel::class,
         UserModel::class,
         MessageModel::class,
         ConversationModel::class,
-        ConversationLinkModel::class
     ],
     version = 1,
     exportSchema = true,

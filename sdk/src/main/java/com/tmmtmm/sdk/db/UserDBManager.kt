@@ -50,26 +50,6 @@ class UserDBManager private constructor() {
         return list
     }
 
-
-
-    fun insertUserLink(userModel: UserLinkModel) {
-        DataBaseManager.getInstance().getDataBase()?.userDao()?.insertUserLink(userModel)
-    }
-
-    fun insertUserLink(userModels: MutableList<UserLinkModel>) {
-        DataBaseManager.getInstance().getDataBase()?.userDao()?.insertUserLinkList(userModels)
-    }
-
-    fun getUserLinkList(uids: MutableList<String>?): MutableList<UserLinkModel>? {
-        if (uids.isNullOrEmpty()) {
-            return null
-        }
-        val list = DataBaseManager.getInstance().splitArray(uids) { value ->
-            DataBaseManager.getInstance().getDataBase()?.userDao()?.queryUserLinkList(value)
-                ?: mutableListOf()
-        }
-        return list
-    }
 }
 
 @Dao
@@ -87,17 +67,4 @@ interface UserDao {
     fun queryUserList(uids: MutableList<String>?): MutableList<UserModel>?
 
 
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUserLink(userModel: UserLinkModel?)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUserLinkList(userModels: List<UserLinkModel>?)
-
-    @Query("select * from tmm_user_link where uid = :uid")
-    fun queryUserLink(uid: String?): UserLinkModel?
-
-    @Query("select * from tmm_user_link where uid in (:uids)")
-    fun queryUserLinkList(uids: MutableList<String>?): MutableList<UserLinkModel>?
 }

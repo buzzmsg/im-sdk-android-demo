@@ -12,6 +12,7 @@ import kotlinx.parcelize.Parcelize
 class TmConversation(
     var id: Long,
     var chatId: String,
+    var aChatId: String,
     var uid: String,
     var lastMid: String? = null,
     var timestamp: Long = 0,

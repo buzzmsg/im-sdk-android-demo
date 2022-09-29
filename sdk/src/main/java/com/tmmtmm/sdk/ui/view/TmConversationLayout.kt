@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,21 +15,16 @@ import com.chad.library.adapter.base.BaseDifferAdapter
 import com.chad.library.adapter.base.QuickAdapterHelper
 import com.chad.library.adapter.base.loadState.LoadState
 import com.chad.library.adapter.base.loadState.trailing.TrailingLoadStateAdapter
-import com.tmmtmm.sdk.R
 import com.tmmtmm.sdk.core.event.EventCenter
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.databinding.ConversationLayoutViewBinding
 import com.tmmtmm.sdk.databinding.ItemConversationBinding
 import com.tmmtmm.sdk.db.ConversationDbManager
 import com.tmmtmm.sdk.db.event.ConversationEvent
-import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.dto.TmConversation
 import com.tmmtmm.sdk.logic.TmConversationLogic
 import com.tmmtmm.sdk.logic.TmMessageLogic
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -44,7 +37,7 @@ class TmConversationLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayoutCompat(context, attrs, defStyleAttr) {
 
-    val KEY_LAST_MESSAGE = "lastMessage"
+    private val KEY_LAST_MESSAGE = "lastMessage"
     private var mBinding: ConversationLayoutViewBinding
 
     private lateinit var mAdapter: ConversationAdapter
@@ -101,20 +94,13 @@ class TmConversationLayout @JvmOverloads constructor(
                 }
             }).build()
 
-        // 设置预加载，请调用以下方法
         helper?.trailingLoadStateAdapter?.preloadSize = 1
         mBinding.conversationListView.adapter = helper?.adapter
         mBinding.conversationListView.itemAnimator = null
 
-        mAdapter.setOnItemClickListener { adapter, view, position ->
+        mAdapter.setOnItemClickListener { _, _, position ->
             val item = mAdapter.items[position]
-            TransferThreadPool.submitTask {
-                val aChatId = TmConversationLogic.INSTANCE.getAChatId(item.chatId)
-
-                ThreadUtils.runOnUiThread {
-                    itemClickCallBack?.onItemClick(aChatId)
-                }
-            }
+            itemClickCallBack?.onItemClick(item.aChatId)
         }
 
         request()
@@ -151,7 +137,7 @@ class TmConversationLayout @JvmOverloads constructor(
 
     }
 
-    val lock = Any()
+    private val lock = Any()
     private fun updateConversation(chatIds: MutableSet<String>?) {
         TransferThreadPool.submitTask {
             synchronized(lock) {
@@ -198,7 +184,7 @@ class TmConversationLayout @JvmOverloads constructor(
                         result = list.union(currentConversationList).toMutableList()
                             .sortedWith(sorted) as MutableList<TmConversation>
                     } else {
-                        val listChatIds = list.map { it.chatId ?: "" }.toMutableSet()
+                        val listChatIds = list.map { it.chatId }.toMutableSet()
                         val needRemoveChatIds = chatIds?.subtract(listChatIds)
 
 
@@ -244,7 +230,7 @@ class TmConversationLayout @JvmOverloads constructor(
 //                        }",
 //                        printConsoleLog = false
 //                    )
-                    Log.w(TAG, "updateConversation: 44444444444 ${unReadMap}")
+                    Log.w(TAG, "updateConversation: 44444444444 $unReadMap")
 
                     setAdapterData(result.toMutableList())
                 }
@@ -280,11 +266,11 @@ class TmConversationLayout @JvmOverloads constructor(
 
     private var itemClickCallBack: ItemClickCallBack? = null
 
-    public fun setItemClickCallBack(callBack: ItemClickCallBack){
+    fun setItemClickCallBack(callBack: ItemClickCallBack){
         this.itemClickCallBack = callBack
     }
 
-    public interface ItemClickCallBack {
+    interface ItemClickCallBack {
         fun onItemClick(chatId: String?)
     }
 

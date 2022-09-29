@@ -49,6 +49,9 @@ import androidx.room.PrimaryKey
 data class ConversationModel(
     @PrimaryKey
     var chatId: String = "",
+
+    var aChatId: String = "",
+
     var uid: String = "",
     var name: String? = null,
     var avatar: String? = null,

@@ -24,15 +24,11 @@ class TmGroupLogic {
 
         //todo
 
-        val linkModel = ConversationLinkModel()
-        linkModel.aChatId = aChatId
-        linkModel.chatId = chatId
-
-        ConversationDbManager.INSTANCE.insertGroupConversationLink(linkModel)
 
 
         val conversationModel = ConversationModel()
         conversationModel.chatId = chatId
+        conversationModel.aChatId = aChatId
 
         ConversationDbManager.INSTANCE.insertGroupConversation(conversationModel)
 

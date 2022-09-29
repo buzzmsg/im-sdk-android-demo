@@ -12,4 +12,6 @@ class UserModel {
 
     @PrimaryKey
     var uid: String = ""
+
+    var aUid: String = ""
 }

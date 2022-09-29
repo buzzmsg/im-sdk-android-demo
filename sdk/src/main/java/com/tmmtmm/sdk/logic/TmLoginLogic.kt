@@ -96,13 +96,11 @@ class TmLoginLogic private constructor() {
                     val uid = loginResponse?.userId ?: ""
                     val token = loginResponse?.token ?: ""
                     setUser(auid = auid, uid = uid)
-                    val userLinkModel = UserLinkModel()
-                    userLinkModel.aUid = auid
-                    userLinkModel.uid = uid
-                    UserDBManager.getInstance().insertUserLink(userLinkModel)
+
 
                     val userModel = UserModel()
                     userModel.uid = uid
+                    userModel.aUid = auid
                     UserDBManager.getInstance().insertUser(userModel)
                     NetFactory.getInstance()
                         .getOrCreateNetByServiceName(

@@ -255,6 +255,7 @@ class TmConversationLogic private constructor() {
             val conversationInfo = TmConversation(
                 id = 0,
                 chatId = conversationEntity.chatId,
+                aChatId = conversationEntity.aChatId,
                 uid = conversationEntity.uid,
                 lastMid = conversationEntity.lastMid,
                 topTimestamp = conversationEntity.topTime ?: 0,
@@ -349,6 +350,7 @@ class TmConversationLogic private constructor() {
             val conversationInfo = TmConversation(
                 id = 0,
                 chatId = conversationEntity.chatId,
+                aChatId = conversationEntity.aChatId,
                 uid = conversationEntity.uid,
                 lastMid = conversationEntity.lastMid,
                 timestamp = conversationEntity.timeStamp ?: 0,
@@ -445,13 +447,5 @@ class TmConversationLogic private constructor() {
         }
         return result
     }
-
-
-    fun getAChatId(chatId: String): String? {
-        return DataBaseManager.getInstance().getDataBase()
-            ?.conversationDao()
-            ?.queryAChatId(chatId)
-    }
-
 
 }

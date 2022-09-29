@@ -96,12 +96,6 @@ class ConversationDbManager private constructor() {
             ?.insertGroupConversation(conversationModel)
     }
 
-    fun insertGroupConversationLink(conversationLinkModel: ConversationLinkModel?){
-        DataBaseManager.getInstance().getDataBase()
-            ?.conversationDao()
-            ?.insertGroupConversationLink(conversationLinkModel)
-    }
-
 
 
 }
@@ -184,11 +178,5 @@ interface ConversationDao {
     @Query("select introduce from tmm_conversation Where chatId = :chatId")
     fun queryGroupIntroduce(chatId: String): String?
 
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGroupConversationLink(conversationLinkModel: ConversationLinkModel?)
-
-    @Query("select aChatId from tmm_conversation_link Where chatId = :chatId ")
-    fun queryAChatId(chatId: String): String
 
 }
