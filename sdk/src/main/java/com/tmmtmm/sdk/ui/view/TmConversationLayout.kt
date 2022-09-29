@@ -20,7 +20,9 @@ import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.databinding.ConversationLayoutViewBinding
 import com.tmmtmm.sdk.databinding.ItemConversationBinding
 import com.tmmtmm.sdk.db.ConversationDbManager
+import com.tmmtmm.sdk.db.UserDBManager
 import com.tmmtmm.sdk.db.event.ConversationEvent
+import com.tmmtmm.sdk.db.event.LoginSuccessEvent
 import com.tmmtmm.sdk.dto.TmConversation
 import com.tmmtmm.sdk.logic.TmConversationLogic
 import com.tmmtmm.sdk.logic.TmMessageLogic
@@ -63,6 +65,13 @@ class TmConversationLayout @JvmOverloads constructor(
                 updateConversation(data?.chatIds)
             }
         })
+
+        UserDBManager.getInstance().addLoginSuccessCallback(null, object : LoginSuccessEvent.LoginSuccessListener {
+            override fun onLoginSuccess(auid: String?) {
+                request()
+            }
+        })
+
     }
 
     override fun onDetachedFromWindow() {

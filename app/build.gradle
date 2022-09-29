@@ -82,6 +82,7 @@ dependencies {
     implementation "org.client.core:core_ui:1.1.6"
 
     implementation "com.github.lygttpod:SuperTextView:2.4.5"
+    implementation "com.github.li-xiaojun:XPopup:2.8.13"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

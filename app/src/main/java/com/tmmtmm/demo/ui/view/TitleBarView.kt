@@ -5,9 +5,11 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.allen.library.shape.ShapeTextView
 import com.blankj.utilcode.util.ClickUtils
 import com.tmmtmm.demo.R
 import com.tmmtmm.demo.ui.ext.setDrawableLeft
+import com.tmmtmm.demo.ui.ext.setDrawableRight
 import org.client.core.ui.layout.StateConstraintLayout
 import org.client.core.ui.layout.StateLinearLayout
 import org.client.core.ui.layout.StateToolBarConstraintLayout
@@ -23,6 +25,8 @@ class TitleBarView {
     var btnTopClose: AppCompatImageButton? = null
 
     var btnTopBarRight: AppCompatImageButton? = null
+
+    var tvTopBarRight: ShapeTextView? = null
 
     var topBar: ConstraintLayout? = null
 
@@ -40,6 +44,7 @@ class TitleBarView {
         tvTopBarCenter = viewTitleVar.findViewById(R.id.tvTopBarTitle)
         btnTopBarRight = viewTitleVar.findViewById(R.id.btnTopBarRight)
         btnTopClose = viewTitleVar.findViewById(R.id.btnTopBarLeftClose)
+        tvTopBarRight = viewTitleVar.findViewById(R.id.tvTopBarRight)
     }
 
     private fun View.generateDefaultTitleBar(title: String, leftBlock: (() -> Unit)? = null) {
@@ -83,6 +88,21 @@ class TitleBarView {
             tvTopBarLeft?.visibility = View.GONE
         }
 
+        if (rightRes != 0 || !TextUtils.isEmpty(rightText)) {
+            tvTopBarRight?.visibility = View.VISIBLE
+            ClickUtils.applySingleDebouncing(tvTopBarRight, 1000) {
+                rightBlock?.invoke()
+            }
+//            tvTopBarRight?.setOnClickListener { rightBlock?.invoke() }
+            if (!TextUtils.isEmpty(rightText)) {
+                tvTopBarRight?.text = rightText
+            }
+            if (rightRes != 0) {
+                tvTopBarRight?.setDrawableRight(rightRes ?: 0)
+            }
+        } else {
+            tvTopBarRight?.visibility = View.GONE
+        }
 
         if (resRightSecond != 0) {
             btnTopBarRight?.visibility = View.VISIBLE

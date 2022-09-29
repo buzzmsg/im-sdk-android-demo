@@ -1,16 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<org.client.core.ui.layout.StateToolBarConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/root_view_constraint"
+    app:ctb_toolBarBackground="@color/white"
+    android:background="@color/white"
     >
 
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="44dp"-->
-<!--        android:layout_marginTop=""-->
+    <View
+        android:id="@+id/conversationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ctb_all_toolbar"
+        app:layout_constraintBottom_toTopOf="@+id/layoutChatInput"
+        />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/layoutChatInput"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
 
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etMessageContent"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSendMessage"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="发送"
+            />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</org.client.core.ui.layout.StateToolBarConstraintLayout>

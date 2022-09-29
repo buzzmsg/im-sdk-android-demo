@@ -2,7 +2,10 @@ package com.tmmtmm.sdk.core.id
 
 import android.text.TextUtils
 import android.util.Log
+import com.blankj.utilcode.util.EncodeUtils
+import com.blankj.utilcode.util.EncryptUtils
 import com.tmmtmm.sdk.cache.LoginCache
+import com.tmmtmm.sdk.core.hash.SHA1
 import com.tmmtmm.sdk.logic.TmLoginLogic
 
 
@@ -34,7 +37,7 @@ class ChatId private constructor(private var code: String) {
 
         fun create(aChatId: String): String {
             val ak = LoginCache.getAKey()
-            return aChatId + ak
+            return EncryptUtils.encryptSHA1ToString(aChatId + ak)
         }
 
     }

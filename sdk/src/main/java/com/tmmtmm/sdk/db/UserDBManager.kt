@@ -1,10 +1,14 @@
 package com.tmmtmm.sdk.db
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tmmtmm.sdk.core.db.DataBaseManager
+import com.tmmtmm.sdk.core.event.EventCenter
+import com.tmmtmm.sdk.db.event.LoginSuccessEvent
+import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.db.model.UserLinkModel
 import com.tmmtmm.sdk.db.model.UserModel
 
@@ -30,6 +34,19 @@ class UserDBManager private constructor() {
             return instance!!
         }
     }
+
+    fun addLoginSuccessCallback(
+        lifecycleOwner: LifecycleOwner?,
+        callback: LoginSuccessEvent.LoginSuccessListener
+    ) =
+        EventCenter.handle<LoginSuccessEvent>(lifecycleOwner)
+            .addCallback(LoginSuccessEvent().observe(callback))
+
+    fun removeLoginSuccessCallback(
+        lifecycleOwner: LifecycleOwner?,
+    ) =
+        EventCenter.handle<LoginSuccessEvent>(lifecycleOwner)
+            .removeCallback()
 
     fun insertUser(userModel: UserModel) {
         DataBaseManager.getInstance().getDataBase()?.userDao()?.insertUser(userModel)
