@@ -27,14 +27,15 @@ class TMM private constructor() {
         }
     }
 
-    fun getInstance(context: Application, ak: String, env: String) {
+    fun getInstance(context: Application, ak: String, env: String): TMM {
         TmLoginLogic.getInstance().setAk(ak)
         TmLoginLogic.getInstance().setEnv(env)
         if (TmLoginLogic.getInstance().getUserId().isBlank()) {
-            return
+            return this
         }
         TmUtils.init(context)
         DataBaseManager.getInstance().init(context)
+        return this
     }
 
     fun initUser(auid: String) {
@@ -52,7 +53,7 @@ class TMM private constructor() {
     }
 
     fun setConnectionDelegate(delegate: TmLoginLogic.TmConnectionDelegate) {
-        TmLoginLogic.getInstance().addConnectionListener(this::javaClass.name,delegate)
+        TmLoginLogic.getInstance().addConnectionListener(this::javaClass.name, delegate)
         ApiBaseService.setDelegate(object : Net.Delegate_401 {
             override fun onTokenError(net: Net?) {
                 val auid = LoginCache.getAUserId()
@@ -64,7 +65,7 @@ class TMM private constructor() {
     }
 
 
-    fun createGroup(aChatId: String, auids: MutableList<String>){
+    fun createGroup(aChatId: String, auids: MutableList<String>) {
         TmGroupLogic.INSTANCE.createGroup(aChatId, auids)
     }
 

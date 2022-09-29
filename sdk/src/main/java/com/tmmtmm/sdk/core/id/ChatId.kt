@@ -5,9 +5,6 @@ import android.util.Log
 import com.tmmtmm.sdk.cache.LoginCache
 import com.tmmtmm.sdk.logic.TmLoginLogic
 
-import com.tmmtmm.sdk.core.hash.MD5
-import com.tmmtmm.sdk.core.utils.Random
-
 
 /**
  * @description
@@ -36,7 +33,7 @@ class ChatId private constructor(private var code: String) {
         fun createById(chatId: String) = ChatId(chatId)
 
         fun create(aChatId: String): String {
-            val ak = LoginCache.getAk()
+            val ak = LoginCache.getAKey()
             return aChatId + ak
         }
 

@@ -55,11 +55,11 @@ class TmLoginLogic private constructor() {
     }
 
     fun getAk(): String {
-        return LoginCache.getAk()
+        return LoginCache.getAKey()
     }
 
     fun setAk(ak: String) {
-        LoginCache.setAk(ak)
+        LoginCache.setAKey(ak)
     }
 
     fun getEnv(): String {

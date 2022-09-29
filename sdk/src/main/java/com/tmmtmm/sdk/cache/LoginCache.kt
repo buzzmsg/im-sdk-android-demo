@@ -11,17 +11,17 @@ import com.tmmtmm.sdk.core.utils.SpUtils
  */
 object LoginCache {
 
-    private const val CURRENT_USER = "current_user"
-
-    private const val KEY_AK = "key_ak"
+//    private const val CURRENT_USER = "current_user"
 
     private const val KEY_ENV = "key_env"
+
+    private var akey = ""
 
     var currentUserId: String? = ""
 
     fun getUserId(): String {
         return if (TextUtils.isEmpty(currentUserId)) {
-            currentUserId = SpUtils.getString(CURRENT_USER, getAUserId())
+            currentUserId = SpUtils.getString(akey, getAUserId())
             currentUserId ?: ""
         } else {
             currentUserId ?: ""
@@ -29,18 +29,17 @@ object LoginCache {
     }
 
     fun getAUserId(): String {
-        return SpUtils.getMap(CURRENT_USER).first()
+        return SpUtils.getMap(akey).first()
     }
 
     fun setUser(auid: String, uid: String) {
-        SpUtils.putString(CURRENT_USER, auid, uid)
+        SpUtils.putString(akey, auid, uid)
     }
 
+    fun getAKey() = akey
 
-    fun getAk() = SpUtils.getString(KEY_AK)
-
-    fun setAk(ak: String) {
-        SpUtils.putString(KEY_AK, ak)
+    fun setAKey(ak: String) {
+        akey = ak
     }
 
     fun getEnv() = SpUtils.getString(KEY_ENV)
