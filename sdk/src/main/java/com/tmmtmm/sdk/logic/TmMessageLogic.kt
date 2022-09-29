@@ -1,6 +1,7 @@
 package com.tmmtmm.sdk.logic
 
 import android.util.Log
+import com.blankj.utilcode.util.CollectionUtils
 import com.tmmtmm.sdk.api.*
 import com.tmmtmm.sdk.cache.MessageCache
 import com.tmmtmm.sdk.constant.MessageContentType
@@ -523,5 +524,103 @@ class TmMessageLogic private constructor() {
                 moreMessageList.add(message)
             }
         return moreMessageList
+    }
+
+
+    fun getMessages(chatId: String?, mids: MutableSet<String>?): MutableList<TmmMessageVo> {
+        if (mids.isNullOrEmpty()) return mutableListOf()
+
+        val messageList = queryMessagesByMids(mids)
+
+        if (messageList.isNullOrEmpty()) return mutableListOf()
+
+//        val quoteMessageVoMap = hashMapOf<String, TmmMessageVo>()
+//
+//        val atTmMessageVoList = mutableListOf<AtMessageContentItemVo>()
+//        val quoteMids = mutableSetOf<String>()
+//
+//        val tmmMessageVoList = mutableListOf<TmmMessageVo>()
+//        messageList.forEachIndexed { index, tmMessage ->
+//            val tmmMessageVo = tmMessage.transformToTmmMessage()
+//            val quoteMid = tmMessage.extra?.mids?.elementAtOrNull(0) ?: ""
+//            if (!CollectionUtils.isEmpty(tmMessage.extra?.mids)) {
+//                quoteMids.add(quoteMid)
+//                quoteMessageVoMap[quoteMid] =
+//                    TmmMessageVo(messageId = 0, mid = quoteMid, uid = "", messageBody = "")
+//            }
+//
+//            if (tmMessage.type == TmMessageContentType.ContentType_At) {
+//                val atMessageContentItemVo = AtMessageContentItemVo()
+//                atMessageContentItemVo.mid = tmMessage.mid
+//                atMessageContentItemVo.items = tmmMessageVo.tmmAtMessageContent?.items
+//                atTmMessageVoList.add(atMessageContentItemVo)
+//            }
+//
+//        }
+//
+//        val quoteMessageMap =
+//            MessageManager.getInstance().queryTmMessageMapByMids(quoteMids) ?: hashMapOf()
+//
+//        quoteMessageMap.values.toMutableList().filter {
+//            it.type == TmMessageContentType.ContentType_At
+//        }.forEach { tmMessage ->
+//            val tmmMessageVo = tmMessage.transformToTmmMessage()
+//            val atMessageContentItemVo = AtMessageContentItemVo()
+//            atMessageContentItemVo.mid = tmMessage.mid
+//            atMessageContentItemVo.items = tmmMessageVo.tmmAtMessageContent?.items
+//            atTmMessageVoList.add(atMessageContentItemVo)
+//        }
+//
+//        val atMessageMap =
+//            TmAtMessageManager.getInstance().getAtMessageList(chatId, atTmMessageVoList)
+//
+//        for (mutableEntry in quoteMessageMap) {
+//            val mid = mutableEntry.value.mid
+//
+//            val quoteMessageVo = quoteMessageMap[mid]?.transformToTmmMessage() ?: continue
+//            if (atMessageMap.keys.contains(quoteMessageVo.mid)) {
+//                quoteMessageVo.atUserList = atMessageMap[mid]
+//            }
+//            quoteMessageVoMap[mid] = quoteMessageVo
+//        }
+
+        val tmmMessageVoList = messageList.map { tmMessage ->
+            val tmmMessageVo = MessageContentLogic.getInstance().transformToTmmMessage(tmMessage)
+//            val mid = tmmMessageVo.mid
+//            val quoteMid = tmMessage.extra?.mids?.elementAtOrNull(0) ?: ""
+//            if (atMessageMap.keys.contains(tmMessage.mid)) {
+//                tmmMessageVo.atUserList = atMessageMap[mid]
+//            }
+//
+//            if (quoteMessageVoMap.keys.contains(quoteMid)) {
+//                tmmMessageVo.quoteMessageVo?.tmmMessageVo = quoteMessageVoMap[quoteMid]
+//            }
+//
+//            tmmMessageVoList.add(tmmMessageVo)
+            tmmMessageVo
+        }.toMutableList()
+
+
+        return tmmMessageVoList
+    }
+
+    private fun queryMessagesByMids(mids: MutableSet<String>?): MutableList<TmMessage>? {
+
+        if (mids.isNullOrEmpty()) {
+            return null
+        }
+
+        val messageEntities =
+            DataBaseManager.getInstance().splitArray(mids.toMutableList()) { value ->
+                DataBaseManager.getInstance().getDataBase()
+                    ?.messageDao()
+                    ?.queryMessagesByMids(value.toMutableSet()) ?: mutableListOf()
+
+            }
+//        val messageEntities = DataBaseManager.getInstance().getDataBase()
+//            ?.messageDao()?.queryMessagesByMids(mids)
+        return messageEntities.map { messageEntity ->
+            MessageContentLogic.getInstance().convertToTmMessage(messageEntity)
+        }.toMutableList()
     }
 }
