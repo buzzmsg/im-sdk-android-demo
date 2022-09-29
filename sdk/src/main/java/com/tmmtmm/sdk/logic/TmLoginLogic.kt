@@ -46,8 +46,6 @@ class TmLoginLogic private constructor() {
         return LoginCache.getUserId()
     }
 
-    fun getUser() = LoginCache.getUser()
-
     fun setUser(auid: String, uid: String) {
         LoginCache.setUser(auid, uid)
     }
@@ -77,7 +75,7 @@ class TmLoginLogic private constructor() {
     }
 
     fun initUser(auid: String) {
-        if (getUser().isEmpty()) {
+        if (getUserId().isBlank()) {
             //start to login
             tmConnectionMap[TMM::class.java.name]?.onConnectLost(auid) { time, nonce, signature ->
                 login(auid, time, nonce, signature)

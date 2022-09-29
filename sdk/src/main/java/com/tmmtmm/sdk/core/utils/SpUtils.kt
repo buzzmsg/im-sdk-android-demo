@@ -81,8 +81,8 @@ object SpUtils {
             .decodeDouble(key, 0.0)
     }
 
-    fun getMap(id: String): Map<String, *> {
-        return MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE).all
+    fun getMap(id: String): Array<String> {
+        return MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE).allKeys()
     }
 
 }

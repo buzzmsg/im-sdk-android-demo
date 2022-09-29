@@ -60,6 +60,9 @@ class LoginActivity : BaseActivity() {
         mViewModel.login(mBinding.etPhone.text.toString()).observe(this) { response ->
             if (response is ResponseResult.Success) {
                 val value = response.value
+                if (value?.auid.isNullOrBlank()) {
+                    return@observe
+                }
                 TmApplication.instance().loginResponse = value
                 loginSdk(value?.auid ?: "")
                 MainActivity.newInstance(this@LoginActivity)

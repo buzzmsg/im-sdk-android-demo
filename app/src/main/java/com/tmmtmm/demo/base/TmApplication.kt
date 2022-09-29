@@ -13,7 +13,7 @@ import kotlin.properties.Delegates
  */
 class TmApplication : Application() {
 
-    lateinit var instance: TmApplication
+//    lateinit var instance: TmApplication
 
     var loginResponse: LoginByPhoneResponse? = null
 

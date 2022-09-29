@@ -15,7 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:background="#99d8d8d8"/>
 
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvLoginTips"
         android:layout_width="wrap_content"
@@ -55,9 +54,5 @@
         android:textColor="@color/white"
         android:gravity="center"
         android:text="登录"/>
-
-
-
-
 
 </org.client.core.ui.layout.StateToolBarConstraintLayout>

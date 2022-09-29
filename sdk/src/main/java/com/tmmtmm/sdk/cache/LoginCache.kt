@@ -21,24 +21,21 @@ object LoginCache {
 
     fun getUserId(): String {
         return if (TextUtils.isEmpty(currentUserId)) {
-            currentUserId = (getUser().entries.first().value as? String) ?: ""
+            currentUserId = SpUtils.getString(CURRENT_USER, getAUserId())
             currentUserId ?: ""
         } else {
             currentUserId ?: ""
         }
     }
 
-    fun getAUserId():String {
-        return (getUser().entries.first().key as? String) ?: ""
+    fun getAUserId(): String {
+        return SpUtils.getMap(CURRENT_USER).first()
     }
 
     fun setUser(auid: String, uid: String) {
         SpUtils.putString(CURRENT_USER, auid, uid)
     }
 
-    fun getUser(): Map<String, *> {
-        return SpUtils.getMap(CURRENT_USER)
-    }
 
     fun getAk() = SpUtils.getString(KEY_AK)
 

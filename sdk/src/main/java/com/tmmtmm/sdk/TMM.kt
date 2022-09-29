@@ -30,7 +30,7 @@ class TMM private constructor() {
     fun getInstance(context: Application, ak: String, env: String) {
         TmLoginLogic.getInstance().setAk(ak)
         TmLoginLogic.getInstance().setEnv(env)
-        if (TmLoginLogic.getInstance().getUser().isEmpty()) {
+        if (TmLoginLogic.getInstance().getUserId().isBlank()) {
             return
         }
         TmUtils.init(context)
