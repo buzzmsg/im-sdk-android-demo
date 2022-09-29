@@ -10,7 +10,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SpanUtils
 import com.blankj.utilcode.util.StringUtils
 import com.tmmtmm.sdk.R
@@ -306,9 +305,9 @@ class ConversationView @JvmOverloads constructor(
 //            return
 //        }
 
-        (context as AppCompatActivity).lifecycleScope.launch(Dispatchers.IO) {
-            mutex.withLock {
-                val conversationBody = lastMessageText
+//        (context as AppCompatActivity).lifecycleScope.launch(Dispatchers.IO) {
+//            mutex.withLock {
+//                val conversationBody = lastMessageText
 //                    when {
 //
 //
@@ -389,13 +388,11 @@ class ConversationView @JvmOverloads constructor(
 //                    return@launch
 //                }
 
-                withContext(Dispatchers.Main) {
-                    setMessageText(conversationBody ?: "")
-                }
-            }
+//                withContext(Dispatchers.Main) {
+//                    setMessageText(conversationBody ?: "")
+//                }
+//            }
 
-
-        }
     }
 
 
@@ -577,17 +574,17 @@ class ConversationView @JvmOverloads constructor(
 //    }
 
     private fun bindLastMessageUpdateStatus(tmmConversation: TmConversation) {
-        (context as AppCompatActivity).lifecycleScope.launch(Dispatchers.IO) {
-            val lastMessage =
-                TmMessageLogic.INSTANCE.queryMessagesByMid(tmmConversation.lastMid)
-
-            val status = lastMessage.status
-            withContext(Dispatchers.Main) {
-                tmmConversation.lastTmMessage?.status =
-                    status ?: MessageStatus.Sending
-//                setLastMessageStatus(tmmConversation)
-            }
-        }
+//        (context as AppCompatActivity).lifecycleScope.launch(Dispatchers.IO) {
+//            val lastMessage =
+//                TmMessageLogic.INSTANCE.queryMessagesByMid(tmmConversation.lastMid)
+//
+//            val status = lastMessage.status
+//            withContext(Dispatchers.Main) {
+//                tmmConversation.lastTmMessage?.status =
+//                    status ?: MessageStatus.Sending
+////                setLastMessageStatus(tmmConversation)
+//            }
+//        }
     }
 
 //    fun bindUnReadCount(
