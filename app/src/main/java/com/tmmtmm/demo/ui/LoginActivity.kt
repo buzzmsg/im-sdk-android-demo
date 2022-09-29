@@ -63,6 +63,7 @@ class LoginActivity : BaseActivity() {
                 if (value?.auid.isNullOrBlank()) {
                     return@observe
                 }
+                TMM.INSTANCE.getInstance(TmApplication.instance(),value?.akey?:"","test")
                 TmApplication.instance().loginResponse = value
                 loginSdk(value?.auid ?: "")
                 MainActivity.newInstance(this@LoginActivity)

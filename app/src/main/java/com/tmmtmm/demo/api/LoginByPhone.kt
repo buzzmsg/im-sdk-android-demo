@@ -23,7 +23,7 @@ data class LoginByPhoneRequest(
 data class LoginByPhoneResponse(
     var code: Int? = 0, // 0
     @SerializedName("akey")
-    var akey: Int? = 0, // 1626879625
+    var akey: String? = "", // 1626879625
     @SerializedName("auid")
     var auid: String? = "", // 2x2qlr88wdcz
     @SerializedName("nonce")

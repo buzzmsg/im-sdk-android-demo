@@ -70,10 +70,6 @@ class TmLoginLogic private constructor() {
         LoginCache.setEnv(env)
     }
 
-    fun setTokenErrorCallback(delegate401: Net.Delegate_401) {
-        ApiBaseService.setDelegate(delegate401)
-    }
-
     fun initUser(auid: String) {
         if (getUserId().isBlank()) {
             //start to login
