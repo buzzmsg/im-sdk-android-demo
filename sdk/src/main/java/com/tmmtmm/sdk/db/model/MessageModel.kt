@@ -31,6 +31,7 @@ class MessageModel{
     @ColumnInfo(defaultValue = "0")
     var sequence: Long? = 0L
     var chatId: String = ""
+    var aChatId: String = ""
     var sender: String? = ""
     var status: Int? = MessageStatus.Sending.value()
     var type: Int? = MessageContentType.ContentType_Unknown

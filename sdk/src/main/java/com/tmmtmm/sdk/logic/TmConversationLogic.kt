@@ -8,6 +8,7 @@ import com.tmmtmm.sdk.db.event.ConversationEvent
 import com.tmmtmm.sdk.db.model.ConversationModel
 import com.tmmtmm.sdk.db.model.MessageModel
 import com.tmmtmm.sdk.dto.TmConversation
+import com.tmmtmm.sdk.ui.view.vo.TmmConversationVo
 
 /**
  * @description
@@ -74,6 +75,7 @@ class TmConversationLogic private constructor() {
                     ?: 0 else maxMessageEntity.sendTime ?: 0L
             val conversationModel = ConversationModel(
                 chatId = chatId,
+                aChatId = maxMessageEntity.aChatId,
                 uid = uid,
                 timeStamp = timestamp,
                 lastMid = maxMessageEntity.mid
@@ -142,6 +144,7 @@ class TmConversationLogic private constructor() {
             val uid = if (mChatId.isSingle()) mChatId.getTargetId() else mChatId.encode()
             val conversationModel = ConversationModel(
                 chatId = messageEntity.chatId,
+                aChatId = messageEntity.aChatId,
                 uid = uid,
                 timeStamp = timestamp,
                 lastMid = messageEntity.mid,
@@ -161,7 +164,7 @@ class TmConversationLogic private constructor() {
     }
 
 
-    fun getConversationCombination(chatIds: MutableSet<String>?): MutableList<TmConversation>? {
+    fun getConversationCombination(chatIds: MutableSet<String>?): MutableList<TmmConversationVo>? {
 
         if (chatIds.isNullOrEmpty()) {
             return null
@@ -186,7 +189,7 @@ class TmConversationLogic private constructor() {
 
             tmConversationInfo
 
-        }?.sortedByDescending { it.timestamp }?.toMutableList()
+        }?.toMutableList()?.transform()?.sortedByDescending { it.dateUpdated }?.toMutableList()
 
     }
 
@@ -409,7 +412,7 @@ class TmConversationLogic private constructor() {
     fun loadConversationList(
         timeStamp: Long,
         count: Int
-    ): MutableList<TmConversation> {
+    ): MutableList<TmmConversationVo> {
         val tmConversationList = loadConversations(timeStamp, count)
 
         if (tmConversationList.isEmpty()) return mutableListOf()
@@ -426,7 +429,7 @@ class TmConversationLogic private constructor() {
 //        val maxSequenceMessageList = MessageManager.getInstance()
 //            .queryMaxMessageSequenceByChatId(chatIds)
 //            ?.associateBy({ it.chatId }, { it.sequence })
-        val result = tmConversationList
+        val result = tmConversationList.transform()
 //            .filter { tmConversationInfo ->
 //                val messageIndex = maxMessageList?.get(tmConversationInfo.chatId) ?: 0
 //                val maxSequence = maxSequenceMessageList?.get(tmConversationInfo.chatId) ?: 0

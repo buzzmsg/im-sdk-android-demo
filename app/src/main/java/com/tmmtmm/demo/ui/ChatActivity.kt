@@ -2,11 +2,16 @@ package com.tmmtmm.demo.ui
 
 import android.content.Context
 import android.content.Intent
+import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.KeyboardUtils
 import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.databinding.ActivityChatBinding
 import com.tmmtmm.demo.ui.view.TitleBarView
 import com.tmmtmm.sdk.TMM
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ChatActivity : BaseActivity() {
 
@@ -53,7 +58,17 @@ class ChatActivity : BaseActivity() {
             if (content.isBlank()) {
                 return@setOnClickListener
             }
-            TMM.INSTANCE.sendTextMessage(content, aChatId)
+            showLoading()
+            lifecycleScope.launch(Dispatchers.IO){
+                TMM.INSTANCE.sendTextMessage(content, aChatId)
+
+                withContext(Dispatchers.Main){
+                    hideLoading()
+                    binding.etMessageContent.setText("")
+                    KeyboardUtils.hideSoftInput(binding.etMessageContent)
+                }
+            }
+
         }
     }
 

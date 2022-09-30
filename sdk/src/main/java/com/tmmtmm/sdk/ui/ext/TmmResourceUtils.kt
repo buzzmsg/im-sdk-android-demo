@@ -6,6 +6,8 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import com.blankj.utilcode.util.ConvertUtils
+import com.blankj.utilcode.util.ResourceUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.Utils
 
@@ -99,5 +101,10 @@ fun AppCompatTextView.setDrawableBottom(drawableLeft: Int) {
         this.compoundDrawablesRelative[0],
         this.compoundDrawablesRelative[1], this.compoundDrawablesRelative[2], drawable
     )
+}
+
+
+fun Float.dpToPx(): Int {
+    return ConvertUtils.dp2px(this)
 }
 

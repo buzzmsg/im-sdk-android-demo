@@ -37,30 +37,30 @@ object ChatTime {
         }
     }
 
-//    fun getChatSectionSpanString(timeStamp: Long): String? {
-//        return when {
-//            TmDateUtils.isToday(timeStamp) -> {
-//                TmUtils.sApp.getString(com.tmmtmm.im.style.R.string.DateUtils_today)
+    fun getChatSectionSpanString(timeStamp: Long): String? {
+        return when {
+            TmDateUtils.isToday(timeStamp) -> {
+                "Today"
+            }
+            TmDateUtils.isYesterday(timeStamp) -> {
+                "Yesterday"
+            }
+            TmDateUtils.isSameNatureWeek(timeStamp) -> {
+                TmDateUtils.getTimeSpanString(
+                    timeStamp,
+                    "EEE dd.MM",
+                    Locale.getDefault()
+                )
+            }
+//            TmDateUtils.isWithin(timestamp, 365, TimeUnit.DAYS) -> {
+//                TmDateUtils.getFormattedDateTime(timestamp, "MMM d", locale)
 //            }
-//            TmDateUtils.isYesterday(timeStamp) -> {
-//                TmUtils.sApp.getString(com.tmmtmm.im.style.R.string.DateUtils_yesterday)
-//            }
-//            TmDateUtils.isSameNatureWeek(timeStamp) -> {
-//                TmDateUtils.getTimeSpanString(
-//                    timeStamp,
-//                    TmUtils.sApp.getString(R.string.string_chat_section_within_week_time_template),
-//                    Locale.getDefault()
-//                )
-//            }
-////            TmDateUtils.isWithin(timestamp, 365, TimeUnit.DAYS) -> {
-////                TmDateUtils.getFormattedDateTime(timestamp, "MMM d", locale)
-////            }
-//            else -> {
-//                return getYearConversationTime(timeStamp)
-//            }
-//        }
-//
-//    }
+            else -> {
+                return getYearConversationTime(timeStamp)
+            }
+        }
+
+    }
 
     fun getChatTimeSpanString(timeStamp: Long, displayTime: Long?): String {
         val is24 = DateFormat.is24HourFormat(TmUtils.sApp)

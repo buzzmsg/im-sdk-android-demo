@@ -13,6 +13,7 @@ import com.tmmtmm.sdk.dto.TmConversation
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.sdk.ui.ext.gone
 import com.tmmtmm.sdk.ui.ext.visible
+import com.tmmtmm.sdk.ui.view.vo.TmmConversationVo
 
 /**
  * @description
@@ -31,9 +32,9 @@ class ConversationStatusView @JvmOverloads constructor(
         mBinding = ViewConversationStatusBinding.inflate(inflater, this)
     }
 
-    fun showConversationStatus(tmmConversationVo: TmConversation?) {
-        val isMute = tmmConversationVo?.isMute() ?: false
-        val tmmMessage = tmmConversationVo?.lastTmMessage
+    fun showConversationStatus(tmmConversationVo: TmmConversationVo?) {
+        val isMute = tmmConversationVo?.isMute ?: false
+        val tmmMessage = tmmConversationVo?.lastTmmMessage
         val isSingle = ChatId.createById(tmmMessage?.chatId ?: "").isSingle()
         val unReadCount = tmmConversationVo?.unReadCount ?: 0
         Log.d("ConversationFragment", "showConversationStatus() called with: unReadCount = $unReadCount")
@@ -101,7 +102,7 @@ class ConversationStatusView @JvmOverloads constructor(
 //                }
 //
 //            }
-            tmmMessage.status == MessageStatus.Sent -> {
+            tmmMessage.status == MessageStatus.Sent.value() -> {
                 mBinding.ivConversationStatus.hideLoading()
 //                if (isMute) {
 //                    if (unReadCount > 0) {
@@ -144,7 +145,7 @@ class ConversationStatusView @JvmOverloads constructor(
                                 }
                             }
 
-                    } else if (tmmMessage.sender == TmLoginLogic.getInstance().getUserId()) {
+                    } else if (tmmMessage.uid == TmLoginLogic.getInstance().getUserId()) {
                         mBinding.tvConversationUnReadCount.gone()
                         mBinding.ivConversationStatus.setImageResource(R.drawable.ic_conversation_message_received)
                         mBinding.ivConversationStatus.visible()
@@ -154,7 +155,7 @@ class ConversationStatusView @JvmOverloads constructor(
                     }
 //                }
             }
-            tmmMessage.status == MessageStatus.Send_Failure -> {
+            tmmMessage.status == MessageStatus.Send_Failure.value() -> {
                 mBinding.ivConversationStatus.hideLoading()
                 mBinding.ivConversationStatus.visible()
                 mBinding.tvConversationUnReadCount.gone()

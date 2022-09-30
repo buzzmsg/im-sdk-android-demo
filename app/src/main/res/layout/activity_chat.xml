@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/root_view_constraint"
+    style="@style/page_style_no_status_bar"
+    android:fitsSystemWindows="true"
     app:ctb_toolBarBackground="@color/white"
     android:background="@color/white"
     >
@@ -13,8 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ctb_all_toolbar"
         app:layout_constraintBottom_toTopOf="@+id/layoutChatInput"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintVertical_bias="0"
         />
 
     <androidx.appcompat.widget.LinearLayoutCompat

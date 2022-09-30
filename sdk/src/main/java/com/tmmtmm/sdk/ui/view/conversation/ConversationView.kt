@@ -23,6 +23,8 @@ import com.tmmtmm.sdk.dto.TmMessage
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.sdk.logic.TmMessageLogic
 import com.tmmtmm.sdk.time.ChatTime
+import com.tmmtmm.sdk.ui.view.vo.TmmConversationVo
+import com.tmmtmm.sdk.ui.view.vo.TmmMessageVo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -41,7 +43,7 @@ class ConversationView @JvmOverloads constructor(
 
     private var mBinding: WidgetConversationViewBinding
 
-    private var mTmmConversation: TmConversation? = null
+    private var mTmmConversation: TmmConversationVo? = null
 
 //    private var unReadNumEventCenter: EventCenter<UnReadNumEvent>? = null
 
@@ -163,10 +165,9 @@ class ConversationView @JvmOverloads constructor(
 //        meetingEventCenter = null
     }
 
-    fun setConversation(tmmConversation: TmConversation?) {
+    fun setConversation(tmmConversation: TmmConversationVo?) {
         mTmmConversation = tmmConversation
 
-        mBinding.tvConversationName.text = tmmConversation?.name
         setBackgroundColor(Color.TRANSPARENT)
 //        if (tmmConversation.isStick) {
 //            setBackgroundColor(ContextCompat.getColor(context, R.color.color_F2FBFC))
@@ -180,10 +181,12 @@ class ConversationView @JvmOverloads constructor(
 //        bindMeetingStatus(tmmConversation)
 
 
-        val uid = tmmConversation?.uid ?: tmmConversation?.chatId
-        mBinding.tvConversationName.text = tmmConversation?.name?.ifEmpty { uid?.substring(uid.length / 2, uid.length) }
+//        val uid = tmmConversation?.uid ?: tmmConversation?.aChatId
+//        mBinding.tvConversationName.text = tmmConversation?.name?.ifEmpty { uid?.substring(uid.length / 2, uid.length) }
+        mBinding.tvConversationName.text = tmmConversation?.aChatId
 
-        bindSingleConversationInfo()
+
+            bindSingleConversationInfo()
 //        bindConversationInfo()
 
 //        if (tmmConversation.name.isEmpty()
@@ -225,15 +228,15 @@ class ConversationView @JvmOverloads constructor(
         }
     }
 
-    fun setLastMessage(tmConversationVo: TmConversation?) {
-        val tmmMessage = tmConversationVo?.lastTmMessage
+    fun setLastMessage(tmConversationVo: TmmConversationVo?) {
+        val tmmMessage = tmConversationVo?.lastTmmMessage
 //        val draftTmmMessage = tmConversationVo?.draftTmmMessage
-        mTmmConversation?.isMute = tmConversationVo?.isMute ?: 0
-        mTmmConversation?.lastTmMessage = tmmMessage
+        mTmmConversation?.isMute = tmConversationVo?.isMute ?: false
+        mTmmConversation?.lastTmmMessage = tmmMessage
         mTmmConversation?.unReadCount = tmConversationVo?.unReadCount
         mTmmConversation?.lastMid = tmmMessage?.mid ?: ""
-        if (tmConversationVo?.timestamp != null) {
-            mTmmConversation?.timestamp = tmConversationVo.timestamp
+        if (tmConversationVo?.dateUpdated != null) {
+            mTmmConversation?.dateUpdated = tmConversationVo.dateUpdated
         }
 
 //        if (draftTmmMessage == null) {
@@ -246,10 +249,11 @@ class ConversationView @JvmOverloads constructor(
     }
 
     private fun setMessageContent(
-        tmmMessage: TmMessage?,
-        tmConversationVo: TmConversation?
+        tmmMessage: TmmMessageVo?,
+        tmConversationVo: TmmConversationVo?
     ) {
-        val lastMessageText = tmmMessage?.digest() ?: ""
+        val lastMessageText = tmmMessage?.messageBody ?: ""
+        setMessageText(lastMessageText ?: "")
 
 //        if (tmmMessage?.type == MessageContentType.ContentType_Virtual_Currency_Pay) {
 //            val tmPayContent = tmmMessage.tmmPayMessageContent
@@ -452,32 +456,32 @@ class ConversationView @JvmOverloads constructor(
         mBinding.tvMessage.text = text
     }
 
-    private fun setLastMessageStatus(tmConversation: TmConversation?) {
-        val tmmMessage = tmConversation?.lastTmMessage
-        mTmmConversation?.isMute = tmConversation?.isMute ?: 0
+    private fun setLastMessageStatus(tmConversation: TmmConversationVo?) {
+        val tmmMessage = tmConversation?.lastTmmMessage
+        mTmmConversation?.isMute = tmConversation?.isMute ?: false
 
-        when (tmmMessage?.sender) {
+        when (tmmMessage?.uid) {
             TmLoginLogic.getInstance().getUserId() -> {
                 mBinding.messageStatus.setVisible()
                 mBinding.messageStatus.showConversationStatus(tmConversation)
                 when {
-                    tmmMessage.status == MessageStatus.Sending -> {
+                    tmmMessage.status == MessageStatus.Sending.value() -> {
                         mBinding.tvDate.text = "Sending..."
                     }
 //                    else -> setUpDateTime(tmmMessage.displayTime)
-                    else -> setUpDateTime(tmConversation.timestamp)
+                    else -> setUpDateTime(tmConversation.dateUpdated)
 
                 }
             }
             else -> {
                 mBinding.messageStatus.showConversationStatus(tmConversation)
-                setUpDateTime(tmConversation?.timestamp ?: 0)
+                setUpDateTime(tmConversation?.dateUpdated ?: 0)
             }
         }
     }
 
     fun setMuteUnReadStatus(isMute: Boolean) {
-        mTmmConversation?.isMute = if (isMute) 1 else 0
+        mTmmConversation?.isMute = isMute
         mBinding.messageStatus.showConversationStatus(mTmmConversation)
     }
 
@@ -522,7 +526,7 @@ class ConversationView @JvmOverloads constructor(
     }
 
     private fun bindSingleConversationInfo() {
-        mBinding.tvConversationName.text = mTmmConversation?.chatId
+        mBinding.tvConversationName.text = mTmmConversation?.aChatId
 //        (context as AppCompatActivity).lifecycleScope.launch(Dispatchers.IO) {
 //            val userInfo = ConversationManager.getConversationUserInfo(
 //                mTmmConversation?.chatId,

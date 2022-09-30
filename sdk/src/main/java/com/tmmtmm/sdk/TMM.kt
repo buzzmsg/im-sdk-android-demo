@@ -49,7 +49,7 @@ class TMM private constructor() {
     ) {
         val chatId = ChatId.create(aChatId)
         TransferThreadPool.submitTask {
-            TmMessageLogic.INSTANCE.sendTextMessage(content, chatId)
+            TmMessageLogic.INSTANCE.sendTextMessage(content, chatId, aChatId)
         }
     }
 

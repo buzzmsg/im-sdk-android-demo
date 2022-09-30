@@ -2,6 +2,7 @@ package com.tmmtmm.sdk.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewTreeObserver
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -20,6 +21,8 @@ import com.tmmtmm.sdk.db.event.MessageEvent
 import com.tmmtmm.sdk.logic.TmMessageLogic
 import com.tmmtmm.sdk.ui.view.message.adapter.MessageAdapter
 import com.tmmtmm.sdk.ui.view.message.diff.MessageDiff
+import com.tmmtmm.sdk.ui.view.recyclerview.decoration.ChatStickyDecoration
+import com.tmmtmm.sdk.ui.view.recyclerview.decoration.RvDecoration
 import com.tmmtmm.sdk.ui.view.vo.TmmMessageVo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.withLock
@@ -42,6 +45,8 @@ class TmChatLayout @JvmOverloads constructor(
     private var linearLayoutManager: LinearLayoutManager? = null
     private val mAdapter = MessageAdapter()
     private lateinit var helper: QuickAdapterHelper
+
+    private lateinit var mPowerfulStickyDecoration: ChatStickyDecoration
 
     private var chatId: String = ""
 
@@ -135,16 +140,16 @@ class TmChatLayout @JvmOverloads constructor(
                                 try {
 //                                    updateBrowsedMessageId(result)
 
-                                    val diffResult =
-                                        DiffUtil.calculateDiff(
-                                            MessageDiff(
-                                                currentMessageList,
-                                                result
-                                            ),
-                                            true
-                                        )
+//                                    val diffResult =
+//                                        DiffUtil.calculateDiff(
+//                                            MessageDiff(
+//                                                currentMessageList,
+//                                                result
+//                                            ),
+//                                            true
+//                                        )
                                     mAdapter.submitList(result)
-                                    diffResult.dispatchUpdatesTo(mAdapter)
+//                                    diffResult.dispatchUpdatesTo(mAdapter)
 
 
                                     if (!mBinding.chatMessageListView.canScrollVertically(1) || isLocalSend) {
@@ -188,7 +193,7 @@ class TmChatLayout @JvmOverloads constructor(
         setChatListManager()
 
 
-        mBinding.chatMessageListView.layoutManager = LinearLayoutManager(context)
+//        mBinding.chatMessageListView.layoutManager = LinearLayoutManager(context)
 
         helper = QuickAdapterHelper.Builder(mAdapter)
             .setLeadingLoadStateAdapter(object : LeadingLoadStateAdapter.OnLeadingListener {
@@ -202,6 +207,52 @@ class TmChatLayout @JvmOverloads constructor(
             }).build()
 
         mBinding.chatMessageListView.adapter = helper.adapter
+
+        mPowerfulStickyDecoration = RvDecoration.buildNewChatDecoration(
+            context = context,
+            onQuick = { position ->
+                if (mAdapter.items.size > position && position >= 0) {
+//                    Log.d(TAG, "setupMessageList() called with: position = $position data = ${mAdapter.items[position]}")
+                    try {
+                        mAdapter.items[position]
+                    } catch (e: Exception) {
+                        null
+                    }
+                } else {
+                    null
+                }
+            },
+            isShowHistoryDecoration = { position ->
+//                if (mAdapter.items.size > position) {
+//
+//                    val messageId = mBinding.notSeeMarkBtn.getNoSeeMessageId() ?: Long.MAX_VALUE
+//
+//                    val firstItem = adapter.items.elementAtOrNull(0)
+//
+//                    if (position == -1) {
+//                        //can not find the last browseMessageIndex
+//                        (mAdapter.items.size < 20 || !isHasMoreHistoryMessage) && firstItem is TmmMessageVo && messageId < firstItem.messageId
+//                    } else {
+//                        val item = adapter.items.get(position)
+//                        if (item !is TmmMessageVo) {
+//                            false
+//                        } else {
+//                            Log.w(
+//                                TAG,
+//                                "setupMessageList: ${mBinding.notSeeMarkBtn.getNoSeeMessageId()}"
+//                            )
+//                            item.messageId == messageId
+//                        }
+//                    }
+//                } else {
+//                    false
+//                }
+                false
+            }
+        )
+
+
+        mBinding.chatMessageListView.addItemDecoration(mPowerfulStickyDecoration)
     }
 
     fun createChat(aChatId: String) {

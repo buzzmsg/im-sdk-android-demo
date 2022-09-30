@@ -58,7 +58,9 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun login() {
+        showLoading()
         mViewModel.login(mBinding.etPhone.text.toString()).observe(this) { response ->
+            hideLoading()
             if (response is ResponseResult.Success) {
                 val value = response.value
                 if (value?.auid.isNullOrBlank()) {

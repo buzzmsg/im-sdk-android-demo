@@ -1,7 +1,6 @@
 package com.tmmtmm.sdk.logic
 
 import android.util.Log
-import com.blankj.utilcode.util.CollectionUtils
 import com.tmmtmm.sdk.api.*
 import com.tmmtmm.sdk.cache.MessageCache
 import com.tmmtmm.sdk.constant.MessageContentType
@@ -259,6 +258,7 @@ class TmMessageLogic private constructor() {
     fun sendTextMessage(
         content: String,
         chatId: String?,
+        aChatId: String?,
         mids: MutableList<String>? = null
     ) {
         val tmMessage = TmMessage.create()
@@ -274,7 +274,7 @@ class TmMessageLogic private constructor() {
         //create message
         tmMessage.content =
             TmTextMessageContent(content)
-        sendMessage(tmMessage, groupId = chatId ?: "")
+        sendMessage(tmMessage, chatId = chatId ?: "", aChatId = aChatId ?: "")
 //        if (!ChatId.createById(chatId ?: "").isSingle()) {
 //
 //        } else {
@@ -283,10 +283,16 @@ class TmMessageLogic private constructor() {
     }
 
 
-    fun sendMessage(message: TmMessage,groupId: String = "", mid: String = "") {
+    fun sendMessage(
+        message: TmMessage,
+        chatId: String = "",
+        aChatId: String = "",
+        mid: String = ""
+    ) {
 //        delDraftMessage(uid, groupId, mid)
 
-        val messageEntity = createMessageEntity(message = message,groupId =  groupId, mid)
+        val messageEntity =
+            createMessageEntity(message = message, chatId = chatId, aChatId = aChatId, mid)
         TmConversationLogic.INSTANCE.insertOrUpdateConversation(messageEntity)
 
         //send event
@@ -307,7 +313,8 @@ class TmMessageLogic private constructor() {
     //create message
     fun createMessageEntity(
         message: TmMessage,
-        groupId: String,
+        chatId: String,
+        aChatId: String,
         mid: String = ""
     ): MessageModel {
         val mUid = TmLoginLogic.getInstance().getUserId()
@@ -325,7 +332,8 @@ class TmMessageLogic private constructor() {
         //create message
         messageEntity.status = MessageStatus.Sending.value()
         messageEntity.sender = mUid
-        messageEntity.chatId = groupId
+        messageEntity.chatId = chatId
+        messageEntity.aChatId = aChatId
         messageEntity.mid = messageId
 //        if (message.extra != null) {
 //            message.extra?.from = MessageFromConstant.FROM_ANDROID
@@ -382,7 +390,7 @@ class TmMessageLogic private constructor() {
     }
 
     fun getUnreadCount(chatIds: MutableList<String>?): Map<String, Int?> {
-        val mChatIds = chatIds?: mutableListOf()
+        val mChatIds = chatIds ?: mutableListOf()
         val messageList = DataBaseManager.getInstance()
             .splitArray(mChatIds) { ids ->
                 DataBaseManager.getInstance().getDataBase()
@@ -402,8 +410,8 @@ class TmMessageLogic private constructor() {
         chatId: String?,
     ): MutableList<TmmMessageVo> {
         val messageList = loadMessage(
-                chatId = chatId, lastId = lastMessageId, messageCount = 20
-            )
+            chatId = chatId, lastId = lastMessageId, messageCount = 20
+        )
         return handleMessages(chatId, messageList)
     }
 
@@ -412,8 +420,8 @@ class TmMessageLogic private constructor() {
         chatId: String?
     ): MutableList<TmmMessageVo> {
         val messageList = loadMoreMessages(
-                chatId = chatId, lastId = lastMessageId, messageCount = 20
-            )
+            chatId = chatId, lastId = lastMessageId, messageCount = 20
+        )
 
         return handleMessages(chatId, messageList)
     }
@@ -509,9 +517,9 @@ class TmMessageLogic private constructor() {
     }
 
     private fun loadMoreMessages(
-    chatId: String?,
-    lastId: Long,
-    messageCount: Int
+        chatId: String?,
+        lastId: Long,
+        messageCount: Int
     ): MutableList<TmMessage> {
         val moreMessageEntityList =
             DataBaseManager.getInstance().getDataBase()

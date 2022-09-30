@@ -42,6 +42,8 @@ data class MessageInfoActionDto(
 data class MessageInfoItem(
     @SerializedName("chat_id")
     var chatId: String? = null, // s_2x2qlr88wdcz_3a4ytt1zez26
+    @SerializedName("achat_id")
+    var aChatId: String? = null,
     @SerializedName("content")
     var content: String? = null, // 你好
     @SerializedName("create_time")
@@ -77,6 +79,8 @@ data class MessageInfoItem(
         messageModel.id = 0
         messageModel.mid = mid ?: ""
         messageModel.chatId = chatId ?: ""
+        messageModel.aChatId = aChatId ?:""
+
         messageModel.sender = senderId ?: ""
         messageModel.content = content
         messageModel.status = MessageStatus.Sent.value()

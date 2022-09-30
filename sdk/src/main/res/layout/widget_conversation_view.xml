@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/message"
+        app:layout_constraintTop_toTopOf="@+id/tvMessage"
         tools:src="@drawable/ic_conversation_message_received"
         />
 

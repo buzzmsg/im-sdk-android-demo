@@ -50,7 +50,6 @@
             app:layout_constraintTop_toBottomOf="@id/stubQuoteMessage"
             app:qmui_linkBackgroundColor="@color/transparent"
             app:qmui_linkTextColor="@color/text_00C6DB"
-            tools:showIn="@layout/chat_received_message_text_item_view"
             tools:text="暗淡但大家大家大江大河大厦的哈哈大活动哈哈大红大活动had"
             tools:textColor="@color/black"
             tools:textColorLink="@color/black"

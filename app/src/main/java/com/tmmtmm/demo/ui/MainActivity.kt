@@ -45,8 +45,8 @@ class MainActivity : BaseActivity() {
 
         mBinding.conversationLayout.setItemClickCallBack(object :
             TmConversationLayout.ItemClickCallBack {
-            override fun onItemClick(chatId: String?) {
-
+            override fun onItemClick(chatId: String) {
+                ChatActivity.newInstance(this@MainActivity, chatId)
             }
         })
     }
@@ -56,7 +56,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun enterChat() {
-        ChatActivity.newInstance(this, "")
+        ChatActivity.newInstance(this, "abcdefg")
     }
 
     fun createGroup() {

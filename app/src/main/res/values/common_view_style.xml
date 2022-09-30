@@ -33,4 +33,10 @@
         <item name="ctb_enableToolBar">false</item>
     </style>
 
+    <style name="page_style_no_status_bar"
+        parent="root_view_constraint">
+        <item name="ctb_enableStatusBar">false</item>
+        <item name="ctb_enableToolBar">true</item>
+    </style>
+
 </resources>

@@ -19,9 +19,10 @@
     <com.tmmtmm.sdk.ui.view.TmConversationLayout
         android:id="@+id/conversationLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
 </org.client.core.ui.layout.StateToolBarConstraintLayout>

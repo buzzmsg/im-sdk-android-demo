@@ -55,7 +55,7 @@ class ReceivedMessageItemView @kotlin.jvm.JvmOverloads constructor(
 
     init {
         val inflater = LayoutInflater.from(context)
-        mBinding = ReceivedMessageItemViewBinding.inflate(inflater, this, true)
+        mBinding = ReceivedMessageItemViewBinding.inflate(inflater, this, false)
 
         val array =
             context.obtainStyledAttributes(attrs, R.styleable.MessageItemView, defStyleAttr, 0)

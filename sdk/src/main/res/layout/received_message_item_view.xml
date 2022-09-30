@@ -72,15 +72,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messageContainerView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="60dp"
         android:longClickable="true"
         app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/stubAvatar"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stubName"
         app:layout_constraintTop_toTopOf="parent"
         >
@@ -119,8 +119,7 @@
             app:layout_constraintTop_toBottomOf="@id/stubQuoteMessage"
             app:qmui_linkBackgroundColor="@color/transparent"
             app:qmui_linkTextColor="@color/text_00C6DB"
-            tools:showIn="@layout/chat_received_message_text_item_view"
-            tools:text="暗淡但大家大家大江大河大厦的哈哈大活动哈哈大红大活动had"
+            tools:text="暗淡但大家大家大"
             tools:textColor="@color/black"
             tools:textColorLink="@color/black"
             />
