@@ -387,14 +387,16 @@ class TmConversationLayout @JvmOverloads constructor(
             oldItem: TmmConversationVo,
             newItem: TmmConversationVo
         ): Any? {
+            Log.w(TAG, "getChangePayload: ===========" )
             val payload = Bundle()
             if (newItem.lastMid != oldItem.lastMid ||
                 newItem.lastTmmMessage?.status != oldItem.lastTmmMessage?.status ||
                 newItem.dateUpdated != oldItem.dateUpdated
             ) {
+
+                Log.w(TAG, "getChangePayload: 1111111111" )
                 payload.putParcelable(KEY_LAST_MESSAGE, newItem)
             }
-
 
             if (payload.size() == 0) {
                 return null
