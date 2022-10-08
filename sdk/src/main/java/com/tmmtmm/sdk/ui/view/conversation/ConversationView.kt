@@ -3,6 +3,7 @@ package com.tmmtmm.sdk.ui.view.conversation
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -459,7 +460,7 @@ class ConversationView @JvmOverloads constructor(
     private fun setLastMessageStatus(tmConversation: TmmConversationVo?) {
         val tmmMessage = tmConversation?.lastTmmMessage
         mTmmConversation?.isMute = tmConversation?.isMute ?: false
-
+        Log.w("TmConversationLayout", "setLastMessageStatus() called with: status = ${tmmMessage?.status}")
         when (tmmMessage?.uid) {
             TmLoginLogic.getInstance().getUserId() -> {
                 mBinding.messageStatus.setVisible()

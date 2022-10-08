@@ -6,8 +6,9 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +17,6 @@ import com.chad.library.adapter.base.BaseDifferAdapter
 import com.chad.library.adapter.base.QuickAdapterHelper
 import com.chad.library.adapter.base.loadState.LoadState
 import com.chad.library.adapter.base.loadState.trailing.TrailingLoadStateAdapter
-import com.tmmtmm.sdk.R
 import com.tmmtmm.sdk.core.event.EventCenter
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.databinding.ConversationLayoutViewBinding
@@ -25,11 +25,13 @@ import com.tmmtmm.sdk.db.ConversationDbManager
 import com.tmmtmm.sdk.db.UserDBManager
 import com.tmmtmm.sdk.db.event.ConversationEvent
 import com.tmmtmm.sdk.db.event.LoginSuccessEvent
-import com.tmmtmm.sdk.dto.TmConversation
 import com.tmmtmm.sdk.logic.TmConversationLogic
 import com.tmmtmm.sdk.logic.TmMessageLogic
-import com.tmmtmm.sdk.ui.view.conversation.ConversationView
 import com.tmmtmm.sdk.ui.view.vo.TmmConversationVo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -70,11 +72,12 @@ class TmConversationLayout @JvmOverloads constructor(
             }
         })
 
-        UserDBManager.getInstance().addLoginSuccessCallback(null, object : LoginSuccessEvent.LoginSuccessListener {
-            override fun onLoginSuccess(auid: String?) {
-                request()
-            }
-        })
+        UserDBManager.getInstance()
+            .addLoginSuccessCallback(null, object : LoginSuccessEvent.LoginSuccessListener {
+                override fun onLoginSuccess(auid: String?) {
+                    request()
+                }
+            })
 
     }
 
@@ -120,10 +123,10 @@ class TmConversationLayout @JvmOverloads constructor(
         request()
     }
 
-    private fun request(){
-        if (mAdapter.items.isEmpty()){
+    private fun request() {
+        if (mAdapter.items.isEmpty()) {
             TransferThreadPool.submitTask {
-               val list = TmConversationLogic.INSTANCE.loadConversationList(Long.MAX_VALUE, 20)
+                val list = TmConversationLogic.INSTANCE.loadConversationList(Long.MAX_VALUE, 20)
 
                 ThreadUtils.runOnUiThread {
                     setAdapterData(list)
@@ -135,12 +138,14 @@ class TmConversationLayout @JvmOverloads constructor(
 
         val lastIndex = mAdapter.items.lastIndex
         val lastConversation = mAdapter.getItem(lastIndex)
-        val conversationList = TmConversationLogic.INSTANCE.loadConversationList(lastConversation?.dateUpdated ?: Long.MAX_VALUE, 20)
+        val conversationList = TmConversationLogic.INSTANCE.loadConversationList(
+            lastConversation?.dateUpdated ?: Long.MAX_VALUE, 20
+        )
 
         ThreadUtils.runOnUiThread {
             if (conversationList.isEmpty()) {
                 helper?.trailingLoadState = LoadState.NotLoading(true)
-            }else {
+            } else {
                 helper?.trailingLoadState = LoadState.NotLoading(false)
             }
             val currentConversationList =
@@ -153,78 +158,83 @@ class TmConversationLayout @JvmOverloads constructor(
 
     private val lock = Any()
     private fun updateConversation(chatIds: MutableSet<String>?) {
-        TransferThreadPool.submitTask {
+//        TransferThreadPool.submitTask {
+        (context as? AppCompatActivity)?.lifecycleScope?.launch(Dispatchers.IO) {
 //            synchronized(lock) {
-                var list =
-                    TmConversationLogic.INSTANCE.getConversationCombination(chatIds)
-                        ?: mutableListOf()
+            var list =
+                TmConversationLogic.INSTANCE.getConversationCombination(chatIds)
+                    ?: mutableListOf()
 
-                val unReadMap =
-                    TmMessageLogic.INSTANCE.getUnreadCount(chatIds?.toMutableList())
+            val unReadMap =
+                TmMessageLogic.INSTANCE.getUnreadCount(chatIds?.toMutableList())
 
-                val result: MutableList<TmmConversationVo>
-                val currentConversationList =
-                    CopyOnWriteArrayList(mAdapter.items.toMutableList())
+            val result: MutableList<TmmConversationVo>
+            val currentConversationList =
+                CopyOnWriteArrayList(mAdapter.items.toMutableList())
 
-                Log.w(TAG, "updateConversation: 333333333")
+            Log.w(TAG, "updateConversation: 333333333")
 
-                if (list.isEmpty()) {
-                    //conversation remove
-                    list = currentConversationList.filter { tmmConversation ->
-                        chatIds?.contains(tmmConversation.chatId) == true
-                    }.toMutableList()
-                    result =
-                        currentConversationList.subtract(list.toSet()).toMutableList()
-                } else {
+            if (list.isEmpty()) {
+                //conversation remove
+                list = currentConversationList.filter { tmmConversation ->
+                    chatIds?.contains(tmmConversation.chatId) == true
+                }.toMutableList()
+                result =
+                    currentConversationList.subtract(list.toSet()).toMutableList()
+            } else {
 
-                    val sorted = kotlin.Comparator<TmmConversationVo> { o1, o2 ->
-                        if (o1.topTimeStamp > o2.topTimeStamp) {
+                val sorted = kotlin.Comparator<TmmConversationVo> { o1, o2 ->
+                    if (o1.topTimeStamp > o2.topTimeStamp) {
+                        -1
+                    } else if (o1.topTimeStamp < o2.topTimeStamp) {
+                        1
+                    } else {
+                        if (o1.dateUpdated > o2.dateUpdated) {
                             -1
-                        } else if (o1.topTimeStamp < o2.topTimeStamp) {
+                        } else if (o1.dateUpdated < o2.dateUpdated) {
                             1
                         } else {
-                            if (o1.dateUpdated > o2.dateUpdated) {
-                                -1
-                            } else if (o1.dateUpdated < o2.dateUpdated) {
-                                1
-                            } else {
-                                1
-                            }
+                            1
                         }
                     }
-                    //conversation add or update
-
-                    if (list.size == chatIds?.size) {
-                        result = list.union(currentConversationList).toMutableList()
-                            .sortedWith(sorted) as MutableList<TmmConversationVo>
-                    } else {
-                        val listChatIds = list.map { it.chatId }.toMutableSet()
-                        val needRemoveChatIds = chatIds?.subtract(listChatIds)
-
-
-                        //conversation remove
-                        val needRemoveList = currentConversationList.filter { tmmConversation ->
-                            needRemoveChatIds?.contains(tmmConversation.chatId) == true
-                        }.toMutableList()
-
-                        val needAddList = list.subtract(needRemoveList.toSet()).toMutableList()
-
-                        val updateList =
-                            currentConversationList.subtract(needRemoveList.toSet()).toMutableList()
-
-                        result = needAddList.union(updateList).toMutableList()
-                            .sortedWith(sorted) as MutableList<TmmConversationVo>
-                    }
                 }
+                //conversation add or update
 
-                for (tmmConversationVo in result) {
-                    val unreadCount = unReadMap[tmmConversationVo.chatId]
-                    if (unreadCount != null) {
-                        tmmConversationVo.unReadCount = unreadCount
-                    }
+                if (list.size == chatIds?.size) {
+                    result = list.union(currentConversationList).toMutableList()
+                        .sortedWith(sorted) as MutableList<TmmConversationVo>
+                } else {
+                    val listChatIds = list.map { it.chatId }.toMutableSet()
+                    val needRemoveChatIds = chatIds?.subtract(listChatIds)
+
+
+                    //conversation remove
+                    val needRemoveList = currentConversationList.filter { tmmConversation ->
+                        needRemoveChatIds?.contains(tmmConversation.chatId) == true
+                    }.toMutableList()
+
+                    val needAddList = list.subtract(needRemoveList.toSet()).toMutableList()
+
+                    val updateList =
+                        currentConversationList.subtract(needRemoveList.toSet()).toMutableList()
+
+                    result = needAddList.union(updateList).toMutableList()
+                        .sortedWith(sorted) as MutableList<TmmConversationVo>
                 }
+            }
 
-                ThreadUtils.runOnUiThread {
+            for (tmmConversationVo in result) {
+                val unreadCount = unReadMap[tmmConversationVo.chatId]
+                if (unreadCount != null) {
+                    tmmConversationVo.unReadCount = unreadCount
+                }
+            }
+
+            flow {
+                emit(result.toMutableList())
+            }.flowOn(Dispatchers.Main).collect { data ->
+                setAdapterData(data)
+            }
 //                TmLogUtils.getInstance()
 //                    .i(
 //                        content = "chatIds = $chatIds   lastEventMessage = ${
@@ -244,10 +254,9 @@ class TmConversationLayout @JvmOverloads constructor(
 //                        }",
 //                        printConsoleLog = false
 //                    )
-                    Log.w(TAG, "updateConversation: 44444444444 $unReadMap")
+            Log.w(TAG, "updateConversation: 44444444444 $unReadMap")
 
-                    setAdapterData(result.toMutableList())
-                }
+
 //            }
         }
 
@@ -280,7 +289,7 @@ class TmConversationLayout @JvmOverloads constructor(
 
     private var itemClickCallBack: ItemClickCallBack? = null
 
-    fun setItemClickCallBack(callBack: ItemClickCallBack){
+    fun setItemClickCallBack(callBack: ItemClickCallBack) {
         this.itemClickCallBack = callBack
     }
 
@@ -300,6 +309,10 @@ class TmConversationLayout @JvmOverloads constructor(
         ) : RecyclerView.ViewHolder(viewBinding.root)
 
         override fun onBindViewHolder(holder: VH, position: Int, item: TmmConversationVo?) {
+//            Log.d(
+//                TAG,
+//                "onBindViewHolder() called with: holder = $holder, position = $position, status = ${item?.lastTmmMessage?.status}"
+//            )
             holder.viewBinding.conversation.setConversation(item)
         }
 
@@ -310,18 +323,24 @@ class TmConversationLayout @JvmOverloads constructor(
             payloads: List<Any>
         ) {
             super.onBindViewHolder(holder, position, item, payloads)
+
             if (payloads.isEmpty()) {
                 return
             }
-            for (payload in payloads) {
-                val bundle = payload as Bundle
-                for (key in bundle.keySet()) {
-                    when (key) {
-                        KEY_LAST_MESSAGE -> {
-                            val tmConversationVo =
-                                bundle.getParcelable<TmmConversationVo>(KEY_LAST_MESSAGE)
-                            holder.viewBinding.conversation.setLastMessage(tmConversationVo)
-                        }
+            val payload = payloads.first()
+            val bundle = payload as Bundle
+
+            for (key in bundle.keySet()) {
+                when (key) {
+                    KEY_LAST_MESSAGE -> {
+                        val tmConversationVo =
+                            bundle.getParcelable<TmmConversationVo>(KEY_LAST_MESSAGE)
+                        Log.d(
+                            TAG,
+                            "onBindViewHolder() payloads called with: tmConversationVo status = ${tmConversationVo?.lastTmmMessage?.status}, position = $position, item status = ${item?.lastTmmMessage?.status}"
+                        )
+                        holder.viewBinding.conversation.setLastMessage(item)
+                    }
 
 //                        KEY_UNREAD_COUNT -> {
 //                            conversation.bindUnReadCount(data.chatId, data)
@@ -354,7 +373,6 @@ class TmConversationLayout @JvmOverloads constructor(
 //                            }
 //                            conversation.setMuteUnReadStatus(isMute)
 //                        }
-                    }
                 }
             }
         }
@@ -387,14 +405,13 @@ class TmConversationLayout @JvmOverloads constructor(
             oldItem: TmmConversationVo,
             newItem: TmmConversationVo
         ): Any? {
-            Log.w(TAG, "getChangePayload: ===========" )
+            Log.w(TAG, "getChangePayload: ===========")
             val payload = Bundle()
             if (newItem.lastMid != oldItem.lastMid ||
                 newItem.lastTmmMessage?.status != oldItem.lastTmmMessage?.status ||
                 newItem.dateUpdated != oldItem.dateUpdated
             ) {
-
-                Log.w(TAG, "getChangePayload: 1111111111" )
+                Log.w(TAG, "getChangePayload: status = ${newItem.lastTmmMessage?.status}")
                 payload.putParcelable(KEY_LAST_MESSAGE, newItem)
             }
 
