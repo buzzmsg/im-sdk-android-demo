@@ -56,7 +56,7 @@ class TMM private constructor() {
         }
     }
 
-    fun setConnectionDelegate(delegate: TmLoginLogic.TmConnectionDelegate) {
+    fun setDelegate(delegate: TmDelegate) {
         TmLoginLogic.getInstance().addConnectionListener(TMM::class.java.name, delegate)
         ApiBaseService.setDelegate(object : Net.Delegate_401 {
             override fun onTokenError(net: Net?) {
@@ -100,6 +100,13 @@ class TMM private constructor() {
     interface CreateChatDelegate {
         fun onCreateSuccess()
         fun onCreateFailed(code: Int?, errorMsg: String?)
+    }
+
+    interface TmDelegate {
+        fun getAuth(
+            auid: String,
+            resolve: ((auth: String) -> Unit)
+        )
     }
 
 }

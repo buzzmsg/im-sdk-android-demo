@@ -129,6 +129,7 @@ class TmChatLayout @JvmOverloads constructor(
 
                                         mAdapter.notifyItemChanged(existIndex)
 
+
                                     }
 
                                     result.addAll(currentMessageList)

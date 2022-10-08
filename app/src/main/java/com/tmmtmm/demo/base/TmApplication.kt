@@ -28,7 +28,7 @@ class TmApplication : Application() {
         MMKV.initialize(this)
         instance = this
         TMM.INSTANCE.getInstance(this, LoginManager.INSTANCE.getAKey(), "test")
-        TMM.INSTANCE.setConnectionDelegate(object : TmLoginLogic.TmConnectionDelegate {
+        TMM.INSTANCE.setDelegate(object : TMM.TmDelegate {
 
             override fun getAuth(auid: String, resolve: (auth: String) -> Unit) {
                 val authcode = loginResponse?.authcode ?: ""

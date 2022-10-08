@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class TmLoginLogic private constructor() {
 
-    private var tmConnectionMap = ConcurrentHashMap<String, TmConnectionDelegate>()
+    private var tmConnectionMap = ConcurrentHashMap<String, TMM.TmDelegate>()
 
     companion object {
 
@@ -123,20 +123,13 @@ class TmLoginLogic private constructor() {
 
     fun addConnectionListener(
         key: String,
-        tmConnectionListenerImpl: TmConnectionDelegate
+        tmConnectionListenerImpl: TMM.TmDelegate
     ) {
         tmConnectionMap[key] = tmConnectionListenerImpl
     }
 
     fun removeConnectionListener(key: String) {
         tmConnectionMap.remove(key)
-    }
-
-    interface TmConnectionDelegate {
-        fun getAuth(
-            auid: String,
-            resolve: ((auth: String) -> Unit)
-        )
     }
 
 }
