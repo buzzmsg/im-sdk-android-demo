@@ -154,7 +154,7 @@ class TmConversationLayout @JvmOverloads constructor(
     private val lock = Any()
     private fun updateConversation(chatIds: MutableSet<String>?) {
         TransferThreadPool.submitTask {
-            synchronized(lock) {
+//            synchronized(lock) {
                 var list =
                     TmConversationLogic.INSTANCE.getConversationCombination(chatIds)
                         ?: mutableListOf()
@@ -248,7 +248,7 @@ class TmConversationLayout @JvmOverloads constructor(
 
                     setAdapterData(result.toMutableList())
                 }
-            }
+//            }
         }
 
     }

@@ -59,9 +59,9 @@ class MainActivity : BaseActivity() {
     }
 
     fun enterChat() {
-        TMM.INSTANCE.createChat(aChatId = "g12345", chatName = "G12345", auids = mutableListOf("024eb1d8dcde23ac"), object : TMM.CreateChatDelegate{
+        TMM.INSTANCE.createChat(aChatId = "n12345", chatName = "N12345", auids = mutableListOf("024eb1d8dcde23ac"), object : TMM.CreateChatDelegate{
             override fun onCreateSuccess() {
-                ChatActivity.newInstance(this@MainActivity, "g12345")
+                ChatActivity.newInstance(this@MainActivity, "n12345")
             }
 
             override fun onCreateFailed(code: Int?, errorMsg: String?) {

@@ -299,6 +299,7 @@ class TmMessageLogic private constructor() {
 
         //send event
         MessageEvent.send(mutableSetOf(messageEntity.mid), messageEntity.chatId)
+
         ConversationEvent.send(mutableSetOf(messageEntity.chatId))
 
         val result = SendMessage.send(messageEntity)
