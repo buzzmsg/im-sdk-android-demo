@@ -1,8 +1,12 @@
 package com.tmmtmm.sdk.logic
 
+import com.tmmtmm.sdk.api.GetChatList
+import com.tmmtmm.sdk.api.GetChatListItemResponse
+import com.tmmtmm.sdk.api.GetChatListRequest
 import com.tmmtmm.sdk.constant.MessageDeleteStatus.IS_DEL
 import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.id.ChatId
+import com.tmmtmm.sdk.core.net.ResponseResult
 import com.tmmtmm.sdk.db.ConversationDbManager
 import com.tmmtmm.sdk.db.event.ConversationEvent
 import com.tmmtmm.sdk.db.model.ConversationModel
@@ -83,8 +87,6 @@ class TmConversationLogic private constructor() {
             receiveConversations.add(conversationModel)
         }
 
-
-
         val existConversations = ConversationDbManager.INSTANCE.queryRawConversations()
 
         val notExistConversations = if (existConversations.isNullOrEmpty()) {
@@ -109,6 +111,23 @@ class TmConversationLogic private constructor() {
 
         if (notExistConversations.isEmpty()) {
             return
+        }
+
+        //获取远程群会话列表
+        val receiveChatIds = notExistConversations.map { it.chatId }.toMutableSet()
+
+        val result = GetChatList.execute(GetChatListRequest(receiveChatIds))
+
+        var chatMap = mutableMapOf<String, GetChatListItemResponse>()
+        if (result is ResponseResult.Success) {
+            val items = result.value?.items
+            chatMap =
+                items?.associateBy({ it.chatId ?: "" }, { it })?.toMutableMap() ?: mutableMapOf()
+        }
+
+        for (notExistConversation in notExistConversations) {
+            notExistConversation.aChatId = chatMap[notExistConversation.chatId]?.aChatId ?:""
+            notExistConversation.name = chatMap[notExistConversation.chatId]?.name ?:""
         }
 
         //insert

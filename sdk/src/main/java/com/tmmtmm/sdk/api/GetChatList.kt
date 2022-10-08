@@ -20,7 +20,7 @@ import com.tmmtmm.sdk.core.net.toJson
 
 @Keep
 data class GetChatListRequest(
-    var ids: MutableList<String>
+    var ids: MutableSet<String>
 )
 
 @Keep
