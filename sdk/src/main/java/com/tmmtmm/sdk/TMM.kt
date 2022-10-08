@@ -1,7 +1,13 @@
 package com.tmmtmm.sdk
 
+import android.app.Activity
 import android.app.Application
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ThreadUtils
+import com.blankj.utilcode.util.Utils
 import com.tmmtmm.sdk.cache.LoginCache
 import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.id.ChatId
@@ -37,6 +43,18 @@ class TMM private constructor() {
         if (TmLoginLogic.getInstance().getUserId().isBlank()) {
             return this
         }
+        AppUtils.registerAppStatusChangedListener(object : Utils.OnAppStatusChangedListener {
+            override fun onForeground(activity: Activity?) {
+                TransferThreadPool.submitTask {
+                    TmMessageLogic.INSTANCE.receiveMessage()
+                }
+            }
+
+            override fun onBackground(activity: Activity?) {
+
+            }
+
+        })
         DataBaseManager.getInstance().init(context)
         return this
     }
