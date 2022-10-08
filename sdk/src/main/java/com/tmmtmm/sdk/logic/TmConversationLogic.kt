@@ -83,6 +83,8 @@ class TmConversationLogic private constructor() {
             receiveConversations.add(conversationModel)
         }
 
+
+
         val existConversations = ConversationDbManager.INSTANCE.queryRawConversations()
 
         val notExistConversations = if (existConversations.isNullOrEmpty()) {

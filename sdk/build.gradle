@@ -28,22 +28,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
-        dev {
-            minifyEnabled false
-            buildConfigField "String", "WS_HOST", DEV_WS_API 
-            buildConfigField "String", "SERVICE_NAME", DEV_IM_SERVICE_NAME 
-            buildConfigField "String", "HOST", DEV_IM_HOST
-            buildConfigField "String", "DB_NAME_PREFIX", DEV_DB_NAME_PREFIX
-
-            buildConfigField "String", "VERSION_NAME", SDK_VERSION_NAME
-        }
-
         debug {
+            debuggable true
             minifyEnabled false
             buildConfigField "String", "WS_HOST", DEBUG_WS_API 
             buildConfigField "String", "SERVICE_NAME", DEBUG_IM_SERVICE_NAME 
             buildConfigField "String", "HOST", DEBUG_IM_HOST
             buildConfigField "String", "DB_NAME_PREFIX", DEBUG_DB_NAME_PREFIX
+
+            buildConfigField "String", "VERSION_NAME", SDK_VERSION_NAME
+        }
+
+        create("dev") {
+            debuggable true
+            minifyEnabled false
+            buildConfigField "String", "WS_HOST", DEV_WS_API
+            buildConfigField "String", "SERVICE_NAME", DEV_IM_SERVICE_NAME
+            buildConfigField "String", "HOST", DEV_IM_HOST
+            buildConfigField "String", "DB_NAME_PREFIX", DEV_DB_NAME_PREFIX
 
             buildConfigField "String", "VERSION_NAME", SDK_VERSION_NAME
         }

@@ -32,15 +32,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
-        dev {
+        debug {
+            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.only
         }
 
-        debug {
-            minifyEnabled false
-            signingConfig signingConfigs.only
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
