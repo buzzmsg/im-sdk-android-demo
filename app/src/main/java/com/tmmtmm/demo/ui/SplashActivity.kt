@@ -18,5 +18,6 @@ class SplashActivity : AppCompatActivity() {
         } else {
             LoginActivity.newInstance(this)
         }
+        finish()
     }
 }

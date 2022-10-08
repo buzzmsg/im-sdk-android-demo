@@ -67,8 +67,8 @@ class LoginActivity : BaseActivity() {
                     return@observe
                 }
                 LoginManager.INSTANCE.setUserId(value?.auid ?: "")
-                LoginManager.INSTANCE.setAKey(value?.akey ?: "")
-                TMM.INSTANCE.getInstance(TmApplication.instance(), value?.akey ?: "", "test")
+                LoginManager.INSTANCE.setAKey(value?.ak ?: "")
+                TMM.INSTANCE.getInstance(TmApplication.instance(), value?.ak ?: "", "test")
                 TmApplication.instance().loginResponse = value
                 loginSdk(value?.auid ?: "")
                 MainActivity.newInstance(this@LoginActivity)

@@ -4,6 +4,7 @@ import android.util.Log
 import com.blankj.utilcode.util.DeviceUtils
 import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor
+import com.tmmtmm.sdk.BuildConfig
 import com.tmmtmm.sdk.core.net.config.Net
 import com.tmmtmm.sdk.core.net.exception.TmException
 import com.tmmtmm.sdk.core.net.exception.TmmError
@@ -82,9 +83,10 @@ class NetClient {
             val requestBody: RequestBody? = data?.toRequestBody(JSON)
             val builder = Request.Builder()
             builder.url(net.getHost() + path)
+            builder.addHeader("ak", TmLoginLogic.getInstance().getAk())
             builder.addHeader("token", token)
             builder.addHeader("req-id", idWorker.nextId().toString())
-//            builder.addHeader("version", BuildConfig.VERSION_NAME)
+            builder.addHeader("version", BuildConfig.VERSION_NAME)
             builder.addHeader("over", "Android${DeviceUtils.getSDKVersionName()}")
 //            builder.addHeader("lang", TmLanguageUtil.getCurrentLanguage())
             builder.addHeader("os", "android")
@@ -136,6 +138,7 @@ class NetClient {
             builder.addHeader("req-id", idWorker.nextId().toString())
             builder.addHeader("ak", TmLoginLogic.getInstance().getAk())
             builder.addHeader("over", "Android${DeviceUtils.getSDKVersionName()}")
+            builder.addHeader("version", BuildConfig.VERSION_NAME)
 //            builder.addHeader("lang", TmLanguageUtil.getCurrentLanguage())
             builder.addHeader("os", "android")
             builder.addHeader("Content-Type", "application/json")

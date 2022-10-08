@@ -259,6 +259,7 @@ class TmMessageLogic private constructor() {
         content: String,
         chatId: String?,
         aChatId: String?,
+        amid: String,
         mids: MutableList<String>? = null
     ) {
         val tmMessage = TmMessage.create()
@@ -274,7 +275,7 @@ class TmMessageLogic private constructor() {
         //create message
         tmMessage.content =
             TmTextMessageContent(content)
-        sendMessage(tmMessage, chatId = chatId ?: "", aChatId = aChatId ?: "")
+        sendMessage(tmMessage, chatId = chatId ?: "", aChatId = aChatId ?: "", amid = amid)
 //        if (!ChatId.createById(chatId ?: "").isSingle()) {
 //
 //        } else {
@@ -287,12 +288,13 @@ class TmMessageLogic private constructor() {
         message: TmMessage,
         chatId: String = "",
         aChatId: String = "",
-        mid: String = ""
+        mid: String = "",
+        amid: String = ""
     ) {
 //        delDraftMessage(uid, groupId, mid)
 
         val messageEntity =
-            createMessageEntity(message = message, chatId = chatId, aChatId = aChatId, mid)
+            createMessageEntity(message = message, chatId = chatId, aChatId = aChatId, mid, amid = amid)
         TmConversationLogic.INSTANCE.insertOrUpdateConversation(messageEntity)
 
         //send event
@@ -315,7 +317,8 @@ class TmMessageLogic private constructor() {
         message: TmMessage,
         chatId: String,
         aChatId: String,
-        mid: String = ""
+        mid: String = "",
+        amid: String = ""
     ): MessageModel {
         val mUid = TmLoginLogic.getInstance().getUserId()
         val messageEntity: MessageModel = MessageContentLogic.getInstance().transform(message)
@@ -335,6 +338,8 @@ class TmMessageLogic private constructor() {
         messageEntity.chatId = chatId
         messageEntity.aChatId = aChatId
         messageEntity.mid = messageId
+
+        messageEntity.amid = amid
 //        if (message.extra != null) {
 //            message.extra?.from = MessageFromConstant.FROM_ANDROID
 //            messageEntity.extra = message.extra?.toJson().toString()

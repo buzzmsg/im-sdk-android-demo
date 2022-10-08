@@ -1,9 +1,11 @@
 package com.tmmtmm.sdk
 
 import android.app.Application
+import com.blankj.utilcode.util.ThreadUtils
 import com.tmmtmm.sdk.cache.LoginCache
 import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.id.ChatId
+import com.tmmtmm.sdk.core.net.ResponseResult
 import com.tmmtmm.sdk.core.net.config.Net
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
 import com.tmmtmm.sdk.core.utils.TmUtils
@@ -45,11 +47,12 @@ class TMM private constructor() {
 
     fun sendTextMessage(
         content: String,
-        aChatId: String
+        aChatId: String,
+        amid: String
     ) {
         val chatId = ChatId.create(aChatId)
         TransferThreadPool.submitTask {
-            TmMessageLogic.INSTANCE.sendTextMessage(content, chatId, aChatId)
+            TmMessageLogic.INSTANCE.sendTextMessage(content, chatId, aChatId, amid)
         }
     }
 
@@ -66,8 +69,37 @@ class TMM private constructor() {
     }
 
 
-    fun createGroup(aChatId: String, auids: MutableList<String>) {
-        TmGroupLogic.INSTANCE.createGroup(aChatId, auids)
+    fun createChat(
+        aChatId: String,
+        chatName: String,
+        auids: MutableList<String>,
+        delegate: CreateChatDelegate?
+    ) {
+
+        TransferThreadPool.submitTask {
+            val result = TmGroupLogic.INSTANCE.createChat(aChatId, chatName, auids)
+
+            if (result is ResponseResult.Success) {
+                ThreadUtils.runOnUiThread {
+                    delegate?.onCreateSuccess()
+                }
+                return@submitTask
+            }
+
+            if (result is ResponseResult.Failure) {
+                ThreadUtils.runOnUiThread {
+                    delegate?.onCreateFailed(
+                        code = result.throwable?.code,
+                        errorMsg = result.throwable?.message
+                    )
+                }
+            }
+        }
+    }
+
+    interface CreateChatDelegate {
+        fun onCreateSuccess()
+        fun onCreateFailed(code: Int?, errorMsg: String?)
     }
 
 }

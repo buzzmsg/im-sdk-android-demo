@@ -12,6 +12,7 @@ import com.tmmtmm.sdk.TMM
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Random
 
 class ChatActivity : BaseActivity() {
 
@@ -60,7 +61,7 @@ class ChatActivity : BaseActivity() {
             }
             showLoading()
             lifecycleScope.launch(Dispatchers.IO){
-                TMM.INSTANCE.sendTextMessage(content, aChatId)
+                TMM.INSTANCE.sendTextMessage(content, aChatId, kotlin.random.Random(6).toString())
 
                 withContext(Dispatchers.Main){
                     hideLoading()

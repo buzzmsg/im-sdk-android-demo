@@ -13,7 +13,7 @@ import com.tmmtmm.sdk.core.net.toJson
 @Keep
 data class GetAuthRequest(
     var auid: String? = null,
-    var akey: String? = null,
+    var ak: String? = null,
     var authcode: String? = null,
 )
 

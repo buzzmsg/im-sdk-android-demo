@@ -28,6 +28,7 @@ class MessageModel{
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
     var mid: String = ""
+    var amid: String = ""
     @ColumnInfo(defaultValue = "0")
     var sequence: Long? = 0L
     var chatId: String = ""

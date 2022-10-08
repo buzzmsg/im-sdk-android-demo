@@ -86,7 +86,7 @@ class TmLoginLogic private constructor() {
             TransferThreadPool.submitTask {
                 val request = GetAuthRequest(
                     auid = auid,
-                    akey = getAk(),
+                    ak = getAk(),
                     authcode = auth,
                 )
                 GetAuth.execute(request).onSuccess { loginResponse ->

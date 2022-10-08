@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap
 @Keep
 data class SendMessageRequest(
     var mid: String? = "",
+    var amid: String? = "",
     @SerializedName("chat_id")
     var chatId: String? = "",
     var content: String? = "",
@@ -63,6 +64,7 @@ object SendMessage {
         messageEntity.content = toJson.toString()
         val req = SendMessageRequest(
             mid = messageEntity.mid,
+            amid = messageEntity.amid,
             chatId = messageEntity.chatId,
             content = messageEntity.content,
             type = messageEntity.type,

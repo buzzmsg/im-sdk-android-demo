@@ -3,12 +3,15 @@ package com.tmmtmm.demo.ui
 //import com.chad.library.adapter.base.BaseBinderAdapter
 import android.content.Context
 import android.content.Intent
+import androidx.lifecycle.lifecycleScope
 import com.lxj.xpopup.XPopup
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.databinding.ActivityMainBinding
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.view.TitleBarView
+import com.tmmtmm.sdk.TMM
 import com.tmmtmm.sdk.ui.view.TmConversationLayout
+import kotlinx.coroutines.launch
 import java.security.AccessController.getContext
 
 class MainActivity : BaseActivity() {
@@ -56,7 +59,16 @@ class MainActivity : BaseActivity() {
     }
 
     fun enterChat() {
-        ChatActivity.newInstance(this, "abcdefg")
+        TMM.INSTANCE.createChat(aChatId = "e12345", chatName = "E12345", auids = mutableListOf("024eb1d8dcde23ac"), object : TMM.CreateChatDelegate{
+            override fun onCreateSuccess() {
+                ChatActivity.newInstance(this@MainActivity, "e12345")
+            }
+
+            override fun onCreateFailed(code: Int?, errorMsg: String?) {
+
+            }
+        })
+
     }
 
     fun createGroup() {

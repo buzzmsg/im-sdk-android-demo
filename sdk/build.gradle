@@ -23,6 +23,8 @@ android {
             buildConfigField "String", "SERVICE_NAME", RELEASE_IM_SERVICE_NAME 
             buildConfigField "String", "HOST", RELEASE_IM_HOST
             buildConfigField "String", "DB_NAME_PREFIX", RELEASE_DB_NAME_PREFIX
+
+            buildConfigField "String", "VERSION_NAME", SDK_VERSION_NAME
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
@@ -32,6 +34,8 @@ android {
             buildConfigField "String", "SERVICE_NAME", DEV_IM_SERVICE_NAME 
             buildConfigField "String", "HOST", DEV_IM_HOST
             buildConfigField "String", "DB_NAME_PREFIX", DEV_DB_NAME_PREFIX
+
+            buildConfigField "String", "VERSION_NAME", SDK_VERSION_NAME
         }
 
         debug {
@@ -40,6 +44,8 @@ android {
             buildConfigField "String", "SERVICE_NAME", DEBUG_IM_SERVICE_NAME 
             buildConfigField "String", "HOST", DEBUG_IM_HOST
             buildConfigField "String", "DB_NAME_PREFIX", DEBUG_DB_NAME_PREFIX
+
+            buildConfigField "String", "VERSION_NAME", SDK_VERSION_NAME
         }
     }
     compileOptions {
