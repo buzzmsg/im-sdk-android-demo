@@ -1,6 +1,7 @@
 package com.tmmtmm.sdk
 
 import android.app.Activity
+import android.app.Application
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @description
  * @version
  */
-class ImSDK private constructor(val ak: String, val env: String) {
+class ImSDK private constructor(val context: Application, val ak: String, val env: String) {
 
     private var tmConnectionMap = ConcurrentHashMap<String, TmDelegate>()
 
@@ -31,11 +32,11 @@ class ImSDK private constructor(val ak: String, val env: String) {
         private var instance: ImSDK? = null
 
         @JvmName("getInstance")
-        fun getInstance(ak: String, env: String): ImSDK {
+        fun getInstance(context: Application, ak: String, env: String): ImSDK {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {
-                        instance = ImSDK(ak, env)
+                        instance = ImSDK(context,ak, env)
                     }
                 }
             }
@@ -44,6 +45,7 @@ class ImSDK private constructor(val ak: String, val env: String) {
     }
 
     init {
+        TmUtils.init(context)
         DataBaseManager.getInstance().initShare(TmUtils.sApp, aKey = ak, env = env)
         TmLoginLogic.getInstance().setAk(ak)
     }

@@ -6,12 +6,14 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.KeyboardUtils
 import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
+import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
 import com.tmmtmm.demo.ui.view.TitleBarView
 import com.tmmtmm.sdk.ImSDK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.reflect.KParameter
 
 class ChatActivity : BaseActivity() {
 
@@ -60,8 +62,7 @@ class ChatActivity : BaseActivity() {
             }
             showLoading()
             lifecycleScope.launch(Dispatchers.IO){
-                ImSDK.INSTANCE.sendTextMessage(content, aChatId, kotlin.random.Random(6).toString())
-
+                TmApplication.instance().imSdk?.sendTextMessage(content, aChatId, kotlin.random.Random(6).toString())
                 withContext(Dispatchers.Main){
                     hideLoading()
                     binding.etMessageContent.setText("")
