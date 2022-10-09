@@ -37,7 +37,10 @@ class ConversationStatusView @JvmOverloads constructor(
         val tmmMessage = tmmConversationVo?.lastTmmMessage
         val isSingle = ChatId.createById(tmmMessage?.chatId ?: "").isSingle()
         val unReadCount = tmmConversationVo?.unReadCount ?: 0
-        Log.d("ConversationFragment", "showConversationStatus() called with: unReadCount = $unReadCount")
+        Log.d(
+            "ConversationFragment",
+            "showConversationStatus() called with: unReadCount = $unReadCount"
+        )
         if (tmmMessage == null) {
             mBinding.ivConversationStatus.gone()
             mBinding.tvConversationUnReadCount.gone()
@@ -127,32 +130,33 @@ class ConversationStatusView @JvmOverloads constructor(
 //                        mBinding.ivConversationStatus.visible()
 //                    }
 //                } else {
-                    if (unReadCount > 0) {
-                        mBinding.tvConversationUnReadCount.setBackgroundResource(R.drawable.shape_round_rect_bg_message_count)
-
-                        mBinding.ivConversationStatus.gone()
-                        mBinding.tvConversationUnReadCount.visible()
-                        mBinding.tvConversationUnReadCount.text =
-                            when {
-                                unReadCount >= 99 -> {
-                                    "  99+  "
-                                }
-                                unReadCount > 9 -> {
-                                    "  $unReadCount  "
-                                }
-                                else -> {
-                                    unReadCount.toString()
-                                }
-                            }
-
-                    } else if (tmmMessage.uid == TmLoginLogic.getInstance().getUserId()) {
-                        mBinding.tvConversationUnReadCount.gone()
-                        mBinding.ivConversationStatus.setImageResource(R.drawable.ic_conversation_message_received)
-                        mBinding.ivConversationStatus.visible()
-                    } else {
-                        mBinding.ivConversationStatus.gone()
-                        mBinding.tvConversationUnReadCount.gone()
-                    }
+//                    if (unReadCount > 0) {
+//                        mBinding.tvConversationUnReadCount.setBackgroundResource(R.drawable.shape_round_rect_bg_message_count)
+//
+//                        mBinding.ivConversationStatus.gone()
+//                        mBinding.tvConversationUnReadCount.visible()
+//                        mBinding.tvConversationUnReadCount.text =
+//                            when {
+//                                unReadCount >= 99 -> {
+//                                    "  99+  "
+//                                }
+//                                unReadCount > 9 -> {
+//                                    "  $unReadCount  "
+//                                }
+//                                else -> {
+//                                    unReadCount.toString()
+//                                }
+//                            }
+//
+//                    } else
+                if (tmmMessage.uid == TmLoginLogic.getInstance().getUserId()) {
+                    mBinding.tvConversationUnReadCount.gone()
+                    mBinding.ivConversationStatus.setImageResource(R.drawable.ic_conversation_message_received)
+                    mBinding.ivConversationStatus.visible()
+                } else {
+                    mBinding.ivConversationStatus.gone()
+                    mBinding.tvConversationUnReadCount.gone()
+                }
 //                }
             }
             tmmMessage.status == MessageStatus.Send_Failure.value() -> {

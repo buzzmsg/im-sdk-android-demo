@@ -187,7 +187,7 @@ class ConversationView @JvmOverloads constructor(
         mBinding.tvConversationName.text = tmmConversation?.aChatId
 
 
-            bindSingleConversationInfo()
+        bindSingleConversationInfo()
 //        bindConversationInfo()
 
 //        if (tmmConversation.name.isEmpty()
@@ -241,7 +241,7 @@ class ConversationView @JvmOverloads constructor(
         }
 
 //        if (draftTmmMessage == null) {
-            setMessageContent(tmmMessage, tmConversationVo)
+        setMessageContent(tmmMessage, tmConversationVo)
 //        } else {
 //            setDraftMessageContent(draftTmmMessage)
 //        }
@@ -460,7 +460,10 @@ class ConversationView @JvmOverloads constructor(
     private fun setLastMessageStatus(tmConversation: TmmConversationVo?) {
         val tmmMessage = tmConversation?.lastTmmMessage
         mTmmConversation?.isMute = tmConversation?.isMute ?: false
-        Log.w("TmConversationLayout", "setLastMessageStatus() called with: status = ${tmmMessage?.status}")
+        Log.w(
+            "TmConversationLayout",
+            "setLastMessageStatus() called with: status = ${tmmMessage?.status}"
+        )
         when (tmmMessage?.uid) {
             TmLoginLogic.getInstance().getUserId() -> {
                 mBinding.messageStatus.setVisible()
@@ -520,7 +523,7 @@ class ConversationView @JvmOverloads constructor(
         val chatId = mTmmConversation?.chatId
         val createById = ChatId.createById(chatId ?: "")
 //        if (createById.isSingle()) {
-            bindSingleConversationInfo()
+        bindSingleConversationInfo()
 //        } else {
 //            bindGroupConversationInfo()
 //        }

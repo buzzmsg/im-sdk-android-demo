@@ -2,9 +2,11 @@ package com.tmmtmm.sdk
 
 import android.app.Activity
 import android.app.Application
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkRequest
+import androidx.lifecycle.*
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
@@ -13,18 +15,24 @@ import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.id.ChatId
 import com.tmmtmm.sdk.core.net.ResponseResult
 import com.tmmtmm.sdk.core.net.config.Net
+import com.tmmtmm.sdk.core.net.listener.impl.NetworkCallbackImpl
+import com.tmmtmm.sdk.core.net.listener.impl.TmConnectionListenerImpl
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
+import com.tmmtmm.sdk.core.net.websocket.IReceiveMessageImpl
+import com.tmmtmm.sdk.core.net.websocket.WebSocketManager
 import com.tmmtmm.sdk.core.utils.TmUtils
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.logic.TmGroupLogic
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.sdk.logic.TmMessageLogic
+import com.tmmtmm.sdk.logic.TmNetWorkStatusLogic
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @description
  * @version
  */
-class TMM private constructor() {
+class TMM private constructor(){
 
     companion object {
         val INSTANCE: TMM by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -56,8 +64,22 @@ class TMM private constructor() {
 
         })
         DataBaseManager.getInstance().init(context)
+
+        WebSocketManager.getInstance().initWebSocket()
+            ?.addListener(
+                null,
+                iReceiveMessageImpl = object : IReceiveMessageImpl() {
+                    override fun onMessage(content: String) {
+                        TransferThreadPool.submitTask {
+                            TmMessageLogic.INSTANCE.receiveMessage()
+                        }
+                    }
+                })?.connect()
+
+        TmNetWorkStatusLogic.getInstance().registerNetworkStatus(context)
         return this
     }
+
 
     fun initUser(auid: String) {
         TmLoginLogic.getInstance().initUser(auid)
@@ -126,5 +148,8 @@ class TMM private constructor() {
             resolve: ((auth: String) -> Unit)
         )
     }
+
+
+
 
 }

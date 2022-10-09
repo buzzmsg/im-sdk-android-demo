@@ -309,10 +309,10 @@ class TmConversationLayout @JvmOverloads constructor(
         ) : RecyclerView.ViewHolder(viewBinding.root)
 
         override fun onBindViewHolder(holder: VH, position: Int, item: TmmConversationVo?) {
-//            Log.d(
-//                TAG,
-//                "onBindViewHolder() called with: holder = $holder, position = $position, status = ${item?.lastTmmMessage?.status}"
-//            )
+            Log.d(
+                TAG,
+                "onBindViewHolder() called with: holder = $holder, position = $position, status = ${item?.lastTmmMessage?.status}"
+            )
             holder.viewBinding.conversation.setConversation(item)
         }
 
@@ -322,7 +322,7 @@ class TmConversationLayout @JvmOverloads constructor(
             item: TmmConversationVo?,
             payloads: List<Any>
         ) {
-            super.onBindViewHolder(holder, position, item, payloads)
+//            super.onBindViewHolder(holder, position, item, payloads)
 
             if (payloads.isEmpty()) {
                 return

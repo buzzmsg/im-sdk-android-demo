@@ -90,12 +90,20 @@ class ConversationDbManager private constructor() {
     }
 
 
-    fun insertGroupConversation(conversationModel: ConversationModel?){
+    fun insertGroupConversation(conversationModel: ConversationModel?) {
         DataBaseManager.getInstance().getDataBase()
             ?.conversationDao()
             ?.insertGroupConversation(conversationModel)
     }
 
+
+    fun queryExistChat(chatIds: MutableList<String>?): MutableList<String> {
+        if (chatIds.isNullOrEmpty()) return mutableListOf()
+        return DataBaseManager.getInstance().splitArray(chatIds) { value ->
+            DataBaseManager.getInstance().getDataBase()?.conversationDao()
+                ?.queryExistConversationIds(value) ?: mutableListOf()
+        }
+    }
 
 
 }
@@ -170,7 +178,7 @@ interface ConversationDao {
     fun clearConversationByChatIds(chatIds: MutableSet<String>?)
 
     @Query("select chatId from tmm_conversation where chatId in (:chatIds)")
-    fun queryExistConversationIds(chatIds: List<String>?): MutableList<String>?
+    fun queryExistConversationIds(chatIds: MutableList<String>?): MutableList<String>?
 
     @Query("select chatId from tmm_conversation where chatId in (:chatIds) and name is null")
     fun queryNotCompleteConversationIds(chatIds: MutableList<String>?): MutableList<String>?

@@ -24,9 +24,15 @@ class TmGroupLogic {
     }
 
 
-    fun createChat(aChatId: String, chatName: String ,auids: MutableList<String>): ResponseResult<CreateChatResponse?>{
+    fun createChat(aChatId: String, chatName: String ,auids: MutableList<String>): ResponseResult<Any?>{
+
         val chatId = ChatId.create(aChatId)
 
+        val existChatIds = ConversationDbManager.INSTANCE.queryExistChat(mutableListOf(chatId))
+
+        if (existChatIds.isNotEmpty()){
+            return ResponseResult.Success(Any())
+        }
 
         val result = CreateChat.excute(CreateChatRequest(id = chatId, aChatId = aChatId, name = chatName, auids = auids, type = CreateChat.CHAT_SINGLE_TYPE))
 

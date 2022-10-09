@@ -3,6 +3,8 @@ package com.tmmtmm.sdk.core.net.websocket
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import com.blankj.utilcode.util.DeviceUtils
+import com.tmmtmm.sdk.BuildConfig
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
 import com.tmmtmm.sdk.core.utils.LogUtils
 import okhttp3.*
@@ -27,8 +29,6 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
     private var sendTime: Long = 0L
     private val heartTime: Long = 40 * 1000
 
-    //    private var wsURL =
-//        BuildConfig.WS_HOST + "?ter_type=android&over=Android${DeviceUtils.getSDKVersionName()}&version=2.1.0&lang=${TmLanguageUtil.getCurrentLanguage()}&token=${com.tmmtmm.netcore.service.ApiBaseService.getCurrentToken()}"
     private var wsURL = ""
 
 
@@ -76,8 +76,8 @@ class WebSocketManager private constructor() : LifecycleEventObserver {
             .connectTimeout(30, TimeUnit.SECONDS)
             .pingInterval(30, TimeUnit.SECONDS)
             .build()
-//        wsURL =
-//            BuildConfig.WS_HOST + "?ter_type=android&over=Android${DeviceUtils.getSDKVersionName()}&version=${BuildConfig.VERSION_CODE}&lang=${TmLanguageUtil.getCurrentLanguage()}&token=$currentToken"
+        wsURL =
+            BuildConfig.WS_HOST + "?ter_type=android&over=Android${DeviceUtils.getSDKVersionName()}&version=${BuildConfig.VERSION_NAME}&token=$currentToken"
         request = Request.Builder().url(wsURL).build()
         return this
     }
