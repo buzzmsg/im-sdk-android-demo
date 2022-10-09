@@ -284,6 +284,17 @@ class TmMessageLogic private constructor() {
     }
 
 
+    fun sendExistMessage(messageEntity: MessageModel) {
+        val result = SendMessage.send(messageEntity)
+        if (result is ResponseResult.Success) {
+            messageEntity.crateTime = System.currentTimeMillis()
+            MessageDb.INSTANCE
+                .updateStatus(messageEntity, MessageStatus.Sent.value(), false)
+        } else if (result is ResponseResult.Failure) {
+
+        }
+    }
+
     fun sendMessage(
         message: TmMessage,
         chatId: String = "",
@@ -360,6 +371,48 @@ class TmMessageLogic private constructor() {
         val id = insert(messageEntity)
         messageEntity.id = id ?: 0
         return messageEntity
+    }
+
+
+    fun retrySendMessages() {
+        val sendingMessages =
+            queryMessagesByStatus(MessageStatus.Sending.value())
+
+//        val needUploadMessage = sendingMessages?.filter {
+//            it.type == MessageContentType.ContentType_Image
+//                    || it.type == MessageContentType.ContentType_File
+//                    || it.type == MessageContentType.ContentType_Video
+//                    || it.type == MessageContentType.ContentType_Voice
+//        }?.toMutableList()
+
+        val retryMessages =
+            sendingMessages?.filter {
+                it.type != MessageContentType.ContentType_Image
+                        && it.type != MessageContentType.ContentType_File
+                        && it.type != MessageContentType.ContentType_Video
+                        && it.type != MessageContentType.ContentType_Voice
+            }
+                ?.toMutableList()
+
+        if (retryMessages.isNullOrEmpty()) return
+
+        val chatIds = retryMessages.map { it.chatId }.toMutableSet()
+
+        retryMessages.forEach { messageEntity ->
+            insert(messageEntity)
+            sendExistMessage(messageEntity)
+
+            MessageEvent.send(mutableSetOf(messageEntity.mid), messageEntity.chatId)
+        }
+
+        ConversationEvent.send(chatIds)
+//        FileProgressManager.getInstance().retryUploadFiles(needUploadMessage)
+    }
+
+    fun queryMessagesByStatus(status: Int): MutableList<MessageModel>? {
+        return DataBaseManager.getInstance().getDataBase()
+            ?.messageDao()
+            ?.queryMessagesByStatus(status)
     }
 
 //    fun queryMaxMessageIndexByChatId(chatId: MutableSet<String>?): MutableList<MessageModel> {

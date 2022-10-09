@@ -3,12 +3,16 @@ package com.tmmtmm.demo.ui
 //import com.chad.library.adapter.base.BaseBinderAdapter
 import android.content.Context
 import android.content.Intent
+import android.os.Build.VERSION_CODES.M
+import com.blankj.utilcode.util.EncodeUtils
+import com.blankj.utilcode.util.EncryptUtils
 import com.lxj.xpopup.XPopup
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityMainBinding
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.view.TitleBarView
+import com.tmmtmm.demo.utils.MD5
 import com.tmmtmm.sdk.IMSdk
 import com.tmmtmm.sdk.ui.view.TmConversationLayout
 
@@ -57,15 +61,8 @@ class MainActivity : BaseActivity() {
     }
 
     fun enterChat() {
-        TmApplication.instance().imSdk?.createChat(aChatId = "e12345", chatName = "E12345", auids = mutableListOf("8611d8cb6105b05f"), object : IMSdk.CreateChatDelegate{
-            override fun onSucc(){
-                ChatActivity.newInstance(this@MainActivity, "e12345")
-            }
+        createGroup()
 
-            override fun onError(code: Int?, errorMsg: String?) {
-
-            }
-        })
 
     }
 
@@ -77,9 +74,19 @@ class MainActivity : BaseActivity() {
             .isDarkTheme(true) //                        .isViewMode(true)
             //.moveUpToKeyboard(false)   //是否移动到软键盘上面，默认为true
             .asInputConfirm(
-                "创建群聊", "", null, "用户id"
-            ) {
+                "创建聊天", "", null, "用户手机号"
+            ) { phone ->
                 //                                          new XPopup.Builder(getContext()).asLoading().show();
+                val auid = MD5.create(phone)
+                TmApplication.instance().imSdk?.createChat(aChatId = phone, chatName = auid.uppercase(), auids = mutableListOf(auid), object : IMSdk.CreateChatDelegate{
+                    override fun onSucc(){
+                        ChatActivity.newInstance(this@MainActivity, phone)
+                    }
+
+                    override fun onError(code: Int?, errorMsg: String?) {
+
+                    }
+                })
             }
             .show()
     }

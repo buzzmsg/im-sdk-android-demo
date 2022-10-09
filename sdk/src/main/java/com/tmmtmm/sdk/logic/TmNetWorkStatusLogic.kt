@@ -62,6 +62,7 @@ class TmNetWorkStatusLogic private constructor()  : LifecycleEventObserver {
 
                 TransferThreadPool.submitTask {
                     TmMessageLogic.INSTANCE.receiveMessage()
+                    TmMessageLogic.INSTANCE.retrySendMessages()
                 }
             }
 

@@ -77,6 +77,7 @@ class TmLoginLogic private constructor() {
             override fun onForeground(activity: Activity?) {
                 TransferThreadPool.submitTask {
                     TmMessageLogic.INSTANCE.receiveMessage()
+                    TmMessageLogic.INSTANCE.retrySendMessages()
                 }
             }
 
@@ -93,6 +94,7 @@ class TmLoginLogic private constructor() {
                     override fun onMessage(content: String) {
                         TransferThreadPool.submitTask {
                             TmMessageLogic.INSTANCE.receiveMessage()
+
                         }
                     }
                 })?.connect()
@@ -100,6 +102,7 @@ class TmLoginLogic private constructor() {
         TmNetWorkStatusLogic.getInstance().registerNetworkStatus(TmUtils.sApp)
         TransferThreadPool.submitTask {
             TmMessageLogic.INSTANCE.receiveMessage()
+            TmMessageLogic.INSTANCE.retrySendMessages()
         }
     }
 

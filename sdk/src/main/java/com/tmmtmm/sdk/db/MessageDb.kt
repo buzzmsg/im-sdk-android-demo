@@ -39,7 +39,7 @@ class MessageDb private constructor(){
         EventCenter.handle<MessageEvent>(lifecycleOwner)
             .removeCallback()
 
-    fun updateStatus(message: MessageModel, status: Int) {
+    fun updateStatus(message: MessageModel, status: Int, sendEvent: Boolean = true) {
         message.status = status
         //update message status to sending
         DataBaseManager.getInstance().getDataBase()
@@ -78,8 +78,10 @@ class MessageDb private constructor(){
                     message.chatId,
                     displayTime ?: System.currentTimeMillis()
                 )
-            MessageEvent.send(mutableSetOf(message.mid), message.chatId)
-            ConversationEvent.send(mutableSetOf(message.chatId))
+            if (sendEvent){
+                MessageEvent.send(mutableSetOf(message.mid), message.chatId)
+                ConversationEvent.send(mutableSetOf(message.chatId))
+            }
         }
     }
 
