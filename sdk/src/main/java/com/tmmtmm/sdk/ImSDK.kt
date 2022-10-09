@@ -54,15 +54,15 @@ class ImSDK private constructor(val context: Application, val ak: String, val en
         if (TmUtils.sApp == null) {
             throw Exception()
         }
-        //not login
         val userId = LoginCache.getUserId()
         if (userId.isBlank()) {
-            //start to login
+            //not login,start to login
             tmConnectionMap[ImSDK::class.java.name]?.getAuth(auid) { auth ->
                 TmLoginLogic.getInstance().login(auid, auth, this)
             }
             return
         }
+        //user is login , init user db
         TmLoginLogic.getInstance().initUser(aKey = ak, env = env, userId = userId)
         LoginSuccessEvent.send(auid)
     }
