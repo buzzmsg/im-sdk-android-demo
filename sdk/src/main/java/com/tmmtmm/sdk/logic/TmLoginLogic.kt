@@ -11,6 +11,8 @@ import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.net.config.NetFactory
 import com.tmmtmm.sdk.core.net.manager.NetDbManager
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
+import com.tmmtmm.sdk.core.net.websocket.IReceiveMessageImpl
+import com.tmmtmm.sdk.core.net.websocket.WebSocketManager
 import com.tmmtmm.sdk.core.utils.TmUtils
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import com.tmmtmm.sdk.core.utils.onSuccess
@@ -83,6 +85,19 @@ class TmLoginLogic private constructor() {
             }
 
         })
+
+        WebSocketManager.getInstance().initWebSocket()
+            ?.addListener(
+                null,
+                iReceiveMessageImpl = object : IReceiveMessageImpl() {
+                    override fun onMessage(content: String) {
+                        TransferThreadPool.submitTask {
+                            TmMessageLogic.INSTANCE.receiveMessage()
+                        }
+                    }
+                })?.connect()
+
+        TmNetWorkStatusLogic.getInstance().registerNetworkStatus(TmUtils.sApp)
     }
 
     fun login(auid: String,auth: String,imSDK: IMSdk) {
@@ -96,17 +111,19 @@ class TmLoginLogic private constructor() {
                 GetAuth.execute(request).onSuccess { loginResponse ->
                     val uid = loginResponse?.userId ?: ""
                     val token = loginResponse?.token ?: ""
+                    NetFactory.getInstance()
+                        .getOrCreateNetByServiceName(
+                            serviceName = ApiBaseService.getServiceName(),
+                            host = ApiBaseService.getHost()
+                        ).setToken(token)
+
                     initUser(aKey = imSDK.ak, env = imSDK.env,uid)
                     setShareUser(auid = auid, uid = uid)
                     val userModel = UserModel()
                     userModel.uid = uid
                     userModel.aUid = auid
                     UserDBManager.getInstance().insertUser(userModel)
-                    NetFactory.getInstance()
-                        .getOrCreateNetByServiceName(
-                            serviceName = ApiBaseService.getServiceName(),
-                            host = ApiBaseService.getHost()
-                        ).setToken(token)
+
                     LoginSuccessEvent.send(auid)
                 }
 

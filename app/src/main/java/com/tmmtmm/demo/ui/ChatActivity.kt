@@ -8,6 +8,7 @@ import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
+import com.tmmtmm.demo.ui.ext.click
 import com.tmmtmm.demo.ui.view.TitleBarView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,10 +54,10 @@ class ChatActivity : BaseActivity() {
             },
             title = "聊天",
         )
-        binding.btnSendMessage.setOnClickListener {
+        binding.btnSendMessage.click {
             val content = binding.etMessageContent.text.toString()
             if (content.isBlank()) {
-                return@setOnClickListener
+                return@click
             }
             showLoading()
             lifecycleScope.launch(Dispatchers.IO){
@@ -69,9 +70,20 @@ class ChatActivity : BaseActivity() {
             }
 
         }
+
+        KeyboardUtils.registerSoftInputChangedListener(this) { height ->
+            if (height > 0){
+                binding.conversationLayout.forceScrollToPosition()
+            }
+        }
     }
 
     override fun fetchData() {
         binding.conversationLayout.createChat(aChatId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        KeyboardUtils.unregisterSoftInputChangedListener(this.window)
     }
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.tmmtmm.sdk.core.net.listener.impl.NetworkCallbackImpl
 import com.tmmtmm.sdk.core.net.listener.impl.TmConnectionListenerImpl
 import com.tmmtmm.sdk.core.net.websocket.WebSocketManager
+import com.tmmtmm.sdk.core.utils.TransferThreadPool
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -58,6 +59,10 @@ class TmNetWorkStatusLogic private constructor()  : LifecycleEventObserver {
 //                    syncWithMessageReceiveLoading()
 //                    retry()
 //                }
+
+                TransferThreadPool.submitTask {
+                    TmMessageLogic.INSTANCE.receiveMessage()
+                }
             }
 
             override fun networkChanged() {

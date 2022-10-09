@@ -308,7 +308,7 @@ class TmChatLayout @JvmOverloads constructor(
         }
     }
 
-    private fun forceScrollToPosition() {
+    fun forceScrollToPosition() {
         if (mAdapter.itemCount > 0) {
             linearLayoutManager?.scrollToPositionWithOffset(mAdapter.itemCount - 1, 0)
         }

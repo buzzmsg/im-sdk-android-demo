@@ -91,13 +91,13 @@ object SendMessage {
             //business failed
 //            handleError(messageEntity, status)
 //            TmLogUtils.getInstance().w(content = "send Message response ${result.toJson()}")
+            retryMessage(messageEntity)
             return ResponseResult.Failure(TmException(status, ""))
         } else {
             //update sequence
             if (retryMessageMap.contains(messageEntity.mid)) {
                 removeRetryMessages(messageEntity.mid)
             }
-            retryMessage(messageEntity)
 //            TmLogUtils.getInstance().w(content = "send Message response ${result.toJson()}")
             val sequence = result.value?.sequence
             DataBaseManager.getInstance().getDataBase()
