@@ -98,6 +98,9 @@ class TmLoginLogic private constructor() {
                 })?.connect()
 
         TmNetWorkStatusLogic.getInstance().registerNetworkStatus(TmUtils.sApp)
+        TransferThreadPool.submitTask {
+            TmMessageLogic.INSTANCE.receiveMessage()
+        }
     }
 
     fun login(auid: String,auth: String,imSDK: IMSdk) {
