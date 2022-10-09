@@ -31,9 +31,9 @@ data class LoginByPhoneResponse(
 
 object LoginByPhone {
 
-    const val host = "https://dev-im-api.tmmtmm.com.tr:7100"
+    const val host = "https://dev-sdkdemo.tmmtmm.com.tr:7504"
 
-    const val api = "/demoLogin"
+    const val api = "/login"
 
     fun execute(requestLoginByPhone: LoginByPhoneRequest): ResponseResult<LoginByPhoneResponse?> {
         try {
