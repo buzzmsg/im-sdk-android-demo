@@ -43,8 +43,7 @@ class MainActivity : BaseActivity() {
             title = "聊天",
             rightText = "创建聊天",
             rightBlock = {
-                enterChat()
-//                createGroup()
+                createGroup()
             }
         )
 
@@ -57,12 +56,6 @@ class MainActivity : BaseActivity() {
     }
 
     override fun fetchData() {
-
-    }
-
-    fun enterChat() {
-        createGroup()
-
 
     }
 

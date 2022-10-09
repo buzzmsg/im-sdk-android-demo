@@ -10,6 +10,7 @@ import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
 import com.tmmtmm.demo.ui.ext.click
 import com.tmmtmm.demo.ui.view.TitleBarView
+import com.tmmtmm.demo.utils.Random
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -61,7 +62,7 @@ class ChatActivity : BaseActivity() {
             }
             showLoading()
             lifecycleScope.launch(Dispatchers.IO){
-                TmApplication.instance().imSdk?.sendTextMessage(content, aChatId, kotlin.random.Random(6).toString())
+                TmApplication.instance().imSdk?.sendTextMessage(content, aChatId, Random.create(6))
                 withContext(Dispatchers.Main){
                     hideLoading()
                     binding.etMessageContent.setText("")
