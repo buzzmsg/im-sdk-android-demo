@@ -50,6 +50,8 @@ data class MessageInfoItem(
     var createTime: Long? = null, // 1621257958
     @SerializedName("id")
     var mid: String? = null, // 2x2qlr88wdcz
+    @SerializedName("amid")
+    var amid: String? = null, // 2x2qlr88wdcz
     @SerializedName("sender_id")
     var senderId: String? = null, // 3a4ytt1zez26
     @SerializedName("status")
@@ -80,13 +82,14 @@ data class MessageInfoItem(
         messageModel.mid = mid ?: ""
         messageModel.chatId = chatId ?: ""
         messageModel.aChatId = aChatId ?:""
-
+        messageModel.amid = amid ?:""
         messageModel.sender = senderId ?: ""
         messageModel.content = content
         messageModel.status = MessageStatus.Sent.value()
         messageModel.crateTime = createTime
         messageModel.sendTime = sendTime
         messageModel.extra = extra
+        messageModel.type = type
         messageModel.displayTime = createTime
         messageModel.readStatus = isRead ?: NOT_READ
         messageModel.delStatus = status

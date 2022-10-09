@@ -36,6 +36,7 @@ data class GetChatListResponse(
 data class GetChatListItemResponse(
     @SerializedName("id")
     var chatId: String? = null,
+    @SerializedName("achat_id")
     var aChatId: String? = null,
     var name: String? = null,
 )

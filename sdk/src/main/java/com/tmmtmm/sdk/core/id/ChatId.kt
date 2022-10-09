@@ -37,7 +37,7 @@ class ChatId private constructor(private var code: String) {
 
         fun create(aChatId: String): String {
             val ak = LoginCache.getAKey()
-            return EncryptUtils.encryptSHA1ToString(aChatId + ak)
+            return EncryptUtils.encryptSHA1ToString(ak + aChatId).toLowerCase()
         }
 
     }
