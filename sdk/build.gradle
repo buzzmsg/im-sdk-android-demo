@@ -7,7 +7,7 @@ plugins {
     id 'com.jfrog.artifactory'
 }
 
-apply from: "../../module.build.gradle"
+apply from: "../module.build.gradle"
 
 android {
     compileSdk 33
@@ -122,7 +122,7 @@ dependencies {
 
 
 
-def packageName = 'com.im.sdk'
+def packageName = 'com.im'
 def libraryVersion = '1.0.0'
 
 publishing {

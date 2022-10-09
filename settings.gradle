@@ -7,7 +7,6 @@ pluginManagement {
         maven { url "https://maven.aliyun.com/repository/google" }
         maven { url "https://maven.aliyun.com/repository/central" }
         maven { url "https://maven.aliyun.com/repository/public" }
-        maven { url 'http://119.27.167.20:8082/artifactory/im_sdk/'}
     }
 }
 dependencyResolutionManagement {
@@ -20,7 +19,10 @@ dependencyResolutionManagement {
         maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
         maven { url "https://maven.aliyun.com/repository/google" }
         maven { url "https://maven.aliyun.com/repository/public" }
-        maven { url 'http://119.27.167.20:8082/artifactory/im_sdk/'}
+        maven {
+            url 'http://119.27.167.20:8082/artifactory/im_sdk/'
+            allowInsecureProtocol = true
+        }
         maven {
             url 'http://119.27.167.20:8082/artifactory/common_module_android/'
             allowInsecureProtocol = true

@@ -58,11 +58,11 @@ class MainActivity : BaseActivity() {
 
     fun enterChat() {
         TmApplication.instance().imSdk?.createChat(aChatId = "e12345", chatName = "E12345", auids = mutableListOf("8611d8cb6105b05f"), object : IMSdk.CreateChatDelegate{
-            override fun onCreateSuccess() {
+            override fun onSucc() {
                 ChatActivity.newInstance(this@MainActivity, "e12345")
             }
 
-            override fun onCreateFailed(code: Int?, errorMsg: String?) {
+            override fun onError(code: Int?, errorMsg: String?) {
 
             }
         })

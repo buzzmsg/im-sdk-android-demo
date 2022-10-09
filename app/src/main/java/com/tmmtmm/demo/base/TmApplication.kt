@@ -30,7 +30,7 @@ class TmApplication : Application() {
         MMKV.initialize(this)
         instance = this
         imSdk = IMSdk.getInstance(context = this, ak = ak,"test")
-        imSdk?.setDelegate(object : IMSdk.TmDelegate {
+        imSdk?.setDelegate(object : IMSdk.ImDelegate {
             override fun getAuth(auid: String, resolve: (auth: String) -> Unit) {
                 val authcode = loginResponse?.authcode ?: ""
                 resolve.invoke(

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class IMSdk private constructor(val context: Application, val ak: String, val env: String) {
 
-    private var tmConnectionMap = ConcurrentHashMap<String, TmDelegate>()
+    private var tmConnectionMap = ConcurrentHashMap<String, ImDelegate>()
 
 
     companion object {
@@ -75,7 +75,7 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
         }
     }
 
-    fun setDelegate(delegate: TmDelegate) {
+    fun setDelegate(delegate: ImDelegate) {
         tmConnectionMap[IMSdk::class.java.name] = delegate
         ApiBaseService.setDelegate(object : Net.Delegate_401 {
             override fun onTokenError(net: Net?) {
@@ -100,14 +100,14 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
 
             if (result is ResponseResult.Success) {
                 ThreadUtils.runOnUiThread {
-                    delegate?.onCreateSuccess()
+                    delegate?.onSucc()
                 }
                 return@submitTask
             }
 
             if (result is ResponseResult.Failure) {
                 ThreadUtils.runOnUiThread {
-                    delegate?.onCreateFailed(
+                    delegate?.onError(
                         code = result.throwable?.code,
                         errorMsg = result.throwable?.message
                     )
@@ -121,11 +121,11 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
     }
 
     interface CreateChatDelegate {
-        fun onCreateSuccess()
-        fun onCreateFailed(code: Int?, errorMsg: String?)
+        fun onSucc()
+        fun onError(code: Int?, errorMsg: String?)
     }
 
-    interface TmDelegate {
+    interface ImDelegate {
         fun getAuth(
             auid: String,
             resolve: ((auth: String) -> Unit)
