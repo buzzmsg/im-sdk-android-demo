@@ -8,11 +8,10 @@ import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.databinding.ActivityChatBinding
 import com.tmmtmm.demo.ui.view.TitleBarView
-import com.tmmtmm.sdk.TMM
+import com.tmmtmm.sdk.ImSDK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Random
 
 class ChatActivity : BaseActivity() {
 
@@ -61,7 +60,7 @@ class ChatActivity : BaseActivity() {
             }
             showLoading()
             lifecycleScope.launch(Dispatchers.IO){
-                TMM.INSTANCE.sendTextMessage(content, aChatId, kotlin.random.Random(6).toString())
+                ImSDK.INSTANCE.sendTextMessage(content, aChatId, kotlin.random.Random(6).toString())
 
                 withContext(Dispatchers.Main){
                     hideLoading()

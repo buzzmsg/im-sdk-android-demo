@@ -11,9 +11,7 @@ import com.tmmtmm.demo.manager.LoginManager
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.ext.click
 import com.tmmtmm.demo.ui.view.TitleBarView
-import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.demo.vm.LoginViewModel
-import com.tmmtmm.sdk.TMM
 
 /**
  * @description
@@ -55,6 +53,7 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun fetchData() {
+
     }
 
     private fun login() {
@@ -68,17 +67,11 @@ class LoginActivity : BaseActivity() {
                 }
                 LoginManager.INSTANCE.setUserId(value?.auid ?: "")
                 LoginManager.INSTANCE.setAKey(value?.ak ?: "")
-                TMM.INSTANCE.getInstance(TmApplication.instance(), value?.ak ?: "", "test")
                 TmApplication.instance().loginResponse = value
-                loginSdk(value?.auid ?: "")
+                TmApplication.instance().imSdk?.initUser(value?.auid ?: "")
                 MainActivity.newInstance(this@LoginActivity)
                 finish()
             }
         }
     }
-
-    private fun loginSdk(auid: String) {
-        TMM.INSTANCE.initUser(auid)
-    }
-
 }

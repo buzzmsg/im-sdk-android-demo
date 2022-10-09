@@ -4,9 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import com.tencent.mmkv.MMKV
 import com.tmmtmm.demo.api.LoginByPhoneResponse
-import com.tmmtmm.demo.manager.LoginManager
-import com.tmmtmm.sdk.TMM
-import com.tmmtmm.sdk.logic.TmLoginLogic
+import com.tmmtmm.sdk.ImSDK
 import kotlin.properties.Delegates
 
 /**
@@ -19,6 +17,8 @@ class TmApplication : Application() {
 
     var loginResponse: LoginByPhoneResponse? = null
 
+    var imSdk: ImSDK? = null
+
     val ak = "68oni7jrg31qcsaijtg76qln"
 
     companion object {
@@ -30,9 +30,8 @@ class TmApplication : Application() {
         super.onCreate()
         MMKV.initialize(this)
         instance = this
-        TMM.INSTANCE.getInstance(this, ak, "test")
-        TMM.INSTANCE.setDelegate(object : TMM.TmDelegate {
-
+        imSdk = ImSDK.getInstance(ak = "","test")
+        imSdk?.setDelegate(object : ImSDK.TmDelegate {
             override fun getAuth(auid: String, resolve: (auth: String) -> Unit) {
                 val authcode = loginResponse?.authcode ?: ""
                 resolve.invoke(

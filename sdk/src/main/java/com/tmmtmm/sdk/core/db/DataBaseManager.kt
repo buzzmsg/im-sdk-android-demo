@@ -41,9 +41,7 @@ class DataBaseManager private constructor() {
         }
     }
 
-    fun init(context: Context) {
-        val aKey = LoginCache.getAKey()
-        val env = LoginCache.getEnv()
+    fun init(context: Context, aKey: String, env: String, userId: String) {
 //        val dbName =
 //            PathUtils.getInternalAppDbPath(aKey + File.separator + env + File.separator + BuildConfig.DB_NAME_PREFIX + TmLoginLogic.getInstance())
 //        val dbName =
@@ -53,7 +51,8 @@ class DataBaseManager private constructor() {
         val dbRootPath = PathUtils.getInternalAppDbsPath()
         val path = dbRootPath + dbPath
         FileUtils.createOrExistsDir(path)
-        val dbName = path + BuildConfig.DB_NAME_PREFIX + TmLoginLogic.getInstance().getUserId() + ".db"
+        val dbName =
+            path + BuildConfig.DB_NAME_PREFIX + userId + ".db"
 
 
         if (TextUtils.isEmpty(dbName)) {
@@ -71,9 +70,7 @@ class DataBaseManager private constructor() {
         }
     }
 
-    fun initShare(context: Context) {
-        val aKey = LoginCache.getAKey()
-        val env = LoginCache.getEnv()
+    fun initShare(context: Context,aKey: String,env: String) {
 //        val dbName =
 //            "${aKey}/${env}/" + BuildConfig.DB_NAME_PREFIX + "share"
 //        val dbName =

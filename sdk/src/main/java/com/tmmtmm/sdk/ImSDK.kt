@@ -1,12 +1,6 @@
 package com.tmmtmm.sdk
 
 import android.app.Activity
-import android.app.Application
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkRequest
-import androidx.lifecycle.*
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
@@ -15,74 +9,60 @@ import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.id.ChatId
 import com.tmmtmm.sdk.core.net.ResponseResult
 import com.tmmtmm.sdk.core.net.config.Net
-import com.tmmtmm.sdk.core.net.listener.impl.NetworkCallbackImpl
-import com.tmmtmm.sdk.core.net.listener.impl.TmConnectionListenerImpl
 import com.tmmtmm.sdk.core.net.service.ApiBaseService
-import com.tmmtmm.sdk.core.net.websocket.IReceiveMessageImpl
-import com.tmmtmm.sdk.core.net.websocket.WebSocketManager
 import com.tmmtmm.sdk.core.utils.TmUtils
 import com.tmmtmm.sdk.core.utils.TransferThreadPool
+import com.tmmtmm.sdk.db.event.LoginSuccessEvent
 import com.tmmtmm.sdk.logic.TmGroupLogic
 import com.tmmtmm.sdk.logic.TmLoginLogic
 import com.tmmtmm.sdk.logic.TmMessageLogic
-import com.tmmtmm.sdk.logic.TmNetWorkStatusLogic
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @description
  * @version
  */
-class TMM private constructor(){
+class ImSDK private constructor(val ak: String, val env: String) {
+
+    private var tmConnectionMap = ConcurrentHashMap<String, TmDelegate>()
+
 
     companion object {
-        val INSTANCE: TMM by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            TMM()
-        }
-    }
+        private var instance: ImSDK? = null
 
-    fun getInstance(context: Application, ak: String, env: String): TMM {
-        TmLoginLogic.getInstance().setAk(ak)
-        TmLoginLogic.getInstance().setEnv(env)
-        TmUtils.init(context)
-        if (ak.isBlank() || env.isBlank()) {
-            return this
-        }
-        DataBaseManager.getInstance().initShare(context)
-        if (TmLoginLogic.getInstance().getUserId().isBlank()) {
-            return this
-        }
-        AppUtils.registerAppStatusChangedListener(object : Utils.OnAppStatusChangedListener {
-            override fun onForeground(activity: Activity?) {
-                TransferThreadPool.submitTask {
-                    TmMessageLogic.INSTANCE.receiveMessage()
+        @JvmName("getInstance")
+        fun getInstance(ak: String, env: String): ImSDK {
+            if (instance == null) {
+                synchronized(this) {
+                    if (instance == null) {
+                        instance = ImSDK(ak, env)
+                    }
                 }
             }
-
-            override fun onBackground(activity: Activity?) {
-
-            }
-
-        })
-        DataBaseManager.getInstance().init(context)
-
-        WebSocketManager.getInstance().initWebSocket()
-            ?.addListener(
-                null,
-                iReceiveMessageImpl = object : IReceiveMessageImpl() {
-                    override fun onMessage(content: String) {
-                        TransferThreadPool.submitTask {
-                            TmMessageLogic.INSTANCE.receiveMessage()
-                        }
-                    }
-                })?.connect()
-
-        TmNetWorkStatusLogic.getInstance().registerNetworkStatus(context)
-        return this
+            return instance!!
+        }
     }
 
+    init {
+        DataBaseManager.getInstance().initShare(TmUtils.sApp, aKey = ak, env = env)
+        TmLoginLogic.getInstance().setAk(ak)
+    }
 
     fun initUser(auid: String) {
-        TmLoginLogic.getInstance().initUser(auid)
+        if (TmUtils.sApp == null) {
+            throw Exception()
+        }
+        //not login
+        val userId = LoginCache.getUserId()
+        if (userId.isBlank()) {
+            //start to login
+            tmConnectionMap[ImSDK::class.java.name]?.getAuth(auid) { auth ->
+                TmLoginLogic.getInstance().login(auid, auth, this)
+            }
+            return
+        }
+        TmLoginLogic.getInstance().initUser(aKey = ak, env = env, userId = userId)
+        LoginSuccessEvent.send(auid)
     }
 
     fun sendTextMessage(
@@ -97,12 +77,12 @@ class TMM private constructor(){
     }
 
     fun setDelegate(delegate: TmDelegate) {
-        TmLoginLogic.getInstance().addConnectionListener(TMM::class.java.name, delegate)
+        tmConnectionMap[ImSDK::class.java.name] = delegate
         ApiBaseService.setDelegate(object : Net.Delegate_401 {
             override fun onTokenError(net: Net?) {
                 val auid = LoginCache.getAUserId()
                 delegate.getAuth(auid) { auth ->
-                    TmLoginLogic.getInstance().login(auid, auth)
+                    TmLoginLogic.getInstance().login(auid, auth, this@ImSDK)
                 }
             }
         })
@@ -137,6 +117,10 @@ class TMM private constructor(){
         }
     }
 
+    fun removeConnectionListener(key: String) {
+        tmConnectionMap.remove(key)
+    }
+
     interface CreateChatDelegate {
         fun onCreateSuccess()
         fun onCreateFailed(code: Int?, errorMsg: String?)
@@ -148,8 +132,5 @@ class TMM private constructor(){
             resolve: ((auth: String) -> Unit)
         )
     }
-
-
-
 
 }

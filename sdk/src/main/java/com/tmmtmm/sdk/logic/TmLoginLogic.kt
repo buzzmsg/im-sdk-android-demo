@@ -1,6 +1,10 @@
 package com.tmmtmm.sdk.logic
 
-import com.tmmtmm.sdk.TMM
+import android.app.Activity
+import android.graphics.ImageDecoder
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.Utils
+import com.tmmtmm.sdk.ImSDK
 import com.tmmtmm.sdk.api.GetAuth
 import com.tmmtmm.sdk.api.GetAuthRequest
 import com.tmmtmm.sdk.cache.LoginCache
@@ -14,15 +18,12 @@ import com.tmmtmm.sdk.core.utils.onSuccess
 import com.tmmtmm.sdk.db.UserDBManager
 import com.tmmtmm.sdk.db.event.LoginSuccessEvent
 import com.tmmtmm.sdk.db.model.UserModel
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @description
  * @version
  */
 class TmLoginLogic private constructor() {
-
-    private var tmConnectionMap = ConcurrentHashMap<String, TMM.TmDelegate>()
 
     companion object {
 
@@ -45,7 +46,7 @@ class TmLoginLogic private constructor() {
         return LoginCache.getUserId()
     }
 
-    fun setUser(auid: String, uid: String) {
+    fun setShareUser(auid: String, uid: String) {
         LoginCache.setUser(auid, uid)
     }
 
@@ -69,32 +70,35 @@ class TmLoginLogic private constructor() {
         LoginCache.setEnv(env)
     }
 
-    fun initUser(auid: String) {
-        if (getUserId().isBlank()) {
-            //start to login
-            tmConnectionMap[TMM::class.java.name]?.getAuth(auid) { auth ->
-                login(auid, auth)
+    fun initUser(aKey: String, env: String, userId: String) {
+        DataBaseManager.getInstance().init(TmUtils.sApp, aKey = aKey, env = env, userId = userId)
+        AppUtils.registerAppStatusChangedListener(object : Utils.OnAppStatusChangedListener {
+            override fun onForeground(activity: Activity?) {
+                TransferThreadPool.submitTask {
+                    TmMessageLogic.INSTANCE.receiveMessage()
+                }
             }
-            return
-        }
-        LoginSuccessEvent.send(auid)
 
+            override fun onBackground(activity: Activity?) {
+
+            }
+
+        })
     }
 
-    fun login(auid: String,auth: String) {
+    fun login(auid: String,auth: String,imSDK: ImSDK) {
         try {
             TransferThreadPool.submitTask {
                 val request = GetAuthRequest(
                     auid = auid,
-                    ak = getAk(),
+                    ak = imSDK.ak,
                     authcode = auth,
                 )
                 GetAuth.execute(request).onSuccess { loginResponse ->
                     val uid = loginResponse?.userId ?: ""
                     val token = loginResponse?.token ?: ""
-                    DataBaseManager.getInstance().initShare(TmUtils.sApp)
-                    setUser(auid = auid, uid = uid)
-                    DataBaseManager.getInstance().init(TmUtils.sApp)
+                    initUser(aKey = imSDK.ak, env = imSDK.env,uid)
+                    setShareUser(auid = auid, uid = uid)
                     val userModel = UserModel()
                     userModel.uid = uid
                     userModel.aUid = auid
@@ -114,22 +118,8 @@ class TmLoginLogic private constructor() {
     }
 
     fun logout(aUid: String) {
-
-//        setUser("")
         NetDbManager.getInstance().clearAll()
         DataBaseManager.getInstance().close()
-
-    }
-
-    fun addConnectionListener(
-        key: String,
-        tmConnectionListenerImpl: TMM.TmDelegate
-    ) {
-        tmConnectionMap[key] = tmConnectionListenerImpl
-    }
-
-    fun removeConnectionListener(key: String) {
-        tmConnectionMap.remove(key)
     }
 
 }
