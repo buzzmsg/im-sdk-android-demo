@@ -1,10 +1,7 @@
 package com.tmmtmm.sdk
 
-import android.app.Activity
 import android.app.Application
-import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ThreadUtils
-import com.blankj.utilcode.util.Utils
 import com.tmmtmm.sdk.cache.LoginCache
 import com.tmmtmm.sdk.core.db.DataBaseManager
 import com.tmmtmm.sdk.core.id.ChatId
@@ -23,20 +20,20 @@ import java.util.concurrent.ConcurrentHashMap
  * @description
  * @version
  */
-class ImSDK private constructor(val context: Application, val ak: String, val env: String) {
+class IMSdk private constructor(val context: Application, val ak: String, val env: String) {
 
     private var tmConnectionMap = ConcurrentHashMap<String, TmDelegate>()
 
 
     companion object {
-        private var instance: ImSDK? = null
+        private var instance: IMSdk? = null
 
         @JvmName("getInstance")
-        fun getInstance(context: Application, ak: String, env: String): ImSDK {
+        fun getInstance(context: Application, ak: String, env: String): IMSdk {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {
-                        instance = ImSDK(context,ak, env)
+                        instance = IMSdk(context, ak, env)
                     }
                 }
             }
@@ -57,7 +54,7 @@ class ImSDK private constructor(val context: Application, val ak: String, val en
         val userId = LoginCache.getUserId()
         if (userId.isBlank()) {
             //not login,start to login
-            tmConnectionMap[ImSDK::class.java.name]?.getAuth(auid) { auth ->
+            tmConnectionMap[IMSdk::class.java.name]?.getAuth(auid) { auth ->
                 TmLoginLogic.getInstance().login(auid, auth, this)
             }
             return
@@ -79,12 +76,12 @@ class ImSDK private constructor(val context: Application, val ak: String, val en
     }
 
     fun setDelegate(delegate: TmDelegate) {
-        tmConnectionMap[ImSDK::class.java.name] = delegate
+        tmConnectionMap[IMSdk::class.java.name] = delegate
         ApiBaseService.setDelegate(object : Net.Delegate_401 {
             override fun onTokenError(net: Net?) {
                 val auid = LoginCache.getAUserId()
                 delegate.getAuth(auid) { auth ->
-                    TmLoginLogic.getInstance().login(auid, auth, this@ImSDK)
+                    TmLoginLogic.getInstance().login(auid, auth, this@IMSdk)
                 }
             }
         })

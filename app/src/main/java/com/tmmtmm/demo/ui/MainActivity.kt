@@ -9,9 +9,8 @@ import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityMainBinding
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.view.TitleBarView
-import com.tmmtmm.sdk.ImSDK
+import com.tmmtmm.sdk.IMSdk
 import com.tmmtmm.sdk.ui.view.TmConversationLayout
-import kotlin.reflect.KParameter
 
 class MainActivity : BaseActivity() {
 
@@ -58,7 +57,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun enterChat() {
-        TmApplication.instance().imSdk?.createChat(aChatId = "e12345", chatName = "E12345", auids = mutableListOf("8611d8cb6105b05f"), object : ImSDK.CreateChatDelegate{
+        TmApplication.instance().imSdk?.createChat(aChatId = "e12345", chatName = "E12345", auids = mutableListOf("8611d8cb6105b05f"), object : IMSdk.CreateChatDelegate{
             override fun onCreateSuccess() {
                 ChatActivity.newInstance(this@MainActivity, "e12345")
             }

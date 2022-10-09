@@ -1,10 +1,9 @@
 package com.tmmtmm.sdk.logic
 
 import android.app.Activity
-import android.graphics.ImageDecoder
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.Utils
-import com.tmmtmm.sdk.ImSDK
+import com.tmmtmm.sdk.IMSdk
 import com.tmmtmm.sdk.api.GetAuth
 import com.tmmtmm.sdk.api.GetAuthRequest
 import com.tmmtmm.sdk.cache.LoginCache
@@ -86,7 +85,7 @@ class TmLoginLogic private constructor() {
         })
     }
 
-    fun login(auid: String,auth: String,imSDK: ImSDK) {
+    fun login(auid: String,auth: String,imSDK: IMSdk) {
         try {
             TransferThreadPool.submitTask {
                 val request = GetAuthRequest(

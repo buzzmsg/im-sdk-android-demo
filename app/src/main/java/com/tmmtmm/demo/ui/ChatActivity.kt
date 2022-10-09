@@ -9,11 +9,9 @@ import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
 import com.tmmtmm.demo.ui.view.TitleBarView
-import com.tmmtmm.sdk.ImSDK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.reflect.KParameter
 
 class ChatActivity : BaseActivity() {
 
