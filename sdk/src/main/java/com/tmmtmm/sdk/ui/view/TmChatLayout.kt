@@ -296,7 +296,7 @@ class TmChatLayout @JvmOverloads constructor(
         helper.leadingLoadState = LoadState.Loading
         TransferThreadPool.submitTask {
             val lastMessage =
-                if (mAdapter.items.isNotEmpty()) mAdapter.items.last() else null
+                if (mAdapter.items.isNotEmpty()) mAdapter.items.first() else null
             val list = TmMessageLogic.INSTANCE.loadMoreMessages(lastMessage?.messageId ?: 0, chatId)
 
             ThreadUtils.runOnUiThread {

@@ -530,7 +530,8 @@ class TmMessageLogic private constructor() {
         val moreMessageEntityList =
             DataBaseManager.getInstance().getDataBase()
                 ?.messageDao()
-                ?.loadMoreMessagesFromBottom(chatId, lastId, messageCount)
+                ?.loadMoreMessages(chatId, lastId, messageCount)
+                ?.reversed()
         val moreMessageList = mutableListOf<TmMessage>()
         moreMessageEntityList
             ?.forEach {

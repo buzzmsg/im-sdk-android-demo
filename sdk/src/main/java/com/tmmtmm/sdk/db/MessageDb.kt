@@ -96,14 +96,14 @@ interface MessageDao {
     @Query("SELECT count(id) from tmm_message")
     fun getMessageCount(): Long
 
-    @Query("SELECT * FROM tmm_message where id >= :lastId ORDER BY id LIMIT :count")
-    fun loadMoreMessagesFromStart(
-        lastId: Long,
-        count: Int
-    ): MutableList<MessageModel>?
+//    @Query("SELECT * FROM tmm_message where id >= :lastId ORDER BY id LIMIT :count")
+//    fun loadMoreMessagesFromStart(
+//        lastId: Long,
+//        count: Int
+//    ): MutableList<MessageModel>?
 
-    @Query("SELECT * FROM tmm_message where id > :lastId and chatId = :chatId and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ORDER BY id LIMIT :count")
-    fun loadMoreMessagesFromBottom(
+    @Query("SELECT * FROM tmm_message where id < :lastId and chatId = :chatId and delStatus != ${MessageDeleteStatus.IS_DEL} and type != ${MessageContentType.ContentType_Read_Receipt} ORDER BY id Desc LIMIT :count")
+    fun loadMoreMessages(
         chatId: String?,
         lastId: Long,
         count: Int
