@@ -3,6 +3,7 @@ package com.tmmtmm.demo.api
 import androidx.annotation.Keep
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.annotations.SerializedName
+import com.tmmtmm.demo.api.LoginByPhone.host
 import com.tmmtmm.demo.exception.TmException
 import com.tmmtmm.demo.exception.TmmError
 
@@ -15,30 +16,24 @@ import java.util.concurrent.TimeUnit
 
 
 @Keep
-data class LoginByPhoneRequest(
-    var phone: String? = null,
+data class GetAuthRequest(
+    var token: String? = null,
 )
 
 @Keep
-data class LoginByPhoneResponse(
+data class GetAuthResponse(
     var code: Int? = 0, // 0
-//    var ak: String? = "", // 1626879625
-    @SerializedName("auid")
-    var auid: String? = "", // 2x2qlr88wdcz
-    var token: String? = "",
+    var authcode: String? = "",
 )
 
 
-object LoginByPhone {
+object GetAuth {
+    private const val api = "/getAuth"
 
-    const val host = "https://dev-sdkdemo.tmmtmm.com.tr:7504"
-
-    private const val api = "/login"
-
-    fun execute(requestLoginByPhone: LoginByPhoneRequest): ResponseResult<LoginByPhoneResponse?> {
+    fun execute(requestGetAuth: GetAuthRequest): ResponseResult<GetAuthResponse?> {
         try {
             val requestBody: RequestBody =
-                requestLoginByPhone.toJson().toString()
+                requestGetAuth.toJson().toString()
                     .toRequestBody("application/json".toMediaType())
             val url = host + api
             val req =
@@ -57,9 +52,9 @@ object LoginByPhone {
             val type =
                 GsonUtils.getType(
                     BaseResponseEntity::class.java,
-                    LoginByPhoneResponse::class.java,
+                    GetAuthResponse::class.java,
                 )
-            val responseData: BaseResponseEntity<LoginByPhoneResponse>? =
+            val responseData: BaseResponseEntity<GetAuthResponse>? =
                 response.body?.string()?.responseToEntity(type)
 
             val result = if (responseData?.isSuccess() == false) {

@@ -26,11 +26,18 @@ class LoginManager private constructor() {
        return SpUtils.getString("DEMO_UID",LOGIN_UID)
     }
 
-    fun setAKey(aKey:String) {
-        SpUtils.putString("DEMO_AKEY",LOGIN_UID, aKey)
+    fun setToken(token:String) {
+        SpUtils.putString("DEMO_TOKEN",LOGIN_UID, token)
     }
 
-    fun getAKey() = SpUtils.getString("DEMO_AKEY",LOGIN_UID)
+    fun getToken() = SpUtils.getString("DEMO_TOKEN",LOGIN_UID)
+
+
+    fun setAuthCode(authCode:String) {
+        SpUtils.putString("DEMO_AuthCode",LOGIN_UID, authCode)
+    }
+
+    fun getAuthCode() = SpUtils.getString("DEMO_AuthCode",LOGIN_UID)
 
 
     fun isLogin(): Boolean{

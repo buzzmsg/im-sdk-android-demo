@@ -66,8 +66,7 @@ class LoginActivity : BaseActivity() {
                     return@observe
                 }
                 LoginManager.INSTANCE.setUserId(value?.auid ?: "")
-                LoginManager.INSTANCE.setAKey(value?.ak ?: "")
-                TmApplication.instance().loginResponse = value
+                LoginManager.INSTANCE.setToken(value?.token ?: "")
                 TmApplication.instance().imSdk?.initUser(value?.auid ?: "")
                 MainActivity.newInstance(this@LoginActivity)
                 finish()
