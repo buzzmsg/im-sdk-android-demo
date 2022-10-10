@@ -33,4 +33,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "im-sdk-android"
 include ':app'
-include ':IMSdk'

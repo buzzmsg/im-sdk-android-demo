@@ -88,8 +88,7 @@ dependencies {
     implementation "com.tencent:mmkv-static:1.2.1"
 
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation project(path: ':IMSdk')
 
-//    implementation ("com.im:sdk:1.0.3")
+    implementation ("com.im:sdk:1.0.3")
 
 }
