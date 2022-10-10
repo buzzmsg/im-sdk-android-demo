@@ -4,10 +4,10 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
     id 'maven-publish'
-    id 'com.jfrog.artifactory'
+//    id 'com.jfrog.artifactory'
 }
 
-apply from: "../module.build.gradle"
+//apply from: "../module.build.gradle"
 
 android {
     compileSdk 33
@@ -24,7 +24,7 @@ android {
         release {
             minifyEnabled false
             buildConfigField "String", "WS_HOST", RELEASE_WS_API
-            buildConfigField "String", "SERVICE_NAME", RELEASE_IM_SERVICE_NAME 
+            buildConfigField "String", "SERVICE_NAME", RELEASE_IM_SERVICE_NAME
             buildConfigField "String", "HOST", RELEASE_IM_HOST
             buildConfigField "String", "DB_NAME_PREFIX", RELEASE_DB_NAME_PREFIX
 
@@ -35,8 +35,8 @@ android {
         debug {
             debuggable true
             minifyEnabled false
-            buildConfigField "String", "WS_HOST", DEBUG_WS_API 
-            buildConfigField "String", "SERVICE_NAME", DEBUG_IM_SERVICE_NAME 
+            buildConfigField "String", "WS_HOST", DEBUG_WS_API
+            buildConfigField "String", "SERVICE_NAME", DEBUG_IM_SERVICE_NAME
             buildConfigField "String", "HOST", DEBUG_IM_HOST
             buildConfigField "String", "DB_NAME_PREFIX", DEBUG_DB_NAME_PREFIX
 
@@ -121,31 +121,54 @@ dependencies {
 }
 
 
-
-def packageName = 'com.im'
-def libraryVersion = '1.0.3'
-
 publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId packageName
-            version = libraryVersion
-            artifactId project.getName()
-
-            // Tell maven to prepare the generated "*.aar" file for publishing
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-            pom.withXml {
-                def dependencies = asNode().appendNode('dependencies')
-                configurations.api.allDependencies.each{
-                    // 如果有compile fileTree()，group会为空，需要去除
-                    if(it.group != null) {
-                        def dependency = dependencies.appendNode('dependency')
-                        dependency.appendNode('groupId', it.group)
-                        dependency.appendNode('artifactId', it.name)
-                        dependency.appendNode('version', it.version)
-                    }
-                }
+    repositories {
+        maven {
+            name = "com.im.sdk"
+            url = "https://maven.pkg.github.com/TmmTmmIM/IMSdk-Android"
+            credentials {
+                username = project.findProperty("gpr.user")
+                password = project.findProperty("gpr.key")
             }
         }
     }
+
+    publications {
+        gpr(MavenPublication) {
+            groupId = 'com.im.sdk'
+            version = '0.0.1'
+            artifact "build\\outputs\\aar\\IMSdk-debug.aar"
+        }
+    }
 }
+
+
+
+
+//def packageName = 'com.im'
+//def libraryVersion = '1.0.3'
+//
+//publishing {
+//    publications {
+//        aar(MavenPublication) {
+//            groupId packageName
+//            version = libraryVersion
+//            artifactId project.getName()
+//
+//            // Tell maven to prepare the generated "*.aar" file for publishing
+//            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+//            pom.withXml {
+//                def dependencies = asNode().appendNode('dependencies')
+//                configurations.api.allDependencies.each{
+//                    // 如果有compile fileTree()，group会为空，需要去除
+//                    if(it.group != null) {
+//                        def dependency = dependencies.appendNode('dependency')
+//                        dependency.appendNode('groupId', it.group)
+//                        dependency.appendNode('artifactId', it.name)
+//                        dependency.appendNode('version', it.version)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}

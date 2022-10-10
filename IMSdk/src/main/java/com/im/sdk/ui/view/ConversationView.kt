@@ -39,7 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  * @description
  * @version
  */
-class TmConversationLayout @JvmOverloads constructor(
+class ConversationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

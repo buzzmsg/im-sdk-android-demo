@@ -18,6 +18,14 @@ class LoginManager private constructor() {
         }
     }
 
+    fun setUserPhone(phone: String){
+        SpUtils.putString("DEMO_PHONE",LOGIN_UID, phone)
+    }
+
+    fun getUserPhone(): String{
+        return SpUtils.getString("DEMO_PHONE",LOGIN_UID)
+    }
+
     fun setUserId(uid: String){
         SpUtils.putString("DEMO_UID",LOGIN_UID, uid)
     }

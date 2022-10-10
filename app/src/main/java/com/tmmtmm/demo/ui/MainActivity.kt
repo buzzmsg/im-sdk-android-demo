@@ -11,7 +11,8 @@ import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.view.TitleBarView
 import com.tmmtmm.demo.utils.MD5
 import com.im.sdk.IMSdk
-import com.im.sdk.ui.view.TmConversationLayout
+import com.im.sdk.ui.view.ConversationView
+import com.tmmtmm.demo.manager.LoginManager
 
 class MainActivity : BaseActivity() {
 
@@ -45,7 +46,7 @@ class MainActivity : BaseActivity() {
         )
 
         mBinding.conversationLayout.setItemClickCallBack(object :
-            TmConversationLayout.ItemClickCallBack {
+            ConversationView.ItemClickCallBack {
             override fun onItemClick(chatId: String) {
                 ChatActivity.newInstance(this@MainActivity, chatId)
             }
@@ -68,9 +69,10 @@ class MainActivity : BaseActivity() {
             ) { phone ->
                 //                                          new XPopup.Builder(getContext()).asLoading().show();
                 val auid = MD5.create(phone)
-                TmApplication.instance().imSdk?.createChat(aChatId = phone, chatName = auid.uppercase(), auids = mutableListOf(auid), object : IMSdk.CreateChatDelegate{
+                val aChatID = phone + LoginManager.INSTANCE.getUserPhone()
+                TmApplication.instance().imSdk?.createChat(aChatId = aChatID, chatName = aChatID, auids = mutableListOf(auid), object : IMSdk.CreateChatDelegate{
                     override fun onSucc(){
-                        ChatActivity.newInstance(this@MainActivity, phone)
+                        ChatActivity.newInstance(this@MainActivity, aChatID)
                     }
 
                     override fun onError(code: Int?, errorMsg: String?) {

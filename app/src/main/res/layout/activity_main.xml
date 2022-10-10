@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:background="#99d8d8d8"/>
 
-    <com.im.sdk.ui.view.TmConversationLayout
+    <com.im.sdk.ui.view.ConversationView
         android:id="@+id/conversationLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"

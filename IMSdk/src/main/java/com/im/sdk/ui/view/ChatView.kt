@@ -27,7 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  * @description
  * @version
  */
-class TmChatLayout @JvmOverloads constructor(
+class ChatView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
