@@ -37,7 +37,7 @@ class TmApplication : Application() {
         imSdk = IMSdk.getInstance(context = this, ak = ak, "test")
 
         imSdk?.setDelegate(object : IMSdk.ImDelegate {
-            override fun getAuth(auid: String, resolve: (auth: String) -> Unit) {
+            override fun onAuth(auid: String, resolve: (auth: String) -> Unit) {
 
                 val localAuthCode = LoginManager.INSTANCE.getAuthCode()
 

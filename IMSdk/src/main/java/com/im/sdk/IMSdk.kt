@@ -54,7 +54,7 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
         val userId = LoginCache.getUserId()
         if (userId.isBlank()) {
             //not login,start to login
-            tmConnectionMap[IMSdk::class.java.name]?.getAuth(auid) { auth ->
+            tmConnectionMap[IMSdk::class.java.name]?.onAuth(auid) { auth ->
                 TmLoginLogic.getInstance().login(auid, auth, this)
             }
             return
@@ -80,7 +80,7 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
         ApiBaseService.setDelegate(object : Net.Delegate_401 {
             override fun onTokenError(net: Net?) {
                 val auid = LoginCache.getAUserId()
-                delegate.getAuth(auid) { auth ->
+                delegate.onAuth(auid) { auth ->
                     TmLoginLogic.getInstance().login(auid, auth, this@IMSdk)
                 }
             }
@@ -126,7 +126,7 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
     }
 
     interface ImDelegate {
-        fun getAuth(
+        fun onAuth(
             auid: String,
             resolve: ((auth: String) -> Unit)
         )
