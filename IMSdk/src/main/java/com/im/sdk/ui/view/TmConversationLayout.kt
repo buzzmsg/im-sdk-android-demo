@@ -19,6 +19,8 @@ import com.chad.library.adapter.base.loadState.LoadState
 import com.chad.library.adapter.base.loadState.trailing.TrailingLoadStateAdapter
 import com.im.sdk.core.event.EventCenter
 import com.im.sdk.core.utils.TransferThreadPool
+import com.im.sdk.databinding.ConversationLayoutViewBinding
+import com.im.sdk.databinding.ItemConversationBinding
 import com.im.sdk.db.ConversationDbManager
 import com.im.sdk.db.UserDBManager
 import com.im.sdk.db.event.ConversationEvent
@@ -26,8 +28,6 @@ import com.im.sdk.db.event.LoginSuccessEvent
 import com.im.sdk.logic.TmConversationLogic
 import com.im.sdk.logic.TmMessageLogic
 import com.im.sdk.ui.view.vo.TmmConversationVo
-import com.tmmtmm.sdk.databinding.ConversationLayoutViewBinding
-import com.tmmtmm.sdk.databinding.ItemConversationBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn

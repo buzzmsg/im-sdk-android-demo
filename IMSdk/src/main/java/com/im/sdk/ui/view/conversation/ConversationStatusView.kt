@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.im.sdk.R
-import com.im.sdk.constant.MessageStatus
 import com.im.sdk.core.id.ChatId
 import com.im.sdk.databinding.ViewConversationStatusBinding
 import com.im.sdk.logic.TmLoginLogic
