@@ -1,6 +1,7 @@
 package com.im.sdk
 
 import android.app.Application
+import android.content.Context
 import com.blankj.utilcode.util.ThreadUtils
 import com.im.sdk.cache.LoginCache
 import com.im.sdk.core.db.DataBaseManager
@@ -14,6 +15,8 @@ import com.im.sdk.db.event.LoginSuccessEvent
 import com.im.sdk.logic.TmGroupLogic
 import com.im.sdk.logic.TmLoginLogic
 import com.im.sdk.logic.TmMessageLogic
+import com.im.sdk.ui.view.ChatView
+import com.im.sdk.ui.view.ConversationView
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -114,6 +117,16 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
                 }
             }
         }
+    }
+
+    fun createConversationView(context: Context): ConversationView {
+        return ConversationView(context)
+    }
+
+    fun createChatView(aChatId: String, context: Context): ChatView{
+        val chatView = ChatView(context)
+        chatView.createChat(aChatId)
+        return chatView
     }
 
     fun removeConnectionListener(key: String) {

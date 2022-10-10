@@ -45,8 +45,8 @@ class MainActivity : BaseActivity() {
             }
         )
 
-        mBinding.conversationLayout.setItemClickCallBack(object :
-            ConversationView.ItemClickCallBack {
+        mBinding.conversationLayout.setConversationDelegate(object :
+            ConversationView.ConversationDelegate {
             override fun onItemClick(chatId: String) {
                 ChatActivity.newInstance(this@MainActivity, chatId)
             }
@@ -57,7 +57,7 @@ class MainActivity : BaseActivity() {
 
     }
 
-    fun createGroup() {
+    private fun createGroup() {
         XPopup.Builder(this)
             .hasStatusBarShadow(false) //.dismissOnBackPressed(false)
             .isDestroyOnDismiss(true) //对于只使用一次的弹窗对象，推荐设置这个
@@ -69,7 +69,12 @@ class MainActivity : BaseActivity() {
             ) { phone ->
                 //                                          new XPopup.Builder(getContext()).asLoading().show();
                 val auid = MD5.create(phone)
-                val aChatID = phone + LoginManager.INSTANCE.getUserPhone()
+                val minePhone = LoginManager.INSTANCE.getUserPhone()
+                val aChatID = if (phone < minePhone){
+                    "${phone}_${minePhone}"
+                } else {
+                    "${minePhone}_${phone}"
+                }
                 TmApplication.instance().imSdk?.createChat(aChatId = aChatID, chatName = aChatID, auids = mutableListOf(auid), object : IMSdk.CreateChatDelegate{
                     override fun onSucc(){
                         ChatActivity.newInstance(this@MainActivity, aChatID)

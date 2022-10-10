@@ -117,7 +117,7 @@ class ConversationView @JvmOverloads constructor(
 
         mAdapter.setOnItemClickListener { _, _, position ->
             val item = mAdapter.items[position]
-            itemClickCallBack?.onItemClick(item.aChatId)
+            conversationDelegate?.onItemClick(item.aChatId)
         }
 
         request()
@@ -287,14 +287,14 @@ class ConversationView @JvmOverloads constructor(
 //        }
     }
 
-    private var itemClickCallBack: ItemClickCallBack? = null
+    private var conversationDelegate: ConversationDelegate? = null
 
-    fun setItemClickCallBack(callBack: ItemClickCallBack) {
-        this.itemClickCallBack = callBack
+    fun setConversationDelegate(delegate: ConversationDelegate) {
+        this.conversationDelegate = delegate
     }
 
-    interface ItemClickCallBack {
-        fun onItemClick(chatId: String)
+    interface ConversationDelegate {
+        fun onItemClick(aChatId: String)
     }
 
 
