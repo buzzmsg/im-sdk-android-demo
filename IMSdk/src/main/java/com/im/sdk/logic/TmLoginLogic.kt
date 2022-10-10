@@ -2,6 +2,7 @@ package com.im.sdk.logic
 
 import android.app.Activity
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
 import com.im.sdk.IMSdk
 import com.im.sdk.api.GetAuth
@@ -15,9 +16,12 @@ import com.im.sdk.core.net.websocket.IReceiveMessageImpl
 import com.im.sdk.core.net.websocket.WebSocketManager
 import com.im.sdk.core.utils.TmUtils
 import com.im.sdk.core.utils.TransferThreadPool
+import com.im.sdk.core.utils.onError
 import com.im.sdk.core.utils.onSuccess
 import com.im.sdk.db.UserDBManager
+import com.im.sdk.db.event.LoginSuccessEvent
 import com.im.sdk.db.model.UserModel
+import kotlinx.coroutines.delay
 
 /**
  * @description
@@ -25,9 +29,15 @@ import com.im.sdk.db.model.UserModel
  */
 class TmLoginLogic private constructor() {
 
+    private var loginRetryTimes = 0
+
     companion object {
 
         private var instance: TmLoginLogic? = null
+
+        private const val RETRY_TIMES = 3
+
+        private const val RETRY_DELAY_MILES = 500L
 
         @JvmName("getInstance")
         fun getInstance(): TmLoginLogic {
@@ -105,7 +115,8 @@ class TmLoginLogic private constructor() {
         }
     }
 
-    fun login(auid: String,auth: String,imSDK: IMSdk) {
+    fun login(auid: String, auth: String, imSDK: IMSdk) {
+        Thread.sleep(2000)
         try {
             TransferThreadPool.submitTask {
                 val request = GetAuthRequest(
@@ -122,14 +133,22 @@ class TmLoginLogic private constructor() {
                             host = ApiBaseService.getHost()
                         ).setToken(token)
 
-                    initUser(aKey = imSDK.ak, env = imSDK.env,uid)
+                    initUser(aKey = imSDK.ak, env = imSDK.env, uid)
                     setShareUser(auid = auid, uid = uid)
                     val userModel = UserModel()
                     userModel.uid = uid
                     userModel.aUid = auid
                     UserDBManager.getInstance().insertUser(userModel)
-
-                    com.im.sdk.db.event.LoginSuccessEvent.send(auid)
+                    LoginSuccessEvent.send(auid)
+                    loginRetryTimes = 0
+                }.onError { code, msg ->
+                    loginRetryTimes += 1
+                    if (loginRetryTimes >= RETRY_TIMES) {
+                        return@onError
+                    }
+                    val sleepDuration = RETRY_DELAY_MILES * loginRetryTimes
+                    Thread.sleep(sleepDuration)
+                    login(auid, auth, imSDK)
                 }
 
             }

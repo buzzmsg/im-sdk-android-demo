@@ -31,14 +31,6 @@ dependencyResolutionManagement {
         maven { url 'https://www.jitpack.io' }
     }
 }
-rootProject.name = "TMM SDK"
+rootProject.name = "im-sdk-android"
 include ':app'
 include ':IMSdk'
-include ':module:libcore'
-include ':app:style'
-include ':module:netcore'
-include ':module:libcore'
-include ':sdk:tmmcore'
-include ':app:style'
-include ':module:netcore'
-include ':sdk:netcore'
