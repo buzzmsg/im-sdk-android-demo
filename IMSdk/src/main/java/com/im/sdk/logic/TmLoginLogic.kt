@@ -21,7 +21,6 @@ import com.im.sdk.core.utils.onSuccess
 import com.im.sdk.db.UserDBManager
 import com.im.sdk.db.event.LoginSuccessEvent
 import com.im.sdk.db.model.UserModel
-import kotlinx.coroutines.delay
 
 /**
  * @description
@@ -116,7 +115,6 @@ class TmLoginLogic private constructor() {
     }
 
     fun login(auid: String, auth: String, imSDK: IMSdk) {
-        Thread.sleep(2000)
         try {
             TransferThreadPool.submitTask {
                 val request = GetAuthRequest(

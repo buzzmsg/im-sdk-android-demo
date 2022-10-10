@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class IMSdk private constructor(val context: Application, val ak: String, val env: String) {
 
-    private var tmConnectionMap = ConcurrentHashMap<String, ImDelegate>()
+    private var tmConnectionMap = ConcurrentHashMap<String, IMDelegate>()
 
 
     companion object {
@@ -75,7 +75,7 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
         }
     }
 
-    fun setDelegate(delegate: ImDelegate) {
+    fun setDelegate(delegate: IMDelegate) {
         tmConnectionMap[IMSdk::class.java.name] = delegate
         ApiBaseService.setDelegate(object : Net.Delegate_401 {
             override fun onTokenError(net: Net?) {
@@ -125,7 +125,7 @@ class IMSdk private constructor(val context: Application, val ak: String, val en
         fun onError(code: Int?, errorMsg: String?)
     }
 
-    interface ImDelegate {
+    interface IMDelegate {
         fun onAuth(
             auid: String,
             resolve: ((auth: String) -> Unit)
