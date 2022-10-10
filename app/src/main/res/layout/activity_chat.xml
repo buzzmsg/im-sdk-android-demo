@@ -9,7 +9,7 @@
     android:background="@color/white"
     >
 
-    <com.tmmtmm.sdk.ui.view.TmChatLayout
+    <com.im.sdk.ui.view.TmChatLayout
         android:id="@+id/conversationLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"

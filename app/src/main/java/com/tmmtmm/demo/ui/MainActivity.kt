@@ -3,9 +3,6 @@ package com.tmmtmm.demo.ui
 //import com.chad.library.adapter.base.BaseBinderAdapter
 import android.content.Context
 import android.content.Intent
-import android.os.Build.VERSION_CODES.M
-import com.blankj.utilcode.util.EncodeUtils
-import com.blankj.utilcode.util.EncryptUtils
 import com.lxj.xpopup.XPopup
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
@@ -13,8 +10,8 @@ import com.tmmtmm.demo.databinding.ActivityMainBinding
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.view.TitleBarView
 import com.tmmtmm.demo.utils.MD5
-import com.tmmtmm.sdk.IMSdk
-import com.tmmtmm.sdk.ui.view.TmConversationLayout
+import com.im.sdk.IMSdk
+import com.im.sdk.ui.view.TmConversationLayout
 
 class MainActivity : BaseActivity() {
 

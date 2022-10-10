@@ -3,7 +3,7 @@ package com.tmmtmm.demo.base
 import android.app.Application
 import com.tencent.mmkv.MMKV
 import com.tmmtmm.demo.api.LoginByPhoneResponse
-import com.tmmtmm.sdk.IMSdk
+import com.im.sdk.IMSdk
 import kotlin.properties.Delegates
 
 /**

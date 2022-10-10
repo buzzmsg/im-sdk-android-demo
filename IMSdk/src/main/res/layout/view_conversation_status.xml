@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <com.im.sdk.ui.view.message.MessageSendingView
+        android:id="@+id/ivConversationStatus"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        tools:src="@drawable/ic_conversation_message_received"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvConversationUnReadCount"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:background="@drawable/shape_round_rect_bg_message_count"
+        android:gravity="center"
+        android:minWidth="18dp"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="9" />
+
+</merge>
