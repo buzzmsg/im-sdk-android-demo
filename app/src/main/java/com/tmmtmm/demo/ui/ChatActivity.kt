@@ -56,21 +56,9 @@ class ChatActivity : BaseActivity() {
             title = "聊天",
         )
         binding.btnSendMessage.click {
-            val content = binding.etMessageContent.text.toString()
-            if (content.isBlank()) {
-                return@click
-            }
-            showLoading()
-            lifecycleScope.launch(Dispatchers.IO){
-                TmApplication.instance().imSdk?.sendTextMessage(content, aChatId, Random.create(6))
-                withContext(Dispatchers.Main){
-                    hideLoading()
-                    binding.etMessageContent.setText("")
-                    KeyboardUtils.hideSoftInput(binding.etMessageContent)
-                }
-            }
-
+            SendMessageActivity.newInstance(this,aChatId)
         }
+
 
         KeyboardUtils.registerSoftInputChangedListener(this) { height ->
             if (height > 0){

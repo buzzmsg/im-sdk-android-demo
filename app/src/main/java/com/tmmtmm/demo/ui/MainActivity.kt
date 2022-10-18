@@ -47,8 +47,8 @@ class MainActivity : BaseActivity() {
 
         mBinding.conversationLayout.setConversationDelegate(object :
             ConversationView.ConversationDelegate {
-            override fun onItemClick(chatId: String) {
-                ChatActivity.newInstance(this@MainActivity, chatId)
+            override fun onItemClick(aChatId: String) {
+                ChatActivity.newInstance(this@MainActivity, aChatId)
             }
         })
     }

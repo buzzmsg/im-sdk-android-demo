@@ -24,6 +24,7 @@ data class GetAuthRequest(
 data class GetAuthResponse(
     var code: Int? = 0, // 0
     var authcode: String? = "",
+    var ak: String? = "", // 1626879625
 )
 
 
