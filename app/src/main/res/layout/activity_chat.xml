@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/page_style_no_status_bar"
-    android:fitsSystemWindows="true"
+    style="@style/root_view_constraint"
     app:ctb_toolBarBackground="@color/white"
     android:background="@color/white"
     >
@@ -24,24 +23,31 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/layoutChatInput"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
+        android:layout_height="150dp"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/conversationLayout"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:background="@color/white"
         >
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etMessageContent"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#3d3d3d"
+            android:textSize="20sp"
+            android:text="输入区域"/>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.allen.library.shape.ShapeButton
             android:id="@+id/btnSendMessage"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:text="发送"
+            android:layout_width="230dp"
+            android:layout_height="44dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:gravity="center"
+            app:shapeSolidColor="@color/text_0091FF"
+            app:shapeCornersRadius="12dp"
+            android:text="发消息"
             />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

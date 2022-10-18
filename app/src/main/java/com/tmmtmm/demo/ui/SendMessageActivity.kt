@@ -165,7 +165,7 @@ class SendMessageActivity : BaseActivity() {
                                 aChatId = aChatId,
                                 amid = Random.create(6),
                                 path = localMedia.realPath,
-                                isOrigin = 1,
+                                isOrigin = false,
                             )
                         }
                     }
@@ -192,7 +192,7 @@ class SendMessageActivity : BaseActivity() {
             val fileType = FileUtils.getFileExtension(file)
             //val format = FormatUtils.getFileType(file.name)
 
-            TmApplication.instance().imSdk?.sendFileMessage(
+            TmApplication.instance().imSdk?.sendAttachmentMessage(
                 aChatId = aChatId,
                 amid = Random.create(6),
                 path = file.absolutePath,
