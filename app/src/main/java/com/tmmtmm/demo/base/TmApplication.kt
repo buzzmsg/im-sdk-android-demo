@@ -1,15 +1,24 @@
 package com.tmmtmm.demo.base
 
 import android.app.Application
+import android.util.Log
+import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.ResourceUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.im.sdk.IMSdk
+import com.im.sdk.dto.UserinfoDto
+import com.im.sdk.extensions.globalIO
 import com.tencent.mmkv.MMKV
+import com.tmmtmm.demo.R
 import com.tmmtmm.demo.api.GetAuth
 import com.tmmtmm.demo.api.GetAuthRequest
 import com.tmmtmm.demo.api.LoginByPhoneResponse
 import com.tmmtmm.demo.api.ResponseResult
 import com.tmmtmm.demo.manager.LoginManager
+import java.util.concurrent.ConcurrentLinkedDeque
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.properties.Delegates
+import kotlin.random.Random
 
 /**
  * @description
@@ -17,15 +26,18 @@ import kotlin.properties.Delegates
  */
 class TmApplication : Application() {
 
-//    lateinit var instance: TmApplication
-
     var loginResponse: LoginByPhoneResponse? = null
 
     var imSdk: IMSdk? = null
 
+    var cacheUserinfoList = mutableListOf<UserinfoDto>()
+
+    val avatarName = "avatar_default_"
+
     private val ak = "68oni7jrg31qcsaijtg76qln"
 
     companion object {
+        private const val TAG = "TmApplication"
         private var instance: TmApplication by Delegates.notNull()
         fun instance() = instance
     }
@@ -37,14 +49,15 @@ class TmApplication : Application() {
         imSdk = IMSdk.getInstance(context = this, ak = ak, "test")
 
         imSdk?.setDelegate(object : IMSdk.IMDelegate {
-            override fun onAuth(auid: String, resolve: (auth: String) -> Unit) {
 
-                val localAuthCode = LoginManager.INSTANCE.getAuthCode()
-
-                if (localAuthCode.isNotBlank()) {
-                    resolve.invoke(localAuthCode)
-                    return
-                }
+            override fun authCodeExpire(auid: String) {
+//                val localAuthCode = LoginManager.INSTANCE.getAuthCode()
+//
+//                if (localAuthCode.isNotBlank()) {
+//                    imSdk?.setAuthCode(localAuthCode)
+////                    resolve.invoke(localAuthCode)
+//                    return
+//                }
 
 
                 ThreadUtils.executeByCached(object : ThreadUtils.Task<String>() {
@@ -57,9 +70,10 @@ class TmApplication : Application() {
                         val authCode = result.value?.authcode ?: ""
 
                         LoginManager.INSTANCE.setAuthCode(authCode)
-                        resolve.invoke(
-                            authCode
-                        )
+//                        resolve.invoke(
+//                            authCode
+//                        )
+                        imSdk?.setAuthCode(authCode)
                         return ""
                     }
 
@@ -73,9 +87,37 @@ class TmApplication : Application() {
                     }
 
                 })
+            }
 
-
+            override fun onShowUserinfo(auids: List<String>) {
+                setUserinfo(auids)
             }
         })
+    }
+
+    fun setUserinfo(auids: List<String>) {
+        globalIO {
+            val mapCacheUserinfoList = cacheUserinfoList.associateBy({ it.auid }, { it.item })
+            for (auid in auids) {
+                if (auid.isEmpty()) continue
+
+                if (mapCacheUserinfoList.keys.contains(auid)) {
+                    continue
+                }
+                Log.d(TAG, "setUserinfo() called auid  = $auid")
+                if (auid.isBlank()) {
+                    continue
+                }
+                //R.drawable.avatar_default_1)
+                val drawableName = avatarName + Random.nextInt(1,30)
+                val drawableIdByName = ResourceUtils.getDrawableIdByName(drawableName)
+                val bitmap =
+                    ImageUtils.drawable2Bytes(ResourceUtils.getDrawable(drawableIdByName))
+                val userinfoItemDto = UserinfoDto.UserinfoItemDto(bitmap, "alex_${auid.substring(0,5)}")
+                val userinfoDto = UserinfoDto(auid, userinfoItemDto)
+                cacheUserinfoList.add(userinfoDto)
+            }
+            imSdk?.setUserinfo(CopyOnWriteArrayList(cacheUserinfoList))
+        }
     }
 }

@@ -14,7 +14,7 @@
         android:includeFontPadding="false"
         android:paddingStart="18dp"
         android:paddingEnd="18dp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="17sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -4,16 +4,19 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.im.sdk.ui.view.ChatView
 import com.tmmtmm.demo.R
+import com.tmmtmm.demo.api.SetMessageStatus
+import com.tmmtmm.demo.api.SetMessageStatusRequest
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
+import com.tmmtmm.demo.manager.LoginManager
 import com.tmmtmm.demo.ui.ext.click
 import com.tmmtmm.demo.ui.view.TitleBarView
-import com.tmmtmm.demo.utils.Random
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ChatActivity : BaseActivity() {
 
@@ -56,19 +59,35 @@ class ChatActivity : BaseActivity() {
             title = "聊天",
         )
         binding.btnSendMessage.click {
-            SendMessageActivity.newInstance(this,aChatId)
+            SendMessageActivity.newInstance(this, aChatId)
         }
 
 
         KeyboardUtils.registerSoftInputChangedListener(this) { height ->
-            if (height > 0){
-                binding.conversationLayout.forceScrollToPosition()
+            if (height > 0) {
+//                binding.chatList.forceScrollToPosition()
             }
         }
     }
 
     override fun fetchData() {
-        binding.conversationLayout.createChat(aChatId)
+        binding.chatList.createChat(aChatId)
+        binding.chatList.setChatDelegate(object : ChatView.ChatDelegate {
+            //CardMessage按钮点击事件
+            override fun onCardMessageClick(amid: String, buttonId: String) {
+                ToastUtils.showShort(buttonId)
+                //设置按钮不可点击，可设置多个按钮
+                TmApplication.instance().imSdk?.disableCardMessage(amid, mutableListOf(buttonId))
+            }
+
+            override fun onMiddleMessageClick(
+                amid: String,
+                tmpId: String,
+                buttonId: String
+            ) {
+                ToastUtils.showShort(buttonId)
+            }
+        })
     }
 
     override fun onDestroy() {

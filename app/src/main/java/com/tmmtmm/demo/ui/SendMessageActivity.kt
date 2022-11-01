@@ -4,18 +4,24 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import com.android.filepicker.config.FilePickerManager
+import com.blankj.utilcode.util.FileIOUtils
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.KeyboardUtils
+import com.im.sdk.message.content.TmCardMessageContent
+import com.im.sdk.vo.CardMessage
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.tmmtmm.demo.R
+import com.tmmtmm.demo.api.SendCardAndTempMessage
+import com.tmmtmm.demo.api.SendCardAndTempMessageRequest
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivitySendMessageBinding
+import com.tmmtmm.demo.manager.LoginManager
 import com.tmmtmm.demo.ui.view.TitleBarView
 import com.tmmtmm.demo.utils.GlideEngine
 import com.tmmtmm.demo.utils.Random
@@ -73,6 +79,10 @@ class SendMessageActivity : BaseActivity() {
         binding.btnSendFileMessage.setOnClickListener {
             chooseFile()
         }
+
+        binding.btnSendCardMessage.setOnClickListener {
+            sendCardMessage()
+        }
     }
 
     override fun fetchData() {
@@ -91,6 +101,7 @@ class SendMessageActivity : BaseActivity() {
                 hideLoading()
                 binding.etMessageContent.setText("")
                 KeyboardUtils.hideSoftInput(binding.etMessageContent)
+                finish()
             }
         }
     }
@@ -99,6 +110,7 @@ class SendMessageActivity : BaseActivity() {
         PictureSelector.create(this)
             .openGallery(SelectMimeType.ofImage())
             .setImageEngine(GlideEngine.createGlideEngine())
+            .isGif(true)
             .forResult(object : OnResultCallbackListener<LocalMedia?> {
                 override fun onResult(result: ArrayList<LocalMedia?>?) {
                     val mediaList = result ?: mutableListOf<LocalMedia>()
@@ -165,8 +177,9 @@ class SendMessageActivity : BaseActivity() {
                                 aChatId = aChatId,
                                 amid = Random.create(6),
                                 path = localMedia.realPath,
-                                isOrigin = false,
+                                isOrigin = true,
                             )
+                            finish()
                         }
                     }
                 }
@@ -200,11 +213,24 @@ class SendMessageActivity : BaseActivity() {
         }
     }
 
+
+    private fun sendCardMessage() {
+        showLoading()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = SendCardAndTempMessage.execute(SendCardAndTempMessageRequest(aChatId = aChatId, LoginManager.INSTANCE.getUserId(), sendTime = System.currentTimeMillis()))
+            withContext(Dispatchers.Main) {
+                hideLoading()
+                finish()
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             if (requestCode == FilePickerManager.REQUEST_CODE) {
                 sendFileMessage()
+                finish()
             }
         }
     }
