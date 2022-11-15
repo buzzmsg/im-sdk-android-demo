@@ -10,7 +10,6 @@ import com.tmmtmm.demo.databinding.ActivityLoginBinding
 import com.tmmtmm.demo.manager.LoginManager
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.ext.click
-import com.tmmtmm.demo.ui.view.TitleBarView
 import com.tmmtmm.demo.vm.LoginViewModel
 
 /**
@@ -40,11 +39,11 @@ class LoginActivity : BaseActivity() {
 
     override fun initViews() {
 
-        val titleBarView = TitleBarView()
-        titleBarView.showTitleBar(
-            cRoot = mBinding.root,
-            title = "TmmTmm SDK",
-        )
+//        val titleBarView = TitleBarView()
+//        titleBarView.showTitleBar(
+//            cRoot = mBinding.root,
+//            title = "TmmTmm SDK",
+//        )
 
         mBinding.btnLogin.click {
             login()

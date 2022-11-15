@@ -3,35 +3,43 @@ package com.tmmtmm.demo.ui
 //import com.chad.library.adapter.base.BaseBinderAdapter
 import android.content.Context
 import android.content.Intent
-import android.text.Html
+import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.im.sdk.IMSdk
+import com.im.sdk.dto.TmConversationMarker
+import com.im.sdk.dto.TmConversationSubTitle
+import com.im.sdk.enum.LanguageType
+import com.im.sdk.ui.ConversationViewModel
+import com.im.sdk.ui.selector.SelectorFactory
+import com.im.sdk.ui.view.ConversationView
 import com.lxj.xpopup.XPopup
+import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityMainBinding
-import com.tmmtmm.demo.ui.ext.bindView
-import com.tmmtmm.demo.ui.view.TitleBarView
-import com.tmmtmm.demo.utils.MD5
-import com.im.sdk.IMSdk
-import com.im.sdk.ui.view.ConversationView
 import com.tmmtmm.demo.manager.LoginManager
-import org.xml.sax.InputSource
-import org.xml.sax.Parser
-import org.xml.sax.XMLReader
+import com.tmmtmm.demo.ui.ext.bindView
+import com.tmmtmm.demo.ui.ext.click
+import com.tmmtmm.demo.utils.MD5
 import org.xml.sax.helpers.DefaultHandler
-import org.xml.sax.helpers.ParserFactory
-import org.xmlpull.v1.XmlPullParserFactory
-import java.io.StringReader
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.parsers.SAXParserFactory
 
 class MainActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
 //    private val mAdapter = BaseBinderAdapter()
 
+    private var hideConversationIds = mutableListOf("TestAli")
+
     companion object {
+
+        const val FOLDER_NAME = "不感兴趣的聊天"
+
+        const val FOLDER_ID = "test"
+
+
         fun newInstance(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
@@ -40,6 +48,7 @@ class MainActivity : BaseActivity() {
 
     override fun contentView() {
         mBinding = ActivityMainBinding.inflate(layoutInflater).bindView(this)
+        PermissionUtils.permission(PermissionConstants.STORAGE).request()
     }
 
     override fun initPrams() {
@@ -47,30 +56,119 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initViews() {
-        val titleBarView = TitleBarView()
-        titleBarView.showTitleBar(
-            cRoot = mBinding.root,
-            title = "聊天",
-            leftText = "加入测试群",
-            leftBlock = {
-                joinTestGroup()
-            },
-            rightText = "创建聊天",
-            rightBlock = {
-                createGroup()
-            }
+//        val titleBarView = TitleBarView()
+//        titleBarView.showTitleBar(
+//            cRoot = mBinding.root,
+//            title = "聊天",
+//            leftText = "加入测试群",
+//            leftBlock = {
+//                joinTestGroup()
+//            },
+//            rightText = "创建聊天",
+//            rightBlock = {
+//                createGroup()
+//            }
+//        )
+        mBinding.tvLeft.setOnClickListener {
+            joinTestGroup()
+        }
+
+        mBinding.tvRight.setOnClickListener {
+            createGroup()
+        }
+
+        TmApplication.instance().imSdk?.setCurrentLanguage(LanguageType.SimplifiedChinese)
+
+
+        val folder = LoginManager.INSTANCE.getFolder()
+        val selector = if (folder.isBlank()) {
+            SelectorFactory.allOf()
+        } else {
+            SelectorFactory.unPartOf(hideConversationIds)
+        }
+
+        val conversationViewModel = TmApplication.instance().imSdk?.createConversationViewModel(
+            selector
         )
 
-        mBinding.conversationLayout.setConversationDelegate(object :
+        val conversationView = conversationViewModel?.getView(this)
+        mBinding.fragment.addView(conversationView)
+
+
+
+        conversationView?.setConversationDelegate(object :
             ConversationView.ConversationDelegate {
             override fun onItemClick(aChatId: String) {
+                if (aChatId == FOLDER_ID) {
+                    ConversationActivity.newInstance(this@MainActivity, aChatId)
+                    return
+                }
                 ChatActivity.newInstance(this@MainActivity, aChatId)
             }
         })
+
+        mBinding.btnAddFolder.click {
+            addFolder(conversationViewModel)
+        }
+
+        mBinding.btnRemoveFolder.click {
+            removeFolder(conversationViewModel)
+        }
+
+        mBinding.btnAddFolderMarker.click {
+            addFolderMarkerAndSubTitle(conversationViewModel)
+        }
     }
 
     override fun fetchData() {
 
+    }
+
+    private fun addFolder(conversationViewModel: ConversationViewModel?) {
+        conversationViewModel?.setFolder(
+            aChatId = FOLDER_ID,
+            content = "共${hideConversationIds.size}条会话",
+            name = FOLDER_NAME,
+            avatar = ImageUtils.bitmap2Bytes(
+                ImageUtils.getBitmap(
+                    R.drawable.ic_launcher_background
+                )
+            )
+        )
+
+        LoginManager.INSTANCE.setFolder(FOLDER_ID)
+
+        conversationViewModel?.updateSelector(unSelectAChatIds = hideConversationIds)
+
+    }
+
+
+    private fun addFolderMarkerAndSubTitle(conversationViewModel: ConversationViewModel?) {
+        val markerList = mutableListOf<TmConversationMarker>()
+        val marker = TmConversationMarker(
+            aChatId = FOLDER_ID, marker = ImageUtils.bitmap2Bytes(
+                ImageUtils.getBitmap(
+                    R.drawable.ic_marker
+                )
+            )
+        )
+        markerList.add(marker)
+
+        TmApplication.instance().imSdk?.setConversationMarker(markerList)
+
+
+        val subNameList = mutableListOf<TmConversationSubTitle>()
+        val subNameDto = TmConversationSubTitle(aChatId = FOLDER_ID, subTitle = "屏蔽的")
+        subNameList.add(subNameDto)
+
+        TmApplication.instance().imSdk?.setConversationSubTitle(subNameList)
+    }
+
+
+    private fun removeFolder(conversationViewModel: ConversationViewModel?) {
+        conversationViewModel?.removeFolder(FOLDER_ID)
+        conversationViewModel?.updateSelector()
+        LoginManager.INSTANCE.setFolder("")
     }
 
     private fun joinTestGroup() {

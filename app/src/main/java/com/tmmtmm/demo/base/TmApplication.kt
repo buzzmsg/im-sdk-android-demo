@@ -6,16 +6,14 @@ import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.ResourceUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.im.sdk.IMSdk
-import com.im.sdk.dto.UserinfoDto
+import com.im.sdk.dto.TmUserinfo
 import com.im.sdk.extensions.globalIO
 import com.tencent.mmkv.MMKV
-import com.tmmtmm.demo.R
 import com.tmmtmm.demo.api.GetAuth
 import com.tmmtmm.demo.api.GetAuthRequest
 import com.tmmtmm.demo.api.LoginByPhoneResponse
 import com.tmmtmm.demo.api.ResponseResult
 import com.tmmtmm.demo.manager.LoginManager
-import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.properties.Delegates
 import kotlin.random.Random
@@ -30,7 +28,7 @@ class TmApplication : Application() {
 
     var imSdk: IMSdk? = null
 
-    var cacheUserinfoList = mutableListOf<UserinfoDto>()
+    var cacheTmUserinfoList = mutableListOf<TmUserinfo>()
 
     val avatarName = "avatar_default_"
 
@@ -46,8 +44,7 @@ class TmApplication : Application() {
         super.onCreate()
         MMKV.initialize(this)
         instance = this
-        imSdk = IMSdk.getInstance(context = this, ak = ak, "test")
-
+        imSdk = IMSdk.getInstance(context = this, ak = ak, "test", deviceId = "android")
         imSdk?.setDelegate(object : IMSdk.IMDelegate {
 
             override fun authCodeExpire(auid: String) {
@@ -92,12 +89,24 @@ class TmApplication : Application() {
             override fun onShowUserinfo(auids: List<String>) {
                 setUserinfo(auids)
             }
+
+            override fun onReceiveMessages(amids: List<String>) {
+
+            }
+
+            override fun onShowConversationMarker(aChatIds: List<String>) {
+
+            }
+
+            override fun onShowConversationSubTitle(aChatIds: List<String>) {
+
+            }
         })
     }
 
     fun setUserinfo(auids: List<String>) {
         globalIO {
-            val mapCacheUserinfoList = cacheUserinfoList.associateBy({ it.auid }, { it.item })
+            val mapCacheUserinfoList = cacheTmUserinfoList.associateBy({ it.auid }, { it.item })
             for (auid in auids) {
                 if (auid.isEmpty()) continue
 
@@ -113,11 +122,11 @@ class TmApplication : Application() {
                 val drawableIdByName = ResourceUtils.getDrawableIdByName(drawableName)
                 val bitmap =
                     ImageUtils.drawable2Bytes(ResourceUtils.getDrawable(drawableIdByName))
-                val userinfoItemDto = UserinfoDto.UserinfoItemDto(bitmap, "alex_${auid.substring(0,5)}")
-                val userinfoDto = UserinfoDto(auid, userinfoItemDto)
-                cacheUserinfoList.add(userinfoDto)
+                val tmUserinfoItemDto = TmUserinfo.UserinfoItemDto(bitmap, "alex_${auid.substring(0,5)}")
+                val tmUserinfo = TmUserinfo(auid, tmUserinfoItemDto)
+                cacheTmUserinfoList.add(tmUserinfo)
             }
-            imSdk?.setUserinfo(CopyOnWriteArrayList(cacheUserinfoList))
+            imSdk?.setUserinfo(CopyOnWriteArrayList(cacheTmUserinfoList))
         }
     }
 }

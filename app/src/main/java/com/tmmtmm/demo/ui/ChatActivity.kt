@@ -2,21 +2,12 @@ package com.tmmtmm.demo.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.im.sdk.ui.view.ChatView
-import com.tmmtmm.demo.R
-import com.tmmtmm.demo.api.SetMessageStatus
-import com.tmmtmm.demo.api.SetMessageStatusRequest
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
-import com.tmmtmm.demo.manager.LoginManager
-import com.tmmtmm.demo.ui.ext.click
-import com.tmmtmm.demo.ui.view.TitleBarView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class ChatActivity : BaseActivity() {
 
@@ -45,20 +36,27 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun initViews() {
-        val titleBarView = TitleBarView()
-        titleBarView.showTitleBar(
-            cRoot = binding.root,
-            leftBlock = {
-                finish()
-            },
-            leftRes = R.drawable.ic_demo_back,
-            rightRes = R.drawable.ic_demo_set_bg,
-            rightBlock = {
+//        val titleBarView = TitleBarView()
+//        titleBarView.showTitleBar(
+//            cRoot = binding.root,
+//            leftBlock = {
+//                finish()
+//            },
+//            leftRes = R.drawable.ic_demo_back,
+//            rightRes = R.drawable.ic_demo_set_bg,
+//            rightBlock = {
+//
+//            },
+//            title = "聊天",
+//        )
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
+        binding.ivBgSet.setOnClickListener {
 
-            },
-            title = "聊天",
-        )
-        binding.btnSendMessage.click {
+
+        }
+        binding.btnSendMessage.setOnClickListener {
             SendMessageActivity.newInstance(this, aChatId)
         }
 
@@ -86,6 +84,10 @@ class ChatActivity : BaseActivity() {
                 buttonId: String
             ) {
                 ToastUtils.showShort(buttonId)
+            }
+
+            override fun onNotificationMessageClick(amid: String, buttonId: String) {
+                ToastUtils.showShort("通知消息")
             }
         })
     }

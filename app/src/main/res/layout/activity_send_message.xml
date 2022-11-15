@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.client.core.ui.layout.StateToolBarLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/root_view_linearlayout"
-    app:ctb_toolBarBackground="@color/white"
     android:background="@color/white"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_back_black"
+            android:scaleType="centerInside"
+            android:layout_marginStart="6dp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="发消息"
+            android:textSize="20sp"
+            android:textColor="#0d1324"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etMessageContent"
@@ -82,4 +107,4 @@
         android:text="发送按钮图片卡片"
         android:layout_marginTop="15dp"
         />
-</org.client.core.ui.layout.StateToolBarLinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

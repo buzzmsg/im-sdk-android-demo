@@ -1,12 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.client.core.ui.layout.StateToolBarConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/root_view_constraint"
-    app:ctb_toolBarBackground="@color/white"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="6dp"
+            android:src="@drawable/ic_back_black"
+            android:scaleType="centerInside"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:text="聊天"
+            android:textColor="#0d1324"
+            android:textSize="20sp"/>
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivBgSet"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/ic_demo_set_bg"
+            android:scaleType="centerInside"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.im.sdk.ui.view.ChatView
         android:id="@+id/chatList"
@@ -14,7 +53,7 @@
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ctb_all_toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/layoutTitle"
         app:layout_constraintBottom_toTopOf="@+id/layoutChatInput"
         app:layout_constrainedWidth="true"
         app:layout_constraintVertical_bias="0"
@@ -52,4 +91,4 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</org.client.core.ui.layout.StateToolBarConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
