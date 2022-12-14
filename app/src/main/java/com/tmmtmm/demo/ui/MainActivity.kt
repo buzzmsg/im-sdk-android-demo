@@ -3,6 +3,9 @@ package com.tmmtmm.demo.ui
 //import com.chad.library.adapter.base.BaseBinderAdapter
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.util.Log
+import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.PermissionUtils
@@ -52,7 +55,8 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initPrams() {
-
+        val withAppendedPath = Uri.parse("wss://dev-sdk-tcp.imtmm.com:7502").buildUpon()
+        Log.e("11111111111111", "initPrams() called${withAppendedPath}")
     }
 
     override fun initViews() {
@@ -125,15 +129,14 @@ class MainActivity : BaseActivity() {
     }
 
     private fun addFolder(conversationViewModel: ConversationViewModel?) {
+
+        val drawable = ResourcesCompat.getDrawable(resources, applicationInfo.icon, theme)
+        val avatar = ImageUtils.drawable2Bytes(drawable)
         conversationViewModel?.setFolder(
             aChatId = FOLDER_ID,
             content = "共${hideConversationIds.size}条会话",
             name = FOLDER_NAME,
-            avatar = ImageUtils.bitmap2Bytes(
-                ImageUtils.getBitmap(
-                    R.drawable.ic_launcher_background
-                )
-            )
+            avatar = avatar
         )
 
         LoginManager.INSTANCE.setFolder(FOLDER_ID)
@@ -185,6 +188,13 @@ class MainActivity : BaseActivity() {
                 ToastUtils.showLong(msg)
             }
         })
+//        TmApplication.instance().imSdk?.loginOut()
+//        ThreadUtils.runOnUiThreadDelayed({
+//            hideLoading()
+//            LoginActivity.newInstance(this)
+//            finish()
+//        }, 1000)
+
     }
 
     private fun createGroup() {

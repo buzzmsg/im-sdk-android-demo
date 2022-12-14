@@ -2,12 +2,15 @@ package com.tmmtmm.demo.ui
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.im.sdk.ui.view.ChatView
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
+import com.tmmtmm.demo.ui.view.CustomView
 
 class ChatActivity : BaseActivity() {
 
@@ -88,6 +91,12 @@ class ChatActivity : BaseActivity() {
 
             override fun onNotificationMessageClick(amid: String, buttonId: String) {
                 ToastUtils.showShort("通知消息")
+            }
+
+            override fun onShowCustomMessageView(amid: String, content: String): View {
+                val customView = CustomView(this@ChatActivity)
+                customView.bindData(content)
+                return customView
             }
         })
     }

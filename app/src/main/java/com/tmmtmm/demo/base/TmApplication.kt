@@ -118,11 +118,12 @@ class TmApplication : Application() {
                     continue
                 }
                 //R.drawable.avatar_default_1)
-                val drawableName = avatarName + Random.nextInt(1,30)
+                val drawableName = avatarName + Random.nextInt(1, 30)
                 val drawableIdByName = ResourceUtils.getDrawableIdByName(drawableName)
                 val bitmap =
                     ImageUtils.drawable2Bytes(ResourceUtils.getDrawable(drawableIdByName))
-                val tmUserinfoItemDto = TmUserinfo.UserinfoItemDto(bitmap, "alex_${auid.substring(0,5)}")
+                val tmUserinfoItemDto =
+                    TmUserinfo.UserinfoItemDto(bitmap, name = "alex_${auid.substring(0, 5)}")
                 val tmUserinfo = TmUserinfo(auid, tmUserinfoItemDto)
                 cacheTmUserinfoList.add(tmUserinfo)
             }

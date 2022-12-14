@@ -99,7 +99,7 @@ dependencies {
     
     implementation project(path: ':app:filepicker')
 
-    implementation ("com.im:IMSdk:0.0.22")
+    implementation ("com.im:IMSdk:0.0.25")
 
 
 }
