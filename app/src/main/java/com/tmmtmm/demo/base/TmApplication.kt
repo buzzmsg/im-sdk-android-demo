@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.ResourceUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.im.sdk.IMSdk
+import com.im.sdk.dto.TmReceiveMessageInfo
 import com.im.sdk.dto.TmUserinfo
 import com.im.sdk.extensions.globalIO
 import com.tencent.mmkv.MMKV
@@ -90,7 +91,7 @@ class TmApplication : Application() {
                 setUserinfo(auids)
             }
 
-            override fun onReceiveMessages(amids: List<String>) {
+            override fun onReceiveMessages(messageList: List<TmReceiveMessageInfo>) {
 
             }
 
