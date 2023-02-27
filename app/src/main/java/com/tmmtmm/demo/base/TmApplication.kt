@@ -44,6 +44,7 @@ class TmApplication : Application() {
 
     companion object {
         private const val TAG = "TmApplication"
+
         private var instance: TmApplication by Delegates.notNull()
         fun instance() = instance
     }
