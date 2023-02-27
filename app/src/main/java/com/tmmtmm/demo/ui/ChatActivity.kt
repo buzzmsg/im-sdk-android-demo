@@ -2,15 +2,13 @@ package com.tmmtmm.demo.ui
 
 import android.content.Context
 import android.content.Intent
-import android.view.View
-import androidx.appcompat.widget.LinearLayoutCompat
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.im.sdk.ui.view.ChatView
+import com.im.sdk.view.ChatView
+import com.im.sdk.view.vo.StrategyVo
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
-import com.tmmtmm.demo.ui.view.CustomView
 
 class ChatActivity : BaseActivity() {
 
@@ -72,13 +70,77 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun fetchData() {
-        binding.chatList.createChat(aChatId)
-        binding.chatList.setChatDelegate(object : ChatView.ChatDelegate {
+
+        binding.chatList.removeAllViews()
+        val chatView = TmApplication.instance().imSdk?.createChatView(aChatId, this)
+        binding.chatList.addView(chatView)
+        chatView?.show()
+        chatView?.setChatDelegate(object : ChatView.ChatDelegate {
             //CardMessage按钮点击事件
-            override fun onCardMessageClick(amid: String, buttonId: String) {
-                ToastUtils.showShort(buttonId)
-                //设置按钮不可点击，可设置多个按钮
-                TmApplication.instance().imSdk?.disableCardMessage(amid, mutableListOf(buttonId))
+//            override fun onCardMessageClick(amid: String, buttonId: String) {
+//                ToastUtils.showShort(buttonId)
+//                //设置按钮不可点击，可设置多个按钮
+//                TmApplication.instance().imSdk?.disableCardMessage(amid, mutableListOf(buttonId))
+//            }
+            override fun onButtonMessageClick(amid: String, buttonId: String) {
+                ToastUtils.showShort("通知消息")
+
+            }
+
+            override fun onCloseKeyBoardPanel() {
+                
+            }
+
+            override fun onCoinOrderDetails(id: String) {
+                
+            }
+
+            override fun onForwardMessageSeeSee(messageBody: CharSequence) {
+                
+            }
+
+            override fun onMapLocation(
+                amid: String?,
+                lat: Double,
+                lon: Double,
+                zoom: Float?,
+                addressName: String?,
+                address: String?
+            ) {
+                
+            }
+
+            override fun onMediaPreview(strategyVo: StrategyVo) {
+                
+            }
+
+            override fun onMeetingCall(meetingType: Int) {
+                
+            }
+
+            override fun onMessageDownFile(amid: String) {
+                
+            }
+
+            override fun onMessageForward(amid: String) {
+                
+            }
+
+            override fun onMessageMultipleChooseClick(messageMultipleChooser: ChatView.MessageMultipleChooser?) {
+                
+            }
+
+            override fun onMessageQuote(
+                amid: String,
+                aUid: String,
+                content: CharSequence?,
+                position: Int
+            ) {
+                
+            }
+
+            override fun onMessageReport(amid: String) {
+                
             }
 
             override fun onMiddleMessageClick(
@@ -89,15 +151,48 @@ class ChatActivity : BaseActivity() {
                 ToastUtils.showShort(buttonId)
             }
 
-            override fun onNotificationMessageClick(amid: String, buttonId: String) {
-                ToastUtils.showShort("通知消息")
+            override fun onMomentDetail(feedId: CharSequence?) {
+                
             }
 
-            override fun onShowCustomMessageView(amid: String, content: String): View {
-                val customView = CustomView(this@ChatActivity)
-                customView.bindData(content)
-                return customView
+            override fun onOpenPdf(filePath: String, fileName: String, amid: String) {
+                
             }
+
+            override fun onRedPacketDetail(aChatId: String, outTradeNo: String) {
+                
+            }
+
+            override fun onRedPacketStatusChange(amid: String, aChatId: String, id: String) {
+                
+            }
+
+            override fun onTmmPayClick(
+                act: Int?,
+                id: String?,
+                associatedId: String?,
+                outTradeNo: String?
+            ) {
+                
+            }
+
+            override fun onUserAvatarClick(amid: String, aChatId: String, aUid: String) {
+                
+            }
+
+            override fun onUserAvatarLongClick(amid: String, aChatId: String, aUid: String) {
+                
+            }
+
+            override fun onWebUrlLinkClick(url: String?) {
+                
+            }
+
+//            override fun onShowCustomMessageView(amid: String, content: String): View {
+//                val customView = CustomView(this@ChatActivity)
+//                customView.bindData(content)
+//                return customView
+//            }
         })
     }
 

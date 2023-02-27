@@ -7,7 +7,6 @@ import com.android.filepicker.config.FilePickerManager
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.UriUtils
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.config.SelectMimeType
@@ -21,7 +20,6 @@ import com.tmmtmm.demo.databinding.ActivitySendMessageBinding
 import com.tmmtmm.demo.manager.LoginManager
 import com.tmmtmm.demo.utils.GlideEngine
 import com.tmmtmm.demo.utils.Random
-import com.im.sdk.core.utils.RealPathUtil
 import com.tmmtmm.demo.utils.ResultContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

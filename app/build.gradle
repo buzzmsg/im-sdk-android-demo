@@ -5,11 +5,12 @@ plugins {
 
 android {
     compileSdk 33
+    buildToolsVersion "32.0.0"
 
     defaultConfig {
         applicationId "com.tmmtmm.demo"
-        minSdk 21
-        targetSdk 33
+        minSdk 26
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -28,22 +29,8 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.only
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
-        debug {
-            debuggable true
-            minifyEnabled false
-            signingConfig signingConfigs.only
-        }
-
-        create("dev") {
-            debuggable true
-            minifyEnabled false
-            signingConfig signingConfigs.only
-        }
-
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -74,7 +61,6 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.3.2"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
 
-
     implementation 'androidx.recyclerview:recyclerview:1.3.0-beta02'
     implementation "com.github.li-xiaojun:XPopup:2.8.13"
 
@@ -99,7 +85,7 @@ dependencies {
     
     implementation project(path: ':app:filepicker')
 
-    implementation ("com.im:IMSdk:0.0.27")
-
+//    implementation ("com.im:IMSdk:0.0.27")
+    implementation('com.buzzmsg.sdk:im_sdk:0.0.11')
 
 }

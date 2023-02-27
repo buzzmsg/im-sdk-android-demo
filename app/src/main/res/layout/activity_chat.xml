@@ -64,7 +64,7 @@
         >
 
         <!--    根布局不能是scrollView -->
-        <com.im.sdk.ui.view.ChatView
+        <FrameLayout
             android:id="@+id/chatList"
             android:layout_width="match_parent"
             android:layout_height="0dp"

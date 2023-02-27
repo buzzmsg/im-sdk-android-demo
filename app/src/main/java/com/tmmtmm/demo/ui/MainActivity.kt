@@ -9,15 +9,14 @@ import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.PermissionUtils
-import com.blankj.utilcode.util.ThreadUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.im.sdk.IMSdk
-import com.im.sdk.dto.TmConversationMarker
-import com.im.sdk.dto.TmConversationSubTitle
-import com.im.sdk.enum.LanguageType
-import com.im.sdk.ui.ConversationViewModel
-import com.im.sdk.ui.selector.SelectorFactory
-import com.im.sdk.ui.view.ConversationView
+import com.im.sdk.constant.enums.LanguageType
+import com.im.sdk.dto.ImImageResourcesInfo
+import com.im.sdk.view.ConversationView
+import com.im.sdk.view.IMConversationViewModel
+import com.im.sdk.view.selector.SelectorFactory
+import com.im.sdk.view.vo.IMConversationMarker
+import com.im.sdk.view.vo.IMConversationSubTitle
 import com.lxj.xpopup.XPopup
 import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
@@ -102,6 +101,10 @@ class MainActivity : BaseActivity() {
 
         conversationView?.setConversationDelegate(object :
             ConversationView.ConversationDelegate {
+            override fun onCompleteAddConversation(aChatIds: MutableList<String>) {
+
+            }
+
             override fun onItemClick(aChatId: String) {
                 if (aChatId == FOLDER_ID) {
                     ConversationActivity.newInstance(this@MainActivity, aChatId)
@@ -128,15 +131,16 @@ class MainActivity : BaseActivity() {
 
     }
 
-    private fun addFolder(conversationViewModel: ConversationViewModel?) {
+    private fun addFolder(conversationViewModel: IMConversationViewModel?) {
 
         val drawable = ResourcesCompat.getDrawable(resources, applicationInfo.icon, theme)
         val avatar = ImageUtils.drawable2Bytes(drawable)
+        val image = ImImageResourcesInfo(avatar)
         conversationViewModel?.setFolder(
             aChatId = FOLDER_ID,
             content = "共${hideConversationIds.size}条会话",
             name = FOLDER_NAME,
-            avatar = avatar
+            resourcesInfo = image
         )
 
         LoginManager.INSTANCE.setFolder(FOLDER_ID)
@@ -146,48 +150,44 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private fun addFolderMarkerAndSubTitle(conversationViewModel: ConversationViewModel?) {
-        val markerList = mutableListOf<TmConversationMarker>()
-        val marker = TmConversationMarker(
-            aChatId = FOLDER_ID, marker = ImageUtils.bitmap2Bytes(
-                ImageUtils.getBitmap(
-                    R.drawable.ic_marker
-                )
-            )
+    private fun addFolderMarkerAndSubTitle(conversationViewModel: IMConversationViewModel?) {
+        val markerList = mutableListOf<IMConversationMarker>()
+        val marker = IMConversationMarker(
+            aChatId = FOLDER_ID, markerVo = ImImageResourcesInfo(R.drawable.ic_marker)
         )
         markerList.add(marker)
 
-        TmApplication.instance().imSdk?.setConversationMarker(markerList)
+        conversationViewModel?.updateConversationMarker(markerList)
 
 
-        val subNameList = mutableListOf<TmConversationSubTitle>()
-        val subNameDto = TmConversationSubTitle(aChatId = FOLDER_ID, subTitle = "屏蔽的")
+        val subNameList = mutableListOf<IMConversationSubTitle>()
+        val subNameDto = IMConversationSubTitle(aChatId = FOLDER_ID, subTitle = "屏蔽的")
         subNameList.add(subNameDto)
 
-        TmApplication.instance().imSdk?.setConversationSubTitle(subNameList)
+        conversationViewModel?.updateConversationSubName(subNameList)
     }
 
 
-    private fun removeFolder(conversationViewModel: ConversationViewModel?) {
+    private fun removeFolder(conversationViewModel: IMConversationViewModel?) {
         conversationViewModel?.removeFolder(FOLDER_ID)
         conversationViewModel?.updateSelector()
         LoginManager.INSTANCE.setFolder("")
     }
 
     private fun joinTestGroup() {
-        showLoading()
-        val auid = LoginManager.INSTANCE.getUserId()
-        TmApplication.instance().imSdk?.joinChat(auid, { aChatId ->
-            ThreadUtils.runOnUiThread {
-                hideLoading()
-                ChatActivity.newInstance(this@MainActivity, aChatId)
-            }
-        }, { msg ->
-            ThreadUtils.runOnUiThread {
-                hideLoading()
-                ToastUtils.showLong(msg)
-            }
-        })
+//        showLoading()
+//        val auid = LoginManager.INSTANCE.getUserId()
+//        TmApplication.instance().imSdk?.joinChat(auid, { aChatId ->
+//            ThreadUtils.runOnUiThread {
+//                hideLoading()
+//                ChatActivity.newInstance(this@MainActivity, aChatId)
+//            }
+//        }, { msg ->
+//            ThreadUtils.runOnUiThread {
+//                hideLoading()
+//                ToastUtils.showLong(msg)
+//            }
+//        })
 //        TmApplication.instance().imSdk?.loginOut()
 //        ThreadUtils.runOnUiThreadDelayed({
 //            hideLoading()

@@ -5,16 +5,23 @@ import android.util.Log
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.ResourceUtils
 import com.blankj.utilcode.util.ThreadUtils
+import com.im.sdk.BuildConfig
 import com.im.sdk.IMSdk
-import com.im.sdk.dto.TmReceiveMessageInfo
-import com.im.sdk.dto.TmUserinfo
-import com.im.sdk.extensions.globalIO
+import com.im.sdk.config.IMConfig
+import com.im.sdk.config.ImUiSetting
+import com.im.sdk.constant.enums.getEnvironmentType
+import com.im.sdk.dto.ImImageResourcesInfo
+import com.im.sdk.dto.ImShowUserinfo
+import com.im.sdk.dto.ImUserinfo
 import com.tencent.mmkv.MMKV
 import com.tmmtmm.demo.api.GetAuth
 import com.tmmtmm.demo.api.GetAuthRequest
 import com.tmmtmm.demo.api.LoginByPhoneResponse
 import com.tmmtmm.demo.api.ResponseResult
 import com.tmmtmm.demo.manager.LoginManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.properties.Delegates
 import kotlin.random.Random
@@ -29,7 +36,7 @@ class TmApplication : Application() {
 
     var imSdk: IMSdk? = null
 
-    var cacheTmUserinfoList = mutableListOf<TmUserinfo>()
+    var cacheTmUserinfoList = mutableListOf<ImUserinfo>()
 
     val avatarName = "avatar_default_"
 
@@ -45,8 +52,11 @@ class TmApplication : Application() {
         super.onCreate()
         MMKV.initialize(this)
         instance = this
-        imSdk = IMSdk.getInstance(context = this, ak = ak, "test", deviceId = "android")
-        imSdk?.setDelegate(object : IMSdk.IMDelegate {
+        val imConfig = getImConfig()
+        imSdk = IMSdk.getInstance(context = this, ak = ak, config = imConfig)
+        val imUiSetting = getUiSetting()
+        imSdk?.setImUiSetting(imUiSetting)
+        imSdk?.setDelegate(object : IMSdk.IMDelegateImpl() {
 
             override fun authCodeExpire(auid: String) {
 //                val localAuthCode = LoginManager.INSTANCE.getAuthCode()
@@ -87,26 +97,45 @@ class TmApplication : Application() {
                 })
             }
 
-            override fun onShowUserinfo(auids: List<String>) {
-                setUserinfo(auids)
-            }
-
-            override fun onReceiveMessages(messageList: List<TmReceiveMessageInfo>) {
-
+            override fun onReceiveMessages(amids: List<String>) {
+                super.onReceiveMessages(amids)
             }
 
             override fun onShowConversationMarker(aChatIds: List<String>) {
-
+                super.onShowConversationMarker(aChatIds)
             }
 
             override fun onShowConversationSubTitle(aChatIds: List<String>) {
+                super.onShowConversationSubTitle(aChatIds)
+            }
 
+            override fun onShowUserinfo(datas: List<ImShowUserinfo>) {
+                val auids = datas.map { it.aUid }.toMutableList()
+                setUserinfo(auids)
             }
         })
     }
 
+    private fun getImConfig(): IMConfig {
+        return IMConfig(
+            env = BuildConfig.BUILD_TYPE.getEnvironmentType(),
+            apiHost = "",
+            wsHost = "",
+            deviceId = "EF85FBC97E93B993"
+        )
+    }
+
+    private fun getUiSetting(): ImUiSetting {
+        val imUiSetting = ImUiSetting()
+        imUiSetting.setShowMessageBrowse(true)
+        imUiSetting.setConversationSwipeMenu(true)
+        imUiSetting.showRightAvatar(true)
+        imUiSetting.showLeftAvatarBySingleChat(true)
+        return imUiSetting
+    }
+
     fun setUserinfo(auids: List<String>) {
-        globalIO {
+        GlobalScope.launch(Dispatchers.IO) {
             val mapCacheUserinfoList = cacheTmUserinfoList.associateBy({ it.auid }, { it.item })
             for (auid in auids) {
                 if (auid.isEmpty()) continue
@@ -123,9 +152,11 @@ class TmApplication : Application() {
                 val drawableIdByName = ResourceUtils.getDrawableIdByName(drawableName)
                 val bitmap =
                     ImageUtils.drawable2Bytes(ResourceUtils.getDrawable(drawableIdByName))
+
+                val imageInfo = ImImageResourcesInfo(bitmap)
                 val tmUserinfoItemDto =
-                    TmUserinfo.UserinfoItemDto(bitmap, name = "alex_${auid.substring(0, 5)}")
-                val tmUserinfo = TmUserinfo(auid, tmUserinfoItemDto)
+                    ImUserinfo.ImUserinfoItemDto(imageInfo, name = "alex_${auid.substring(0, 5)}")
+                val tmUserinfo = ImUserinfo(auid, tmUserinfoItemDto)
                 cacheTmUserinfoList.add(tmUserinfo)
             }
             imSdk?.setUserinfo(CopyOnWriteArrayList(cacheTmUserinfoList))

@@ -2,15 +2,11 @@ package com.tmmtmm.demo.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import com.im.sdk.ui.selector.SelectorFactory
-import com.im.sdk.ui.view.ConversationView
-import com.tmmtmm.demo.R
+import com.im.sdk.view.ConversationView
+import com.im.sdk.view.selector.SelectorFactory
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityConversationBinding
-import com.tmmtmm.demo.databinding.ActivityMainBinding
 import com.tmmtmm.demo.ui.ext.bindView
 
 class ConversationActivity : BaseActivity() {
@@ -52,6 +48,10 @@ class ConversationActivity : BaseActivity() {
 
         conversationView?.setConversationDelegate(object :
             ConversationView.ConversationDelegate {
+            override fun onCompleteAddConversation(aChatIds: MutableList<String>) {
+
+            }
+
             override fun onItemClick(aChatId: String) {
                 ChatActivity.newInstance(this@ConversationActivity, aChatId)
             }
