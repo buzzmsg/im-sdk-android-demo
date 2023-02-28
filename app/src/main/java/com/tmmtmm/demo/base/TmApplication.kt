@@ -9,6 +9,7 @@ import com.im.sdk.BuildConfig
 import com.im.sdk.IMSdk
 import com.im.sdk.config.IMConfig
 import com.im.sdk.config.ImUiSetting
+import com.im.sdk.config.LoginError
 import com.im.sdk.constant.enums.getEnvironmentType
 import com.im.sdk.dto.ImImageResourcesInfo
 import com.im.sdk.dto.ImShowUserinfo
@@ -40,7 +41,8 @@ class TmApplication : Application() {
 
     val avatarName = "avatar_default_"
 
-    private val ak = "68oni7jrg31qcsaijtg76qln"
+    //    private val ak = "68oni7jrg31qcsaijtg76qln"
+    private val ak = "DEMO"
 
     companion object {
         private const val TAG = "TmApplication"
@@ -59,7 +61,7 @@ class TmApplication : Application() {
         imSdk?.setImUiSetting(imUiSetting)
         imSdk?.setDelegate(object : IMSdk.IMDelegateImpl() {
 
-            override fun authCodeExpire(auid: String) {
+            override fun authCodeExpire(auid: String, code: LoginError) {
 //                val localAuthCode = LoginManager.INSTANCE.getAuthCode()
 //
 //                if (localAuthCode.isNotBlank()) {
