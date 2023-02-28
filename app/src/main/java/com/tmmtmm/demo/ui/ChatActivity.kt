@@ -6,6 +6,7 @@ import android.view.View
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.im.sdk.view.ChatView
+import com.im.sdk.view.vo.ImFileData
 import com.im.sdk.view.vo.StrategyVo
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
@@ -97,6 +98,10 @@ class ChatActivity : BaseActivity() {
                 
             }
 
+            override fun onFileClick(amid: String, data: ImFileData) {
+
+            }
+
             override fun onForwardMessageSeeSee(messageBody: CharSequence) {
                 
             }
@@ -117,10 +122,6 @@ class ChatActivity : BaseActivity() {
             }
 
             override fun onMeetingCall(meetingType: Int) {
-                
-            }
-
-            override fun onMessageDownFile(amid: String) {
                 
             }
 
@@ -154,10 +155,6 @@ class ChatActivity : BaseActivity() {
             }
 
             override fun onMomentDetail(feedId: CharSequence?) {
-                
-            }
-
-            override fun onOpenPdf(filePath: String, fileName: String, amid: String) {
                 
             }
 
