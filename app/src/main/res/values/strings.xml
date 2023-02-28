@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TMM SDK</string>
+    <string name="string_original_size">Original Image ( %s )</string>
+    <string name="name_save">Save</string>
 </resources>

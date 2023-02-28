@@ -111,7 +111,7 @@ class ChatActivity : BaseActivity() {
             }
 
             override fun onMediaPreview(strategyVo: StrategyVo) {
-                
+                MediaPreviewActivity.newInstance(this@ChatActivity,strategyVo)
             }
 
             override fun onMeetingCall(meetingType: Int) {
