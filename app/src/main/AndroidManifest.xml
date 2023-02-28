@@ -67,6 +67,11 @@
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.MediaPreviewActivity"
+            android:configChanges="uiMode"
+            android:exported="false"
+            android:theme="@style/translucent_style_anim" />
     </application>
 
 </manifest>

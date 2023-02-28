@@ -72,14 +72,13 @@ class MediaPreviewActivity : AppCompatActivity() {
         mediaPreview =
             TmApplication.instance().imSdk?.createMediaPreview(this, this, strategyVo) {
                 backgroundEndColor = R.color.black.getColor()
+                isOpenAnimation = true
             }
 
         mBinding.mediaPreview.removeAllViews()
         if (mediaPreview != null) {
             mBinding.mediaPreview.addView(mediaPreview)
         }
-
-        mBinding.topSettingBar.setPadding(0, BarUtils.getStatusBarHeight(), 0, 0)
 
         setPreviewDelegate()
         setSaveShow()
