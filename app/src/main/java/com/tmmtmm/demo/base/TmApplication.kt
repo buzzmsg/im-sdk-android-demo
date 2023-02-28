@@ -119,8 +119,8 @@ class TmApplication : Application() {
     private fun getImConfig(): IMConfig {
         return IMConfig(
             env = BuildConfig.BUILD_TYPE.getEnvironmentType(),
-            apiHost = "",
-            wsHost = "",
+            apiHost = "https://demo-sdk-api.rpgqp.com",
+            wsHost = "wss://dev-sdk-tcp.rpgqp.com/wsConnect?",
             deviceId = "EF85FBC97E93B993"
         )
     }
