@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ConvertUtils
@@ -58,6 +59,10 @@ class MediaPreviewActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMediaPreviewBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
         mBinding = ActivityMediaPreviewBinding.inflate(layoutInflater).bindView(this)
         if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -79,6 +84,8 @@ class MediaPreviewActivity : AppCompatActivity() {
         if (mediaPreview != null) {
             mBinding.mediaPreview.addView(mediaPreview)
         }
+
+        mBinding.topSettingBar.setPadding(0, BarUtils.getStatusBarHeight(), 0, 0)
 
         setPreviewDelegate()
         setSaveShow()
