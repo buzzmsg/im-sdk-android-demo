@@ -176,7 +176,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun joinTestGroup() {
-//        showLoading()
+        showLoading()
 //        val auid = LoginManager.INSTANCE.getUserId()
 //        TmApplication.instance().imSdk?.joinChat(auid, { aChatId ->
 //            ThreadUtils.runOnUiThread {
