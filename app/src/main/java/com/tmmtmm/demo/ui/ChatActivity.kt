@@ -130,7 +130,7 @@ class ChatActivity : BaseActivity() {
 
             }
 
-            override fun onMessagePeportAct(amid: String) {
+            override fun onMessageReportAct(amid: String) {
 
             }
 
