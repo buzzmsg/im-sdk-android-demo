@@ -3,6 +3,7 @@ package com.tmmtmm.demo.api
 import androidx.annotation.Keep
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.annotations.SerializedName
+import com.tmmtmm.demo.api.LoginByPhone.host
 import com.tmmtmm.demo.exception.TmException
 import com.tmmtmm.demo.exception.TmmError
 import okhttp3.MediaType.Companion.toMediaType
@@ -15,12 +16,18 @@ import java.util.concurrent.TimeUnit
 
 @Keep
 data class SendCardAndTempMessageRequest(
+    @SerializedName("amid")
+    var amid: String? = null,
     @SerializedName("achat_id")
     var aChatId: String? = null,
     @SerializedName("sender_id")
     var senderId: String? = null,
     @SerializedName("sender_time")
     var sendTime: Long? = null,
+//    @SerializedName("receive_ids")
+//    var receiveIds: MutableList<String>? = null,
+//    @SerializedName("content")
+//    var content: String? = null
 )
 
 @Keep
@@ -29,10 +36,32 @@ data class SendCardAndTempMessageResponse(
     var errCode: Int?,
 )
 
+data class CardMessageContent(
+    var text:MutableList<CardMessageTextItem>
+)
+
+data class CardMessageTextItem(
+    var t: String = "txt",
+    var value: String = "",
+    var color: String = ""
+)
+
+data class CardMessageButtonItem(
+    var buttonId: String = "txt",
+    var txt: String = "",
+    var enableColor: String = "",
+    var disableColor: String = ""
+)
+
+data class CardMessageButtonIdItem(
+    var buttonId: String = "txt",
+    var type: Int = 0
+)
+
 
 object SendCardAndTempMessage {
 
-    const val host = "https://dev-sdkdemo.imtmm.com:7504"
+//    const val host = "https://demo-sdk-test-api.rpgqp.com"
 //    const val host = "https://dev-sdkdemo.tmmtmm.com.tr:7504"
 
     private const val api = "/sendCardAndTempMessage"

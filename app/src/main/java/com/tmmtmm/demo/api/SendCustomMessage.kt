@@ -6,8 +6,6 @@ import com.google.gson.annotations.SerializedName
 import com.tmmtmm.demo.api.LoginByPhone.host
 import com.tmmtmm.demo.exception.TmException
 import com.tmmtmm.demo.exception.TmmError
-import com.tmmtmm.demo.manager.LoginManager
-
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -17,30 +15,39 @@ import java.util.concurrent.TimeUnit
 
 
 @Keep
-data class SetMessageStatusRequest(
+data class SendCustomMessageRequest(
+    @SerializedName("amid")
     var amid: String? = null,
-    var auid: String? = null,
-    var status: Int = 2,
+    @SerializedName("achat_id")
+    var aChatId: String? = null,
+    @SerializedName("sender_id")
+    var senderId: String? = null,
+    @SerializedName("sender_time")
+    var sendTime: Long? = null,
+//    @SerializedName("receive_ids")
+//    var receiveIds: MutableList<String>? = null,
+//    @SerializedName("content")
+//    var content: String? = null
 )
 
 @Keep
-data class SetMessageStatusResponse(
+data class SendCustomMessageResponse(
     @SerializedName("err_code")
     var errCode: Int?,
 )
 
 
-object SetMessageStatus {
+object SendCustomMessage {
 
 //    const val host = "https://demo-sdk-test-api.rpgqp.com"
 //    const val host = "https://dev-sdkdemo.tmmtmm.com.tr:7504"
 
-    private const val api = "/setMessageStatus"
+    private const val api = "/sendCustomizeMessage"
 
-    fun execute(requestSetMessageStatus: SetMessageStatusRequest): ResponseResult<SetMessageStatusResponse?> {
+    fun execute(sendCustomMessageRequest: SendCustomMessageRequest): ResponseResult<SendCardAndTempMessageResponse?> {
         try {
             val requestBody: RequestBody =
-                requestSetMessageStatus.toJson().toString()
+                sendCustomMessageRequest.toJson().toString()
                     .toRequestBody("application/json".toMediaType())
             val url = host + api
             val req =
@@ -60,9 +67,9 @@ object SetMessageStatus {
             val type =
                 GsonUtils.getType(
                     BaseResponseEntity::class.java,
-                    SetMessageStatusResponse::class.java,
+                    SendCustomMessageResponse::class.java,
                 )
-            val responseData: BaseResponseEntity<SetMessageStatusResponse>? =
+            val responseData: BaseResponseEntity<SendCardAndTempMessageResponse>? =
                 response.body?.string()?.responseToEntity(type)
 
             val result = if (responseData?.isSuccess() == false) {

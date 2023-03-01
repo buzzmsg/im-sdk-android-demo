@@ -34,3 +34,6 @@ dependencyResolutionManagement {
 rootProject.name = "im-sdk-android"
 include ':app:filepicker'
 include ':app'
+
+include ':imsdk-android'
+include ':imsdk-android-common'

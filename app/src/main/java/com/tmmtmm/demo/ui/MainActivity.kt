@@ -9,6 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.PermissionUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.im.sdk.IMSdk
 import com.im.sdk.constant.enums.LanguageType
 import com.im.sdk.dto.IMImageResourcesInfo
@@ -188,12 +189,12 @@ class MainActivity : BaseActivity() {
 //                ToastUtils.showLong(msg)
 //            }
 //        })
-//        TmApplication.instance().imSdk?.loginOut()
-//        ThreadUtils.runOnUiThreadDelayed({
-//            hideLoading()
-//            LoginActivity.newInstance(this)
-//            finish()
-//        }, 1000)
+        TmApplication.instance().imSdk?.loginOut()
+        ThreadUtils.runOnUiThreadDelayed({
+            hideLoading()
+            LoginActivity.newInstance(this)
+            finish()
+        }, 1000)
 
     }
 

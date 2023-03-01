@@ -107,4 +107,21 @@
         android:text="发送按钮图片卡片"
         android:layout_marginTop="15dp"
         />
+
+
+    <com.allen.library.shape.ShapeButton
+        android:id="@+id/btnSendCustomMessage"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        app:shapeSolidColor="@color/text_0091FF"
+        app:shapeCornersRadius="10dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:visibility="visible"
+        android:text="发送按钮图片卡片"
+        android:layout_marginTop="15dp"
+        />
 </androidx.appcompat.widget.LinearLayoutCompat>

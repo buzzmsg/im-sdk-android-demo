@@ -1,0 +1,6 @@
+[submodule "imsdk-android-common"]
+	path = imsdk-android-common
+	url = https://git.vm.snqu.com/im/tmm/imsdk/imsdk-android-common.git
+[submodule "imsdk-android"]
+	path = imsdk-android
+	url = https://git.vm.snqu.com/im/tmm/imsdk/imsdk-android.git

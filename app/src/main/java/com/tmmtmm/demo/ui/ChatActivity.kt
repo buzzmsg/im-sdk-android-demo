@@ -19,6 +19,8 @@ class ChatActivity : BaseActivity() {
 
     private var aChatId = ""
 
+    private var chatView: ChatView? = null
+
     companion object {
 
         private const val KEY_CHAT_ID = "key_chat_id"
@@ -66,16 +68,17 @@ class ChatActivity : BaseActivity() {
 
 
         KeyboardUtils.registerSoftInputChangedListener(this) { height ->
-            if (height > 0) {
+//            if (height > 0) {
 //                binding.chatList.forceScrollToPosition()
-            }
+//                chatView?.compressionHeight(height)
+//            }
         }
     }
 
     override fun fetchData() {
 
         binding.chatList.removeAllViews()
-        val chatView = TmApplication.instance().imSdk?.createChatView(aChatId, this)
+        chatView = TmApplication.instance().imSdk?.createChatView(aChatId, this)
         binding.chatList.addView(chatView)
         chatView?.show()
         chatView?.setChatDelegate(object : ChatView.ChatDelegate {

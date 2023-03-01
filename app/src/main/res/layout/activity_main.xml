@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="6dp"
-            android:text="加入测试群"
+            android:text="退出登录"
             android:textSize="16sp"
             android:textColor="#0d1324"/>
 
