@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.im.sdk.IMSdk
 import com.im.sdk.constant.enums.LanguageType
-import com.im.sdk.dto.ImImageResourcesInfo
+import com.im.sdk.dto.IMImageResourcesInfo
 import com.im.sdk.view.ConversationView
 import com.im.sdk.view.IMConversationViewModel
 import com.im.sdk.view.selector.SelectorFactory
@@ -135,7 +135,7 @@ class MainActivity : BaseActivity() {
 
         val drawable = ResourcesCompat.getDrawable(resources, applicationInfo.icon, theme)
         val avatar = ImageUtils.drawable2Bytes(drawable)
-        val image = ImImageResourcesInfo(avatar)
+        val image = IMImageResourcesInfo(avatar)
         conversationViewModel?.setFolder(
             aChatId = FOLDER_ID,
             content = "共${hideConversationIds.size}条会话",
@@ -153,7 +153,7 @@ class MainActivity : BaseActivity() {
     private fun addFolderMarkerAndSubTitle(conversationViewModel: IMConversationViewModel?) {
         val markerList = mutableListOf<IMConversationMarker>()
         val marker = IMConversationMarker(
-            aChatId = FOLDER_ID, markerVo = ImImageResourcesInfo(R.drawable.ic_marker)
+            aChatId = FOLDER_ID, markerVo = IMImageResourcesInfo(R.drawable.ic_marker)
         )
         markerList.add(marker)
 

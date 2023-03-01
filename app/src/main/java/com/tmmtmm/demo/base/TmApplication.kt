@@ -8,12 +8,12 @@ import com.blankj.utilcode.util.ThreadUtils
 import com.im.sdk.BuildConfig
 import com.im.sdk.IMSdk
 import com.im.sdk.config.IMConfig
-import com.im.sdk.config.ImUiSetting
+import com.im.sdk.config.IMUiSetting
 import com.im.sdk.config.LoginError
 import com.im.sdk.constant.enums.getEnvironmentType
-import com.im.sdk.dto.ImImageResourcesInfo
-import com.im.sdk.dto.ImShowUserinfo
-import com.im.sdk.dto.ImUserinfo
+import com.im.sdk.dto.IMImageResourcesInfo
+import com.im.sdk.dto.IMShowUserinfo
+import com.im.sdk.dto.IMUserinfo
 import com.tencent.mmkv.MMKV
 import com.tmmtmm.demo.api.GetAuth
 import com.tmmtmm.demo.api.GetAuthRequest
@@ -37,7 +37,7 @@ class TmApplication : Application() {
 
     var imSdk: IMSdk? = null
 
-    var cacheTmUserinfoList = mutableListOf<ImUserinfo>()
+    var cacheTmUserinfoList = mutableListOf<IMUserinfo>()
 
     val avatarName = "avatar_default_"
 
@@ -112,7 +112,7 @@ class TmApplication : Application() {
                 super.onShowConversationSubTitle(aChatIds)
             }
 
-            override fun onShowUserinfo(datas: List<ImShowUserinfo>) {
+            override fun onShowUserinfo(datas: List<IMShowUserinfo>) {
                 val auids = datas.map { it.aUid }.toMutableList()
                 setUserinfo(auids)
             }
@@ -128,12 +128,18 @@ class TmApplication : Application() {
         )
     }
 
-    private fun getUiSetting(): ImUiSetting {
-        val imUiSetting = ImUiSetting()
+    private fun getUiSetting(): IMUiSetting {
+        val imUiSetting = IMUiSetting()
         imUiSetting.setShowMessageBrowse(true)
         imUiSetting.setConversationSwipeMenu(true)
         imUiSetting.showRightAvatar(true)
         imUiSetting.showLeftAvatarBySingleChat(true)
+
+        val menus = mutableSetOf<IMUiSetting.IMMessageMenuType>()
+        menus.add(IMUiSetting.IMMessageMenuType.COPY)
+        menus.add(IMUiSetting.IMMessageMenuType.DELETE_FOR_ME)
+        menus.add(IMUiSetting.IMMessageMenuType.DELETE_FOR_EVERYONE)
+        imUiSetting.setMessageMenu(menus)
         return imUiSetting
     }
 
@@ -156,10 +162,10 @@ class TmApplication : Application() {
                 val bitmap =
                     ImageUtils.drawable2Bytes(ResourceUtils.getDrawable(drawableIdByName))
 
-                val imageInfo = ImImageResourcesInfo(bitmap)
+                val imageInfo = IMImageResourcesInfo(bitmap)
                 val tmUserinfoItemDto =
-                    ImUserinfo.ImUserinfoItemDto(imageInfo, name = "alex_${auid.substring(0, 5)}")
-                val tmUserinfo = ImUserinfo(auid, tmUserinfoItemDto)
+                    IMUserinfo.IMUserinfoItemDto(imageInfo, name = "alex_${auid.substring(0, 5)}")
+                val tmUserinfo = IMUserinfo(auid, tmUserinfoItemDto)
                 cacheTmUserinfoList.add(tmUserinfo)
             }
             imSdk?.setUserinfo(CopyOnWriteArrayList(cacheTmUserinfoList))
