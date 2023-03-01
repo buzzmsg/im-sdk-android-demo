@@ -14,6 +14,7 @@ import com.im.sdk.constant.enums.getEnvironmentType
 import com.im.sdk.dto.IMImageResourcesInfo
 import com.im.sdk.dto.IMShowUserinfo
 import com.im.sdk.dto.IMUserinfo
+import com.im.sdk.logic.vo.TmReceiveMessageInfo
 import com.tencent.mmkv.MMKV
 import com.tmmtmm.demo.api.GetAuth
 import com.tmmtmm.demo.api.GetAuthRequest
@@ -100,8 +101,8 @@ class TmApplication : Application() {
                 })
             }
 
-            override fun onReceiveMessages(amids: List<String>) {
-                super.onReceiveMessages(amids)
+            override fun onReceiveMessages(messageInfoList: MutableList<TmReceiveMessageInfo>) {
+                super.onReceiveMessages(messageInfoList)
             }
 
             override fun onShowConversationMarker(aChatIds: List<String>) {
