@@ -183,7 +183,7 @@ class ChatActivity : BaseActivity() {
                 return customView
             }
 
-            override fun onCloseKeyBoardPanel() {
+            override fun onCloseKeyBoard() {
 
             }
 
