@@ -2,11 +2,13 @@ package com.tmmtmm.demo.ui
 
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.view.View
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.im.sdk.view.ChatView
 import com.im.sdk.view.vo.ImFileData
+import com.im.sdk.view.vo.ImLocationVo
 import com.im.sdk.view.vo.StrategyVo
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
@@ -109,11 +111,7 @@ class ChatActivity : BaseActivity() {
 
             override fun onLocationMessageClick(
                 amid: String?,
-                lat: Double,
-                lon: Double,
-                zoom: Float?,
-                addressName: String?,
-                address: String?
+                location: ImLocationVo
             ) {
 
             }
