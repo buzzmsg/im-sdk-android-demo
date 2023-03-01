@@ -82,34 +82,32 @@ class ChatActivity : BaseActivity() {
         binding.chatList.addView(chatView)
         chatView?.show()
         chatView?.setChatDelegate(object : ChatView.ChatDelegate {
-            //CardMessage按钮点击事件
-//            override fun onCardMessageClick(amid: String, buttonId: String) {
-//                ToastUtils.showShort(buttonId)
-//                //设置按钮不可点击，可设置多个按钮
-//                TmApplication.instance().imSdk?.disableCardMessage(amid, mutableListOf(buttonId))
-//            }
+            override fun onFileMessageClick(amid: String, data: ImFileData) {
+
+            }
+
+            override fun onImageMessageClick(amid: String, strategyVo: StrategyVo) {
+                MediaPreviewActivity.newInstance(this@ChatActivity, strategyVo)
+
+            }
+
+            override fun onMiddleMessageClick(amid: String, tmpId: String, buttonId: String) {
+                ToastUtils.showShort(buttonId)
+            }
+
             override fun onButtonMessageClick(amid: String, buttonId: String) {
                 ToastUtils.showShort("通知消息")
+            }
+
+            override fun onMessageMultipleChooseClick(messageMultipleChooser: ChatView.MessageMultipleChooser?) {
 
             }
 
-            override fun onCloseKeyBoardPanel() {
-                
-            }
-
-            override fun onCoinOrderDetails(id: String) {
-                
-            }
-
-            override fun onFileClick(amid: String, data: ImFileData) {
+            override fun onMomentMessageClick(amid: String, feedId: CharSequence?) {
 
             }
 
-            override fun onForwardMessageSeeSee(messageBody: CharSequence) {
-                
-            }
-
-            override fun onMapLocation(
+            override fun onLocationMessageClick(
                 amid: String?,
                 lat: Double,
                 lon: Double,
@@ -117,77 +115,66 @@ class ChatActivity : BaseActivity() {
                 addressName: String?,
                 address: String?
             ) {
-                
+
             }
 
-            override fun onMediaPreview(strategyVo: StrategyVo) {
-                MediaPreviewActivity.newInstance(this@ChatActivity,strategyVo)
+            override fun onAvatarLongPress(amid: String, aUid: String) {
+
             }
 
-            override fun onMeetingCall(meetingType: Int) {
-                
+            override fun onAvatarClick(amid: String, aUid: String) {
+
             }
 
-            override fun onMessageForward(amid: String) {
-                
+            override fun onMeetingRecordClick(amid: String, meetingType: Int) {
+
             }
 
-            override fun onMessageMultipleChooseClick(messageMultipleChooser: ChatView.MessageMultipleChooser?) {
-                
+            override fun onMessagePeportAct(amid: String) {
+
             }
 
-            override fun onMessageQuote(
+            override fun onMessageForwardAct(amid: String) {
+
+            }
+
+            override fun onMessageQuoteAct(
                 amid: String,
                 aUid: String,
                 content: CharSequence?,
                 position: Int
             ) {
-                
+
             }
 
-            override fun onMessageReport(amid: String) {
-                
+            override fun onRedPacketStatusChange(amid: String, id: String) {
+
             }
 
-            override fun onMiddleMessageClick(
+            override fun onRedPacketNoticeMessageClick(amid: String, outTradeNo: String) {
+
+            }
+
+            override fun onReferenceMessageClick(amid: String, messageBody: CharSequence) {
+
+            }
+
+            override fun onWebUrlLinkClick(amid: String, url: String?) {
+
+            }
+
+            override fun onTransferMessageClick(amid: String, orderId: String) {
+
+            }
+
+            override fun onPayMessageClick(
                 amid: String,
-                tmpId: String,
-                buttonId: String
-            ) {
-                ToastUtils.showShort(buttonId)
-            }
-
-            override fun onMomentDetail(feedId: CharSequence?) {
-                
-            }
-
-            override fun onRedPacketDetail(aChatId: String, outTradeNo: String) {
-                
-            }
-
-            override fun onRedPacketStatusChange(amid: String, aChatId: String, id: String) {
-                
-            }
-
-            override fun onTmmPayClick(
                 act: Int?,
                 id: String?,
                 associatedId: String?,
                 outTradeNo: String?
             ) {
-                
-            }
 
-            override fun onUserAvatarClick(amid: String, aChatId: String, aUid: String) {
-                
-            }
-
-            override fun onUserAvatarLongClick(amid: String, aChatId: String, aUid: String) {
-                
-            }
-
-            override fun onWebUrlLinkClick(url: String?) {
-                
             }
 
             override fun onShowCustomMessageView(amid: String, content: String): View? {
@@ -195,6 +182,12 @@ class ChatActivity : BaseActivity() {
                 customView.bindData(content)
                 return customView
             }
+
+            override fun onCloseKeyBoardPanel() {
+
+            }
+
+
         })
     }
 
