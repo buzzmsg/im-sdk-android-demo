@@ -121,7 +121,7 @@
         android:textSize="18sp"
         android:gravity="center"
         android:visibility="visible"
-        android:text="发送按钮图片卡片"
+        android:text="发送自定义消息"
         android:layout_marginTop="15dp"
         />
 </androidx.appcompat.widget.LinearLayoutCompat>

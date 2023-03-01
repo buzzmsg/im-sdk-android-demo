@@ -4,15 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.view.View
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.im.sdk.view.ChatView
-import com.im.sdk.view.vo.ImFileData
-import com.im.sdk.view.vo.ImLocationVo
+import com.im.sdk.view.vo.IMFileData
+import com.im.sdk.view.vo.IMLocationVo
 import com.im.sdk.view.vo.StrategyVo
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityChatBinding
+import com.tmmtmm.demo.ui.dto.ButtonIdDto
 import com.tmmtmm.demo.ui.view.CustomView
 
 class ChatActivity : BaseActivity() {
@@ -70,10 +72,9 @@ class ChatActivity : BaseActivity() {
 
 
         KeyboardUtils.registerSoftInputChangedListener(this) { height ->
-//            if (height > 0) {
-//                binding.chatList.forceScrollToPosition()
-//                chatView?.compressionHeight(height)
-//            }
+            if (height > 0) {
+                chatView?.getChatListRecyclerView()?.scrollBy(0, height)
+            }
         }
     }
 
@@ -84,7 +85,7 @@ class ChatActivity : BaseActivity() {
         binding.chatList.addView(chatView)
         chatView?.show()
         chatView?.setChatDelegate(object : ChatView.ChatDelegate {
-            override fun onFileMessageClick(amid: String, data: ImFileData) {
+            override fun onFileMessageClick(amid: String, data: IMFileData) {
 
             }
 
@@ -98,7 +99,23 @@ class ChatActivity : BaseActivity() {
             }
 
             override fun onButtonMessageClick(amid: String, buttonId: String) {
-                ToastUtils.showShort("通知消息")
+                try {
+                    val dto = GsonUtils.fromJson<ButtonIdDto>(buttonId, ButtonIdDto::class.java)
+
+                    if (dto.type == 19) {
+                        ToastUtils.showShort("卡片消息")
+                        //设置按钮不可点击，可设置多个按钮
+                        TmApplication.instance().imSdk?.disableCardMessage(
+                            amid,
+                            mutableListOf(buttonId)
+                        )
+                    } else {
+                        ToastUtils.showShort("通知消息")
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
             }
 
             override fun onMessageMultipleChooseClick(messageMultipleChooser: ChatView.MessageMultipleChooser?) {
@@ -111,7 +128,7 @@ class ChatActivity : BaseActivity() {
 
             override fun onLocationMessageClick(
                 amid: String?,
-                location: ImLocationVo
+                location: IMLocationVo
             ) {
 
             }
