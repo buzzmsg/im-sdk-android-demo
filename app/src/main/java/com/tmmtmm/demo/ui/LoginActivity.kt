@@ -67,6 +67,7 @@ class LoginActivity : BaseActivity() {
                 LoginManager.INSTANCE.setUserPhone(mBinding.etPhone.text.toString())
                 LoginManager.INSTANCE.setUserId(value?.auid ?: "")
                 LoginManager.INSTANCE.setToken(value?.token ?: "")
+                TmApplication.instance().setIMDelegate()
                 TmApplication.instance().imSdk?.initUser(value?.auid ?: "")
                 MainActivity.newInstance(this@LoginActivity)
                 finish()

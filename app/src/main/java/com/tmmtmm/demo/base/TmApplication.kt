@@ -56,6 +56,11 @@ class TmApplication : Application() {
         super.onCreate()
         MMKV.initialize(this)
         instance = this
+
+        setIMDelegate()
+    }
+
+    fun setIMDelegate(){
         val imConfig = getImConfig()
         imSdk = IMSdk.getInstance(context = this, ak = ak, config = imConfig)
         val imUiSetting = getUiSetting()

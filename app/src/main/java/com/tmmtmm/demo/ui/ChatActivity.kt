@@ -182,7 +182,7 @@ class ChatActivity : BaseActivity() {
             }
 
             override fun onCloseKeyBoard() {
-
+                KeyboardUtils.hideSoftInput(this@ChatActivity)
             }
 
 
