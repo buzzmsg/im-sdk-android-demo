@@ -65,9 +65,6 @@ class MediaPreviewActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
-        AndroidStatusBarUtils.setStatusBarDarkMode(this)
-        BarUtils.setNavBarColor(window, R.color.black.getColor())
-        BarUtils.setNavBarLightMode(window, false)
 
         intent?.apply {
             strategyVo = this.getParcelableExtra("strategyVo")
@@ -91,12 +88,6 @@ class MediaPreviewActivity : AppCompatActivity() {
 
 
     private fun onClick() {
-        mBinding.btnMore.click {
-            val actionVo = mediaPreview?.getActionData()
-            actionVo?.let {
-                moreClick(actionVo)
-            }
-        }
 
         mBinding.imgCloseButton.click {
             finish()
@@ -148,7 +139,6 @@ class MediaPreviewActivity : AppCompatActivity() {
     private fun switchViewShowType(visibility: Int? = null) {
         visibility?.let {
             mBinding.layoutTopBox.visibility = it
-            mBinding.btnMore.visibility = it
             mBinding.tvIndicator.visibility = it
             mBinding.imgCloseButton.visibility = it
         } ?: run {
@@ -159,74 +149,6 @@ class MediaPreviewActivity : AppCompatActivity() {
             }
         }
     }
-
-
-    private fun moreClick(actionVo: IMMediaMoreActionVo) {
-        val list: ArrayList<MediaActionVo> = arrayListOf()
-        val actionData = showActionData(actionVo)
-        if (actionData.size < 1) return
-
-        actionData.forEach { vo ->
-            list.add(vo)
-        }
-        if (dialog != null) {
-            dialog?.dismiss()
-            dialog = null
-        }
-        dialog = IMDialogMediaOperate.newInstance(list)
-        if (dialog?.isVisible == true) return
-        dialog?.showNow(supportFragmentManager, IMDialogMediaOperate::class.java.name)
-    }
-
-
-    private fun showActionData(actionVo: IMMediaMoreActionVo): MutableList<MediaActionVo> {
-        val actionDataList = mutableListOf<MediaActionVo>()
-
-        when (actionVo.fileType) {
-            MediaPreviewType.MEDIA_FILE_IMAGE -> {
-                addImageActionData(actionDataList, actionVo.filePath)
-            }
-            MediaPreviewType.MEDIA_FILE_VIDEO -> {
-                addVideoActionData(actionDataList, actionVo.filePath)
-            }
-            else -> {}
-        }
-        return actionDataList
-
-    }
-
-    private fun addVideoActionData(actionDataList: MutableList<MediaActionVo>, filePath: String) {
-        val mediaActionVo = MediaActionVo()
-        mediaActionVo.imageRes = R.drawable.ic_more_download
-        mediaActionVo.text = R.string.name_save.getString()
-        //save video
-        mediaActionVo.callback = object : MediaActionImpl() {
-            override fun action(callback: ActionFinishCallback?) {
-                super.action(callback)
-                SaveFile.saveVideo(filePath)
-                callback?.onActionFinish()
-            }
-        }
-        actionDataList.add(mediaActionVo)
-    }
-
-    private fun addImageActionData(actionDataList: MutableList<MediaActionVo>, filePath: String) {
-        var mediaActionVo = MediaActionVo()
-        mediaActionVo.imageRes = R.drawable.ic_more_download
-        mediaActionVo.text = R.string.name_save.getString()
-        //save image
-        mediaActionVo.callback = object : MediaActionImpl() {
-            override fun action(callback: ActionFinishCallback?) {
-                super.action(callback)
-                SaveFile.saveImage(filePath)
-                callback?.onActionFinish()
-            }
-        }
-        actionDataList.add(mediaActionVo)
-
-
-    }
-
 
 
     override fun finish() {
