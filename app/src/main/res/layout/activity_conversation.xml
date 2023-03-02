@@ -36,7 +36,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="聊天"
+            android:text="不感兴趣"
             android:textSize="20sp"
             android:textColor="#0d1324"/>
 

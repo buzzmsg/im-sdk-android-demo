@@ -5,6 +5,7 @@ import android.util.Log
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.ResourceUtils
 import com.blankj.utilcode.util.ThreadUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.im.sdk.BuildConfig
 import com.im.sdk.IMSdk
 import com.im.sdk.config.IMConfig
@@ -16,6 +17,7 @@ import com.im.sdk.dto.IMShowUserinfo
 import com.im.sdk.dto.IMUserinfo
 import com.im.sdk.logic.vo.TmReceiveMessageInfo
 import com.tencent.mmkv.MMKV
+import com.tmmtmm.demo.R
 import com.tmmtmm.demo.api.GetAuth
 import com.tmmtmm.demo.api.GetAuthRequest
 import com.tmmtmm.demo.api.LoginByPhoneResponse
@@ -76,7 +78,7 @@ class TmApplication : Application() {
 //                    return
 //                }
 
-
+                ToastUtils.showLong("嗨，兄弟， 401了 ${code.code}")
                 ThreadUtils.executeByCached(object : ThreadUtils.Task<String>() {
                     override fun doInBackground(): String {
                         val result =
@@ -136,7 +138,7 @@ class TmApplication : Application() {
 
     private fun getUiSetting(): IMUiSetting {
         val imUiSetting = IMUiSetting()
-        imUiSetting.setShowMessageBrowse(true)
+        imUiSetting.setShowMessageBrowse(false)
         imUiSetting.setConversationSwipeMenu(true)
         imUiSetting.showRightAvatar(true)
         imUiSetting.showLeftAvatarBySingleChat(true)
@@ -146,6 +148,8 @@ class TmApplication : Application() {
         menus.add(IMUiSetting.IMMessageMenuType.DELETE_FOR_ME)
         menus.add(IMUiSetting.IMMessageMenuType.DELETE_FOR_EVERYONE)
         imUiSetting.setMessageMenu(menus)
+
+        imUiSetting.setDefaultErrorImage(ImageUtils.getBitmap(R.drawable.ic_launcher_background))
         return imUiSetting
     }
 
@@ -170,7 +174,7 @@ class TmApplication : Application() {
 
                 val imageInfo = IMImageResourcesInfo(bitmap)
                 val tmUserinfoItemDto =
-                    IMUserinfo.IMUserinfoItemDto(imageInfo, name = "alex_${auid.substring(0, 5)}")
+                    IMUserinfo.IMUserinfoItemDto(imageInfo, name1 = "alex_${auid.substring(0, 5)}")
                 val tmUserinfo = IMUserinfo(auid, tmUserinfoItemDto)
                 cacheTmUserinfoList.add(tmUserinfo)
             }

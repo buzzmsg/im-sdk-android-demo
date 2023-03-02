@@ -15,7 +15,9 @@ import com.im.sdk.constant.enums.LanguageType
 import com.im.sdk.dto.IMImageResourcesInfo
 import com.im.sdk.view.ConversationView
 import com.im.sdk.view.IMConversationViewModel
+import com.im.sdk.view.selector.SelectPart
 import com.im.sdk.view.selector.SelectorFactory
+import com.im.sdk.view.selector.UnSelectPart
 import com.im.sdk.view.vo.IMConversationMarker
 import com.im.sdk.view.vo.IMConversationSubTitle
 import com.lxj.xpopup.XPopup
@@ -34,7 +36,7 @@ class MainActivity : BaseActivity() {
     private lateinit var mBinding: ActivityMainBinding
 //    private val mAdapter = BaseBinderAdapter()
 
-    private var hideConversationIds = mutableListOf("TestAli")
+    private var hideConversationIds = mutableListOf<String>("147147100_147147800")
 
     companion object {
 
@@ -80,6 +82,8 @@ class MainActivity : BaseActivity() {
         mBinding.tvRight.setOnClickListener {
             createGroup()
         }
+
+        mBinding.tvTitle.text = "聊天"+"(${LoginManager.INSTANCE.getUserPhone()})"
 
         TmApplication.instance().imSdk?.setCurrentLanguage(LanguageType.SimplifiedChinese)
 
@@ -146,8 +150,12 @@ class MainActivity : BaseActivity() {
 
         LoginManager.INSTANCE.setFolder(FOLDER_ID)
 
-        conversationViewModel?.updateSelector(unSelectAChatIds = hideConversationIds)
+//        conversationViewModel?.updateSelector(unSelectAChatIds = hideConversationIds)
 
+        val hideSelector = UnSelectPart(hideConversationIds)
+        val folderSelector = SelectPart(mutableListOf(FOLDER_ID))
+        val selector = conversationViewModel?.getCurrentSelector()?.and(hideSelector)?.or(folderSelector)
+        selector?.let { conversationViewModel.replace(it) }
     }
 
 
@@ -171,7 +179,13 @@ class MainActivity : BaseActivity() {
 
     private fun removeFolder(conversationViewModel: IMConversationViewModel?) {
         conversationViewModel?.removeFolder(FOLDER_ID)
-        conversationViewModel?.updateSelector()
+//        conversationViewModel?.updateSelector()
+        val hideSelector = SelectPart(hideConversationIds)
+        val selector = conversationViewModel?.getCurrentSelector()?.or(hideSelector)
+        if (selector != null) {
+            conversationViewModel.replace(selector)
+        }
+
         LoginManager.INSTANCE.setFolder("")
     }
 
@@ -223,6 +237,7 @@ class MainActivity : BaseActivity() {
                     object : IMSdk.CreateChatDelegate {
                         override fun onSucc() {
                             ChatActivity.newInstance(this@MainActivity, aChatID)
+                            hideConversationIds = mutableListOf(aChatID)
                         }
 
                         override fun onError(code: Int?, errorMsg: String?) {
