@@ -129,29 +129,6 @@ class MediaPreviewActivity : AppCompatActivity() {
             override fun syncOriginalDownLoadStatus() {
                 setOriginShow()
             }
-//            override fun showOriginStatus(isCanDownOrigin: Boolean, fileSize: Long) {
-//                this@MediaPreviewActivity.isCanDownOrigin = isCanDownOrigin
-//                if (isCanDownOrigin) {
-//                    mBinding.tvShowOrigin.visibility = View.VISIBLE
-//                    val size = ConvertUtils.byte2FitMemorySize(
-//                        fileSize,
-//                        1
-//                    )
-//                    mBinding.tvShowOrigin.text =
-//                        String.format(getString(R.string.string_original_size), size)
-//                } else {
-//                    mBinding.tvShowOrigin.visibility = View.GONE
-//                }
-//            }
-
-//            override fun isCanSave(isCanSave: Boolean) {
-//                this@MediaPreviewActivity.isCanSave = isCanSave
-//                if (isCanSave) {
-//                    mBinding.imgSave.visible()
-//                } else {
-//                    mBinding.imgSave.hide()
-//                }
-//            }
 
             override fun dragValue(dragValue: Float) {
                 allBtnShowType(dragValue)
