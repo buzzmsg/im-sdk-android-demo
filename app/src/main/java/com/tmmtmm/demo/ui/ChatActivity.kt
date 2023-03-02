@@ -76,6 +76,30 @@ class ChatActivity : BaseActivity() {
                 chatView?.getChatListRecyclerView()?.scrollBy(0, height)
             }
         }
+
+        binding.btnPin.setOnClickListener {
+            showLoading()
+            TmApplication.instance().viewModel?.getChatIsTop(aChatId) { isTop ->
+                if (isTop) {
+                    TmApplication.instance().viewModel?.setChatCloseTop(aChatId, {
+                        hideLoading()
+                        ToastUtils.showShort("取消置顶成功")
+                    }, {
+                        hideLoading()
+                        ToastUtils.showShort("取消置顶失败")
+                    })
+                } else {
+                    TmApplication.instance().viewModel?.setChatTop(aChatId, {
+                        hideLoading()
+                        ToastUtils.showShort("置顶成功")
+                    }, {
+                        hideLoading()
+                        ToastUtils.showShort("置顶失败")
+                    })
+                }
+            }
+        }
+
     }
 
     override fun fetchData() {

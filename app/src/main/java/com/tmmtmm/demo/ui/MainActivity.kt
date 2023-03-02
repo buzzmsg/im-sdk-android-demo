@@ -106,16 +106,34 @@ class MainActivity : BaseActivity() {
 
         conversationView?.setConversationDelegate(object :
             ConversationView.ConversationDelegate {
-            override fun onCompleteAddConversation(aChatIds: MutableList<String>) {
-
-            }
 
             override fun onItemClick(aChatId: String) {
+                TmApplication.instance().viewModel = conversationViewModel
                 if (aChatId == FOLDER_ID) {
                     ConversationActivity.newInstance(this@MainActivity, aChatId)
                     return
                 }
                 ChatActivity.newInstance(this@MainActivity, aChatId)
+            }
+
+            override fun onShowConversationMarker(aChatIds: List<String>) {
+                if (!aChatIds.contains(FOLDER_ID)) return
+                val markerList = mutableListOf<IMConversationMarker>()
+                val marker = IMConversationMarker(
+                    aChatId = FOLDER_ID, markerVo = IMImageResourcesInfo(R.drawable.ic_marker)
+                )
+                markerList.add(marker)
+
+                conversationViewModel.setConversationMarker(markerList)
+            }
+
+            override fun onShowConversationSubTitle(aChatIds: List<String>) {
+                if (!aChatIds.contains(FOLDER_ID)) return
+                val subNameList = mutableListOf<IMConversationSubTitle>()
+                val subNameDto = IMConversationSubTitle(aChatId = FOLDER_ID, subTitle = "屏蔽的")
+                subNameList.add(subNameDto)
+
+                conversationViewModel.setConversationSubTitle(subNameList)
             }
         })
 
@@ -166,14 +184,14 @@ class MainActivity : BaseActivity() {
         )
         markerList.add(marker)
 
-        conversationViewModel?.updateConversationMarker(markerList)
+        conversationViewModel?.setConversationMarker(markerList)
 
 
         val subNameList = mutableListOf<IMConversationSubTitle>()
         val subNameDto = IMConversationSubTitle(aChatId = FOLDER_ID, subTitle = "屏蔽的")
         subNameList.add(subNameDto)
 
-        conversationViewModel?.updateConversationSubName(subNameList)
+        conversationViewModel?.setConversationSubTitle(subNameList)
     }
 
 
