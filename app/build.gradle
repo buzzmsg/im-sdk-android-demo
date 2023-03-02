@@ -29,9 +29,23 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.only
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+
+        create("dev") {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.only
+        }
+
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
