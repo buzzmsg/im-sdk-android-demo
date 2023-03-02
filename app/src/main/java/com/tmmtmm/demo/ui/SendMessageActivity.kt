@@ -260,7 +260,7 @@ class SendMessageActivity : BaseActivity() {
             val result = SendNotificationMessage.execute(
                 SendNotificationMessageRequest(
                     amid = Random.create(6),
-                    aChatId = aChatId,
+//                    aChatId = aChatId,
                     senderId = LoginManager.INSTANCE.getUserId(),
                     sendTime = System.currentTimeMillis(),
                 )
