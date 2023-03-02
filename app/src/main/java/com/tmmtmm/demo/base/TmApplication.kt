@@ -16,6 +16,7 @@ import com.im.sdk.dto.IMImageResourcesInfo
 import com.im.sdk.dto.IMShowUserinfo
 import com.im.sdk.dto.IMUserinfo
 import com.im.sdk.logic.vo.TmReceiveMessageInfo
+import com.im.sdk.view.IMConversationViewModel
 import com.tencent.mmkv.MMKV
 import com.tmmtmm.demo.R
 import com.tmmtmm.demo.api.GetAuth
@@ -46,6 +47,8 @@ class TmApplication : Application() {
 
     //    private val ak = "68oni7jrg31qcsaijtg76qln"
     private val ak = "DEMO"
+
+    var viewModel: IMConversationViewModel? = null
 
     companion object {
         private const val TAG = "TmApplication"
@@ -112,14 +115,6 @@ class TmApplication : Application() {
                 super.onReceiveMessages(messageInfoList)
             }
 
-            override fun onShowConversationMarker(aChatIds: List<String>) {
-                super.onShowConversationMarker(aChatIds)
-            }
-
-            override fun onShowConversationSubTitle(aChatIds: List<String>) {
-                super.onShowConversationSubTitle(aChatIds)
-            }
-
             override fun onShowUserinfo(datas: List<IMShowUserinfo>) {
                 val auids = datas.map { it.aUid }.toMutableList()
                 setUserinfo(auids)
@@ -138,8 +133,8 @@ class TmApplication : Application() {
 
     private fun getUiSetting(): IMUiSetting {
         val imUiSetting = IMUiSetting()
-        imUiSetting.setShowMessageBrowse(false)
-        imUiSetting.setConversationSwipeMenu(true)
+        imUiSetting.showChatBrowsedTag(false)
+        imUiSetting.setConversationMenu(false)
         imUiSetting.showRightAvatar(true)
         imUiSetting.showLeftAvatarBySingleChat(true)
 
@@ -149,7 +144,7 @@ class TmApplication : Application() {
         menus.add(IMUiSetting.IMMessageMenuType.DELETE_FOR_EVERYONE)
         imUiSetting.setMessageMenu(menus)
 
-        imUiSetting.setDefaultErrorImage(ImageUtils.getBitmap(R.drawable.ic_launcher_background))
+        imUiSetting.setAvatarPlaceholder(ImageUtils.getBitmap(R.drawable.ic_launcher_background))
         return imUiSetting
     }
 

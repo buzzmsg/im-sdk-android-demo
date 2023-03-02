@@ -48,12 +48,18 @@ class ConversationActivity : BaseActivity() {
 
         conversationView?.setConversationDelegate(object :
             ConversationView.ConversationDelegate {
-            override fun onCompleteAddConversation(aChatIds: MutableList<String>) {
+
+            override fun onItemClick(aChatId: String) {
+                TmApplication.instance().viewModel = conversationViewModel
+                ChatActivity.newInstance(this@ConversationActivity, aChatId)
+            }
+
+            override fun onShowConversationMarker(aChatIds: List<String>) {
 
             }
 
-            override fun onItemClick(aChatId: String) {
-                ChatActivity.newInstance(this@ConversationActivity, aChatId)
+            override fun onShowConversationSubTitle(aChatIds: List<String>) {
+
             }
         })
     }

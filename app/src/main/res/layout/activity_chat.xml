@@ -93,17 +93,40 @@
                 android:textSize="20sp"
                 />
 
-            <com.allen.library.shape.ShapeButton
-                android:id="@+id/btnSendMessage"
-                android:layout_width="230dp"
-                android:layout_height="44dp"
-                android:gravity="center"
-                android:text="发消息"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                app:shapeCornersRadius="12dp"
-                app:shapeSolidColor="@color/text_0091FF"
-                />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.allen.library.shape.ShapeButton
+                    android:id="@+id/btnSendMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="发消息"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:shapeCornersRadius="12dp"
+                    android:layout_marginStart="@dimen/dp_20"
+                    app:shapeSolidColor="@color/text_0091FF"
+                    />
+
+                <com.allen.library.shape.ShapeButton
+                    android:id="@+id/btnPin"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginStart="@dimen/dp_40"
+                    android:text="置顶/取消置顶"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:shapeCornersRadius="12dp"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    app:shapeSolidColor="@color/text_0091FF"
+                    />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etInput"
