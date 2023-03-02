@@ -82,6 +82,10 @@ class SendMessageActivity : BaseActivity() {
             sendCardMessage()
         }
 
+        binding.btnSendCustomMessage.setOnClickListener {
+            sendCustomMessage()
+        }
+
         binding.btnSendNotificationMessage.setOnClickListener {
             sendNotificationMessage()
         }

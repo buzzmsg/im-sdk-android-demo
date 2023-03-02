@@ -66,8 +66,10 @@ android {
                 //projectName-VersionName-Version-release/debug.apk
                 if (variant.buildType.name == 'release') {
                     outputFileName = "${project.archivesBaseName}-v${versionName}-c${versionCode}-${buildDate}-${variant.name}-release.apk"
-                } else {
+                } else if (variant.buildType.name == 'debug') {
                     outputFileName = "${project.archivesBaseName}-v${versionName}-c${versionCode}-${buildDate}-${variant.name}-debug.apk"
+                } else {
+                    outputFileName = "${project.archivesBaseName}-v${versionName}-c${versionCode}-${buildDate}-${variant.name}-dev.apk"
                 }
             }
     }
