@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 
 
 @Keep
-data class SendCustomMessageRequest(
+data class SendNotificationMessageRequest(
     @SerializedName("amid")
     var amid: String? = null,
     @SerializedName("achat_id")
@@ -31,23 +31,23 @@ data class SendCustomMessageRequest(
 )
 
 @Keep
-data class SendCustomMessageResponse(
+data class SendNotificationMessageResponse(
     @SerializedName("err_code")
     var errCode: Int?,
 )
 
 
-object SendCustomMessage {
+object SendNotificationMessage {
 
 //    const val host = "https://demo-sdk-test-api.rpgqp.com"
 //    const val host = "https://dev-sdkdemo.tmmtmm.com.tr:7504"
 
-    private const val api = "/sendCustomizeMessage"
+    private const val api = "/sendNotificationMessage"
 
-    fun execute(sendCustomMessageRequest: SendCustomMessageRequest): ResponseResult<SendCustomMessageResponse?> {
+    fun execute(sendNotificationMessageRequest: SendNotificationMessageRequest): ResponseResult<SendNotificationMessageResponse?> {
         try {
             val requestBody: RequestBody =
-                sendCustomMessageRequest.toJson().toString()
+                sendNotificationMessageRequest.toJson().toString()
                     .toRequestBody("application/json".toMediaType())
             val url = host + api
             val req =
@@ -67,9 +67,9 @@ object SendCustomMessage {
             val type =
                 GsonUtils.getType(
                     BaseResponseEntity::class.java,
-                    SendCustomMessageResponse::class.java,
+                    SendNotificationMessageResponse::class.java,
                 )
-            val responseData: BaseResponseEntity<SendCustomMessageResponse>? =
+            val responseData: BaseResponseEntity<SendNotificationMessageResponse>? =
                 response.body?.string()?.responseToEntity(type)
 
             val result = if (responseData?.isSuccess() == false) {

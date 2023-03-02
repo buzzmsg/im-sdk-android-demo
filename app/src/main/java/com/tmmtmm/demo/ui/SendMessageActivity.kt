@@ -12,10 +12,7 @@ import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
-import com.tmmtmm.demo.api.SendCardAndTempMessage
-import com.tmmtmm.demo.api.SendCardAndTempMessageRequest
-import com.tmmtmm.demo.api.SendCustomMessage
-import com.tmmtmm.demo.api.SendCustomMessageRequest
+import com.tmmtmm.demo.api.*
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivitySendMessageBinding
@@ -85,8 +82,8 @@ class SendMessageActivity : BaseActivity() {
             sendCardMessage()
         }
 
-        binding.btnSendCustomMessage.setOnClickListener {
-            sendCustomMessage()
+        binding.btnSendNotificationMessage.setOnClickListener {
+            sendNotificationMessage()
         }
     }
 
@@ -244,6 +241,24 @@ class SendMessageActivity : BaseActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val result = SendCustomMessage.execute(
                 SendCustomMessageRequest(
+                    amid = Random.create(6),
+                    aChatId = aChatId,
+                    senderId = LoginManager.INSTANCE.getUserId(),
+                    sendTime = System.currentTimeMillis(),
+                )
+            )
+            withContext(Dispatchers.Main) {
+                hideLoading()
+                finish()
+            }
+        }
+    }
+
+    private fun sendNotificationMessage() {
+        showLoading()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = SendNotificationMessage.execute(
+                SendNotificationMessageRequest(
                     amid = Random.create(6),
                     aChatId = aChatId,
                     senderId = LoginManager.INSTANCE.getUserId(),

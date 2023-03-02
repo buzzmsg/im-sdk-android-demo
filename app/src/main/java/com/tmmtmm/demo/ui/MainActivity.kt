@@ -163,7 +163,7 @@ class MainActivity : BaseActivity() {
             aChatId = FOLDER_ID,
             content = "共${hideConversationIds.size}条会话",
             name = FOLDER_NAME,
-            resourcesInfo = image
+            folderIcon = image
         )
 
         LoginManager.INSTANCE.setFolder(FOLDER_ID)
