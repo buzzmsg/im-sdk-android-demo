@@ -41,8 +41,6 @@ class MediaPreviewActivity : AppCompatActivity() {
     private var dialog: IMDialogMediaOperate? = null
     private var strategyVo: StrategyVo? = null
 
-    private var isCanDownOrigin = false
-    private var isCanSave = false
 
 
     companion object {
@@ -88,8 +86,6 @@ class MediaPreviewActivity : AppCompatActivity() {
         mBinding.topSettingBar.setPadding(0, BarUtils.getStatusBarHeight(), 0, 0)
 
         setPreviewDelegate()
-        setSaveShow()
-        setOriginShow()
         onClick()
     }
 
@@ -106,16 +102,6 @@ class MediaPreviewActivity : AppCompatActivity() {
             finish()
         }
 
-        mBinding.tvShowOrigin.click {
-            val isDowm = mediaPreview?.startDownOriginImage() ?: false
-            if (isDowm) {
-                mBinding.tvShowOrigin.gone()
-            }
-        }
-
-        mBinding.imgSave.click {
-            mediaPreview?.saveFile()
-        }
     }
 
     private fun setPreviewDelegate() {
@@ -127,7 +113,6 @@ class MediaPreviewActivity : AppCompatActivity() {
             }
 
             override fun syncOriginalDownLoadStatus() {
-                setOriginShow()
             }
 
             override fun dragValue(dragValue: Float) {
@@ -145,49 +130,11 @@ class MediaPreviewActivity : AppCompatActivity() {
             override fun indicatorData(currentIndex: Int, totalCount: Int) {
                 mBinding.tvIndicator.text =
                     String.format("%s%s%s", "$currentIndex", "/", "$totalCount")
-                setSaveShow()
-                setOriginShow()
             }
         })
     }
 
 
-    private fun setSaveShow(){
-        val actionVo = mediaPreview?.getActionData()
-        val isCanSave = actionVo?.fileType == MediaPreviewType.MEDIA_FILE_IMAGE
-        if (isCanSave) {
-            mBinding.imgSave.visible()
-        } else {
-            mBinding.imgSave.hide()
-        }
-    }
-
-    private fun setOriginShow(){
-        val actionVo = mediaPreview?.getActionData()
-        if (actionVo?.isHaveOrigin == false){
-            mBinding.tvShowOrigin.visibility = View.GONE
-            isCanDownOrigin = false
-            return
-        }
-
-
-        if (actionVo?.originalDownloadStatus == IMMediaMoreActionVo.DownloadStatus.DOWNLOADING){
-            mBinding.tvShowOrigin.visibility = View.GONE
-            isCanDownOrigin = false
-            return
-        }
-
-        isCanDownOrigin = true
-        val fileSize = actionVo?.originalFileSize ?: 0L
-        mBinding.tvShowOrigin.visibility = View.VISIBLE
-        val size = ConvertUtils.byte2FitMemorySize(
-            fileSize,
-            1
-        )
-        mBinding.tvShowOrigin.text =
-            String.format(getString(R.string.string_original_size), size)
-
-    }
 
 
     private fun allBtnShowType(dragValue: Float) {
@@ -204,12 +151,6 @@ class MediaPreviewActivity : AppCompatActivity() {
             mBinding.btnMore.visibility = it
             mBinding.tvIndicator.visibility = it
             mBinding.imgCloseButton.visibility = it
-            if (isCanDownOrigin) {
-                mBinding.tvShowOrigin.visibility = it
-            }
-            if (isCanSave) {
-                mBinding.imgSave.visibility = it
-            }
         } ?: run {
             if (mBinding.layoutTopBox.visibility == View.VISIBLE) {
                 switchViewShowType(View.INVISIBLE)
@@ -285,7 +226,6 @@ class MediaPreviewActivity : AppCompatActivity() {
 
 
     }
-
 
 
 

@@ -86,7 +86,7 @@ class ChatActivity : BaseActivity() {
         chatView?.show()
         chatView?.setChatDelegate(object : ChatView.ChatDelegate {
             override fun onFileMessageClick(amid: String, data: IMFileData) {
-
+                DownloadFileActivity.download(this@ChatActivity, amid)
             }
 
             override fun onImageMessageClick(amid: String, strategyVo: StrategyVo) {
