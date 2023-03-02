@@ -12,7 +12,7 @@ import com.im.sdk.config.IMConfig
 import com.im.sdk.config.IMUiSetting
 import com.im.sdk.config.LoginError
 import com.im.sdk.constant.enums.getEnvironmentType
-import com.im.sdk.dto.IMImageResourcesInfo
+import com.im.sdk.dto.IMAvatar
 import com.im.sdk.dto.IMShowUserinfo
 import com.im.sdk.dto.IMUserinfo
 import com.im.sdk.logic.vo.TmReceiveMessageInfo
@@ -167,9 +167,9 @@ class TmApplication : Application() {
                 val bitmap =
                     ImageUtils.drawable2Bytes(ResourceUtils.getDrawable(drawableIdByName))
 
-                val imageInfo = IMImageResourcesInfo(bitmap)
+                val imageInfo = IMAvatar(bitmap)
                 val tmUserinfoItemDto =
-                    IMUserinfo.IMUserinfoItemDto(imageInfo, name1 = "alex_${auid.substring(0, 5)}")
+                    IMUserinfo.IMUserinfoItem(imageInfo, name1 = "alex_${auid.substring(0, 5)}")
                 val tmUserinfo = IMUserinfo(auid, tmUserinfoItemDto)
                 cacheTmUserinfoList.add(tmUserinfo)
             }
