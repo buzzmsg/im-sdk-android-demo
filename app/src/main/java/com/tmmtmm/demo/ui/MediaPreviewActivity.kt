@@ -111,7 +111,7 @@ class MediaPreviewActivity : AppCompatActivity() {
             }
 
             override fun itemLongClickListener() {
-                mBinding.btnMore.performClick()
+
             }
 
             override fun itemClickListener() {
