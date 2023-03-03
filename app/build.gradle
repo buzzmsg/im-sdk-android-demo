@@ -121,11 +121,9 @@ dependencies {
     implementation project(path: ':app:filepicker')
 
 //    implementation ("com.im:IMSdk:0.0.27")
-//    implementation('com.buzzmsg.sdk:im_sdk:0.0.28'){
-//        exclude group: 'com.davemorrissey.labs'
-//    }
+    implementation('com.buzzmsg.android:imsdk:1.0.0')
 
-    implementation project(path: ':imsdk-android')
+//    implementation project(path: ':imsdk-android')
 //    implementation project(path: ':imsdk-android')
 
 }
