@@ -45,8 +45,8 @@ class TmApplication : Application() {
 
     val avatarName = "avatar_default_"
 
-    //    private val ak = "68oni7jrg31qcsaijtg76qln"
-    private val ak = "DEMO"
+    private val ak = "68oni7jrg31qcsaijtg76qln"
+//    private val ak = "DEMO"
 
     var viewModel: IMConversationViewModel? = null
 
