@@ -107,6 +107,7 @@ class ChatActivity : BaseActivity() {
         binding.chatList.removeAllViews()
         chatView = TmApplication.instance().imSdk?.createChatView(aChatId, this)
         binding.chatList.addView(chatView)
+        chatView?.setBackgroundColor("#00c6b2")
         chatView?.show()
         chatView?.setChatDelegate(object : ChatView.ChatDelegate {
             override fun onFileMessageClick(amid: String, data: IMFileData) {

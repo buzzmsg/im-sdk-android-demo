@@ -120,12 +120,14 @@ dependencies {
     
     implementation project(path: ':app:filepicker')
 
+//    implementation 'com.google.firebase:firebase-perf:20.1.1'
+
 //    implementation ("com.im:IMSdk:0.0.27")
+    implementation('com.buzzmsg.android:imsdk:1.2.0')
 //    implementation('com.buzzmsg.sdk:im_sdk:0.0.28'){
 //        exclude group: 'com.davemorrissey.labs'
 //    }
 
-    implementation project(path: ':imsdk-android')
 //    implementation project(path: ':imsdk-android')
 
 }

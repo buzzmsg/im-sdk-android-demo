@@ -6,9 +6,9 @@ import com.tmmtmm.demo.base.BaseActivity
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.ActivityCompat
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.im.sdk.view.mediapreview.dialog.DialogFileOperate
-import com.im.sdk.view.mediapreview.utils.OpenFileUtil
 import com.im.sdk.view.mediapreview.view.DownloadFileView
 import com.im.sdk.view.vo.StrategyVo
 import com.tmmtmm.demo.R
@@ -16,6 +16,7 @@ import com.tmmtmm.demo.base.TmApplication
 import com.tmmtmm.demo.databinding.ActivityDownloadFileLayoutBinding
 import com.tmmtmm.demo.ui.ext.bindView
 import com.tmmtmm.demo.ui.ext.initToolbar
+import com.tmmtmm.demo.utils.OpenFileUtil
 
 class DownloadFileActivity : BaseActivity() {
 
@@ -63,7 +64,7 @@ class DownloadFileActivity : BaseActivity() {
             }
 
             override fun onOpenApk(filePath: String) {
-//                AppUtils.installApp(filePath)
+                AppUtils.installApp(filePath)
             }
 
             override fun onOpenOtherFile(filePath: String) {

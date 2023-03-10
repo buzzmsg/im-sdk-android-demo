@@ -15,7 +15,7 @@ import com.im.sdk.constant.enums.getEnvironmentType
 import com.im.sdk.dto.IMAvatar
 import com.im.sdk.dto.IMShowUserinfo
 import com.im.sdk.dto.IMUserinfo
-import com.im.sdk.logic.vo.TmReceiveMessageInfo
+import com.im.sdk.logic.vo.IMReceiveMessageInfo
 import com.im.sdk.view.IMConversationViewModel
 import com.tencent.mmkv.MMKV
 import com.tmmtmm.demo.R
@@ -45,8 +45,8 @@ class TmApplication : Application() {
 
     val avatarName = "avatar_default_"
 
-    //    private val ak = "68oni7jrg31qcsaijtg76qln"
-    private val ak = "DEMO"
+    private val ak = "68oni7jrg31qcsaijtg76qln"
+//    private val ak = "DEMO"
 
     var viewModel: IMConversationViewModel? = null
 
@@ -65,7 +65,7 @@ class TmApplication : Application() {
         setIMDelegate()
     }
 
-    fun setIMDelegate(){
+    fun setIMDelegate() {
         val imConfig = getImConfig()
         imSdk = IMSdk.getInstance(context = this, ak = ak, config = imConfig)
         val imUiSetting = getUiSetting()
@@ -111,7 +111,7 @@ class TmApplication : Application() {
                 })
             }
 
-            override fun onReceiveMessages(messageInfoList: MutableList<TmReceiveMessageInfo>) {
+            override fun onReceiveMessages(messageInfoList: MutableList<IMReceiveMessageInfo>) {
                 super.onReceiveMessages(messageInfoList)
             }
 
@@ -125,8 +125,8 @@ class TmApplication : Application() {
     private fun getImConfig(): IMConfig {
         return IMConfig(
             env = BuildConfig.BUILD_TYPE.getEnvironmentType(),
-            apiHost = "https://demo-sdk-api.rpgqp.com",
-            wsHost = "wss://dev-sdk-tcp.rpgqp.com/wsConnect?",
+            apiHost = "https://demo-sdk-api.buzzmsg.com",
+            wsHost = "wss://dev-sdk-tcp.buzzmsg.com/wsConnect?",
             deviceId = "EF85FBC97E93B993"
         )
     }
@@ -137,6 +137,7 @@ class TmApplication : Application() {
         imUiSetting.setConversationMenu(false)
         imUiSetting.showRightAvatar(true)
         imUiSetting.showLeftAvatarBySingleChat(true)
+        imUiSetting.showChatBackToBottom(false)
 
         val menus = mutableSetOf<IMUiSetting.IMMessageMenuType>()
         menus.add(IMUiSetting.IMMessageMenuType.COPY)

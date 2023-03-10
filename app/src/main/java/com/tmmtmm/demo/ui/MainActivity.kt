@@ -36,7 +36,7 @@ class MainActivity : BaseActivity() {
     private lateinit var mBinding: ActivityMainBinding
 //    private val mAdapter = BaseBinderAdapter()
 
-    private var hideConversationIds = mutableListOf<String>("147147100_147147800")
+    private var hideConversationIds = mutableListOf<String>("1471471477_1471471478")
 
     companion object {
 
@@ -172,7 +172,7 @@ class MainActivity : BaseActivity() {
 
         val hideSelector = UnSelectPart(hideConversationIds)
         val folderSelector = SelectPart(mutableListOf(FOLDER_ID))
-        val selector = conversationViewModel?.getCurrentSelector()?.and(hideSelector)?.or(folderSelector)
+        val selector = conversationViewModel?.getCurrentSelector()?.or(folderSelector)?.and(hideSelector)
         selector?.let { conversationViewModel.replace(it) }
     }
 
@@ -221,6 +221,8 @@ class MainActivity : BaseActivity() {
 //                ToastUtils.showLong(msg)
 //            }
 //        })
+        LoginManager.INSTANCE.setUserId("")
+        LoginManager.INSTANCE.setUserPhone("")
         TmApplication.instance().imSdk?.loginOut()
         ThreadUtils.runOnUiThreadDelayed({
             hideLoading()

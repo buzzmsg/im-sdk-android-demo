@@ -53,7 +53,7 @@ object SendCustomMessage {
             val req =
                 Request.Builder().url(url)
                     .post(requestBody)
-                    .addHeader("token", " ")
+                    .addHeader("token", "12345")
                     .build()
 
             val okHttpClient = OkHttpClient.Builder()

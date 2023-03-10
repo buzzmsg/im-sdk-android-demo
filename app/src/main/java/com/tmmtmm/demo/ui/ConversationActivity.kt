@@ -15,7 +15,7 @@ class ConversationActivity : BaseActivity() {
 
     private lateinit var binding: ActivityConversationBinding
 
-    private var hideConversationIds = mutableListOf("147147100_147147800")
+    private var hideConversationIds = mutableListOf("1471471477_1471471478")
 
     companion object {
         fun newInstance(context: Context, chatId: String) {
