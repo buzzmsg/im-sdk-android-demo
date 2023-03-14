@@ -3,6 +3,7 @@ package com.tmmtmm.demo.api
 import androidx.annotation.Keep
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.annotations.SerializedName
+import com.tmmtmm.demo.BuildConfig
 import com.tmmtmm.demo.exception.TmException
 import com.tmmtmm.demo.exception.TmmError
 
@@ -31,8 +32,9 @@ data class LoginByPhoneResponse(
 
 object LoginByPhone {
 
-    const val host = "https://demo-sdk-test-api.buzzmsg.com"
-//    const val host = "https://dev-sdkdemo.tmmtmm.com.tr:7504"
+//    const val host = "https://demo-sdk-test-api.buzzmsg.com"
+
+//    const val host = "https://sti.buzzmsg.com/"
 
     private const val api = "/login"
 
@@ -41,7 +43,7 @@ object LoginByPhone {
             val requestBody: RequestBody =
                 requestLoginByPhone.toJson().toString()
                     .toRequestBody("application/json".toMediaType())
-            val url = host + api
+            val url = BuildConfig.SDK_TEST_API + api
             val req =
                 Request.Builder().url(url)
                     .post(requestBody)

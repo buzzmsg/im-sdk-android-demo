@@ -29,19 +29,32 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            debuggable true
             signingConfig signingConfigs.only
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "SDK_CLIENT_API", "\"https://sci.buzzmsg.com\""
+            buildConfigField "String", "SDK_TEST_API", "\"https://sti.buzzmsg.com\""
+            buildConfigField "String", "WEBSOCKET_API", "\"wss://ws.buzzmsg.com/wsConnect?\""
         }
 
         debug {
             debuggable true
             minifyEnabled false
+
+            buildConfigField "String", "SDK_CLIENT_API", "\"https://demo-sdk-api.buzzmsg.com\""
+            buildConfigField "String", "SDK_TEST_API", "\"https://demo-sdk-test-api.buzzmsg.com\""
+            buildConfigField "String", "WEBSOCKET_API", "\"wss://dev-sdk-tcp.buzzmsg.com/wsConnect?\""
         }
 
         create("dev") {
             debuggable true
             minifyEnabled false
             signingConfig signingConfigs.only
+
+            buildConfigField "String", "SDK_CLIENT_API", "\"https://demo-sdk-api.buzzmsg.com\""
+            buildConfigField "String", "SDK_TEST_API", "\"https://demo-sdk-test-api.buzzmsg.com\""
+            buildConfigField "String", "WEBSOCKET_API", "\"wss://dev-sdk-tcp.buzzmsg.com/wsConnect?\""
         }
 
     }

@@ -125,8 +125,8 @@ class TmApplication : Application() {
     private fun getImConfig(): IMConfig {
         return IMConfig(
             env = BuildConfig.BUILD_TYPE.getEnvironmentType(),
-            apiHost = "https://demo-sdk-api.buzzmsg.com",
-            wsHost = "wss://dev-sdk-tcp.buzzmsg.com/wsConnect?",
+            apiHost = com.tmmtmm.demo.BuildConfig.SDK_CLIENT_API,
+            wsHost = com.tmmtmm.demo.BuildConfig.WEBSOCKET_API,
             deviceId = "EF85FBC97E93B993"
         )
     }
