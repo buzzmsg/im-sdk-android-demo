@@ -7,6 +7,7 @@ import com.android.filepicker.config.FilePickerManager
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.config.SelectMimeType
@@ -89,6 +90,49 @@ class SendMessageActivity : BaseActivity() {
         binding.btnSendNotificationMessage.setOnClickListener {
             sendNotificationMessage()
         }
+
+        val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
+            "退出登录"
+        } else {
+            "登录"
+        }
+
+        binding.btnLogout.text = loginText
+
+        binding.btnLogout.setOnClickListener {
+            loginout()
+        }
+    }
+
+    private fun loginout() {
+        showLoading()
+//        val auid = LoginManager.INSTANCE.getUserId()
+//        TmApplication.instance().imSdk?.joinChat(auid, { aChatId ->
+//            ThreadUtils.runOnUiThread {
+//                hideLoading()
+//                ChatActivity.newInstance(this@MainActivity, aChatId)
+//            }
+//        }, { msg ->
+//            ThreadUtils.runOnUiThread {
+//                hideLoading()
+//                ToastUtils.showLong(msg)
+//            }
+//        })
+
+        if (LoginManager.INSTANCE.getUserId().isBlank()) {
+            LoginActivity.newInstance(this)
+        } else {
+            LoginManager.INSTANCE.setUserId("")
+            LoginManager.INSTANCE.setUserPhone("")
+            TmApplication.instance().imSdk?.loginOut()
+            ThreadUtils.runOnUiThreadDelayed({
+                hideLoading()
+//            LoginActivity.newInstance(this)
+//                finish()
+            }, 1000)
+            binding.btnLogout.text = "登陆"
+        }
+
     }
 
     override fun fetchData() {

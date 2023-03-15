@@ -61,6 +61,17 @@ class MainActivity : BaseActivity() {
         Log.e("11111111111111", "initPrams() called${withAppendedPath}")
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
+            "退出登录"
+        } else {
+            "登录"
+        }
+
+        mBinding.tvLeft.text = loginText
+    }
+
     override fun initViews() {
 //        val titleBarView = TitleBarView()
 //        titleBarView.showTitleBar(
@@ -73,10 +84,19 @@ class MainActivity : BaseActivity() {
 //            rightText = "创建聊天",
 //            rightBlock = {
 //                createGroup()
-//            }
+//     Lo    }
 //        )
+
+        val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
+            "退出登录"
+        } else {
+            "登录"
+        }
+
+        mBinding.tvLeft.text = loginText
+
         mBinding.tvLeft.setOnClickListener {
-            joinTestGroup()
+            loginout()
         }
 
         mBinding.tvRight.setOnClickListener {
@@ -207,7 +227,7 @@ class MainActivity : BaseActivity() {
         LoginManager.INSTANCE.setFolder("")
     }
 
-    private fun joinTestGroup() {
+    private fun loginout() {
         showLoading()
 //        val auid = LoginManager.INSTANCE.getUserId()
 //        TmApplication.instance().imSdk?.joinChat(auid, { aChatId ->
@@ -221,14 +241,20 @@ class MainActivity : BaseActivity() {
 //                ToastUtils.showLong(msg)
 //            }
 //        })
-        LoginManager.INSTANCE.setUserId("")
-        LoginManager.INSTANCE.setUserPhone("")
-        TmApplication.instance().imSdk?.loginOut()
-        ThreadUtils.runOnUiThreadDelayed({
-            hideLoading()
+
+        if (LoginManager.INSTANCE.getUserId().isBlank()) {
             LoginActivity.newInstance(this)
-            finish()
-        }, 1000)
+        } else {
+            LoginManager.INSTANCE.setUserId("")
+            LoginManager.INSTANCE.setUserPhone("")
+            TmApplication.instance().imSdk?.loginOut()
+            ThreadUtils.runOnUiThreadDelayed({
+                hideLoading()
+//            LoginActivity.newInstance(this)
+//                finish()
+            }, 1000)
+            mBinding.tvLeft.text = "登陆"
+        }
 
     }
 

@@ -14,7 +14,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     var loadingPopup: LoadingPopupView? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BarUtils.setStatusBarLightMode(window,true)

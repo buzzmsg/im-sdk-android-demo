@@ -3,6 +3,7 @@ package com.tmmtmm.demo.ui
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
+import com.blankj.utilcode.util.ActivityUtils
 import com.tmmtmm.demo.api.ResponseResult
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
@@ -67,10 +68,13 @@ class LoginActivity : BaseActivity() {
                 LoginManager.INSTANCE.setUserPhone(mBinding.etPhone.text.toString())
                 LoginManager.INSTANCE.setUserId(value?.auid ?: "")
                 LoginManager.INSTANCE.setToken(value?.token ?: "")
-                TmApplication.instance().setIMDelegate()
+//                TmApplication.instance().setIMDelegate()
                 TmApplication.instance().imSdk?.initUser(value?.auid ?: "")
-                MainActivity.newInstance(this@LoginActivity)
-                finish()
+                if (ActivityUtils.isActivityExistsInStack(MainActivity::class.java)) {
+                    finish()
+                } else {
+                    MainActivity.newInstance(this@LoginActivity)
+                }
             }
         }
     }
