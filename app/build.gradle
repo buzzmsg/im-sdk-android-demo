@@ -35,16 +35,16 @@ android {
 
             buildConfigField "String", "SDK_CLIENT_API", "\"https://sci.buzzmsg.com\""
             buildConfigField "String", "SDK_TEST_API", "\"https://sti.buzzmsg.com\""
-            buildConfigField "String", "WEBSOCKET_API", "\"wss://ws.buzzmsg.com/wsConnect?\""
+            buildConfigField "String", "WEBSOCKET_API", "\"wss://ws.buzzmsg.com/wsConnect\""
         }
 
         debug {
             debuggable true
             minifyEnabled false
 
-            buildConfigField "String", "SDK_CLIENT_API", "\"https://demo-sdk-api.buzzmsg.com\""
-            buildConfigField "String", "SDK_TEST_API", "\"https://demo-sdk-test-api.buzzmsg.com\""
-            buildConfigField "String", "WEBSOCKET_API", "\"wss://dev-sdk-tcp.buzzmsg.com/wsConnect?\""
+            buildConfigField "String", "SDK_CLIENT_API", "\"https://sci.buzzmsg.com\""
+            buildConfigField "String", "SDK_TEST_API", "\"https://ssi.buzzmsg.com\""
+            buildConfigField "String", "WEBSOCKET_API", "\"wss://ws.buzzmsg.com/wsConnect\""
         }
 
         create("dev") {
@@ -52,9 +52,9 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.only
 
-            buildConfigField "String", "SDK_CLIENT_API", "\"https://demo-sdk-api.buzzmsg.com\""
-            buildConfigField "String", "SDK_TEST_API", "\"https://demo-sdk-test-api.buzzmsg.com\""
-            buildConfigField "String", "WEBSOCKET_API", "\"wss://dev-sdk-tcp.buzzmsg.com/wsConnect?\""
+            buildConfigField "String", "SDK_CLIENT_API", "\"https://dev-sdk-api.buzzmsg.com\""
+            buildConfigField "String", "SDK_TEST_API", "\"https://dev-sdk-ser-api.buzzmsg.com\""
+            buildConfigField "String", "WEBSOCKET_API", "\"wss://dev-sdk-tcp.buzzmsg.com/wsConnect\""
         }
 
     }
@@ -136,11 +136,11 @@ dependencies {
 //    implementation 'com.google.firebase:firebase-perf:20.1.1'
 
 //    implementation ("com.im:IMSdk:0.0.27")
-    implementation('com.buzzmsg.android:imsdk:1.2.0')
+//    implementation('com.buzzmsg.android:imsdk:1.2.0')
 //    implementation('com.buzzmsg.sdk:im_sdk:0.0.28'){
 //        exclude group: 'com.davemorrissey.labs'
 //    }
 
-//    implementation project(path: ':imsdk-android')
+    implementation project(path: ':imsdk-android')
 
 }

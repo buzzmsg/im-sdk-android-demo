@@ -105,7 +105,7 @@ class SendMessageActivity : BaseActivity() {
     }
 
     private fun loginout() {
-        showLoading()
+
 //        val auid = LoginManager.INSTANCE.getUserId()
 //        TmApplication.instance().imSdk?.joinChat(auid, { aChatId ->
 //            ThreadUtils.runOnUiThread {
@@ -122,6 +122,7 @@ class SendMessageActivity : BaseActivity() {
         if (LoginManager.INSTANCE.getUserId().isBlank()) {
             LoginActivity.newInstance(this)
         } else {
+            showLoading()
             LoginManager.INSTANCE.setUserId("")
             LoginManager.INSTANCE.setUserPhone("")
             TmApplication.instance().imSdk?.loginOut()
