@@ -91,17 +91,17 @@ class SendMessageActivity : BaseActivity() {
             sendNotificationMessage()
         }
 
-        val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
-            "退出登录"
-        } else {
-            "登录"
-        }
-
-        binding.btnLogout.text = loginText
-
-        binding.btnLogout.setOnClickListener {
-            loginout()
-        }
+//        val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
+//            "退出登录"
+//        } else {
+//            "登录"
+//        }
+//
+//        binding.btnLogout.text = loginText
+//
+//        binding.btnLogout.setOnClickListener {
+//            loginout()
+//        }
     }
 
     private fun loginout() {
@@ -131,7 +131,7 @@ class SendMessageActivity : BaseActivity() {
 //            LoginActivity.newInstance(this)
 //                finish()
             }, 1000)
-            binding.btnLogout.text = "登陆"
+//            binding.btnLogout.text = "登陆"
         }
 
     }

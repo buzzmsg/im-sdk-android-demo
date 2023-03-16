@@ -84,6 +84,7 @@ class TmApplication : Application() {
                 ToastUtils.showLong("嗨，兄弟， 401了 ${code.code}")
                 ThreadUtils.executeByCached(object : ThreadUtils.Task<String>() {
                     override fun doInBackground(): String {
+
                         val result =
                             GetAuth.execute(GetAuthRequest(LoginManager.INSTANCE.getToken()))
 
@@ -95,7 +96,9 @@ class TmApplication : Application() {
 //                        resolve.invoke(
 //                            authCode
 //                        )
-                        imSdk?.setAuthCode(authCode)
+                        ThreadUtils.runOnUiThreadDelayed({
+                            imSdk?.setAuthCode(authCode)
+                        },5000)
                         return ""
                     }
 

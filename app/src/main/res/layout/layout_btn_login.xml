@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.allen.library.shape.ShapeTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvLoginAction"
+    android:layout_width="@dimen/dp_120"
+    android:layout_height="@dimen/dp_50"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:shapeSolidColor="@color/bg_EF4343"
+    app:shapeCornersRadius="@dimen/dp_20"
+    android:gravity="center"
+    android:text="登陆"
+    android:textSize="20sp"
+    android:textColor="@color/white"
+    />

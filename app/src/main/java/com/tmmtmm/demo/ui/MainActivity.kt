@@ -5,7 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.view.Gravity
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
+import com.allen.library.shape.ShapeTextView
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.PermissionUtils
@@ -21,6 +28,12 @@ import com.im.sdk.view.selector.UnSelectPart
 import com.im.sdk.view.vo.IMConversationMarker
 import com.im.sdk.view.vo.IMConversationSubTitle
 import com.lxj.xpopup.XPopup
+import com.lzf.easyfloat.EasyFloat
+import com.lzf.easyfloat.enums.ShowPattern
+import com.lzf.easyfloat.enums.SidePattern
+import com.lzf.easyfloat.interfaces.OnTouchRangeListener
+import com.lzf.easyfloat.utils.DragUtils
+import com.lzf.easyfloat.widget.BaseSwitchView
 import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
@@ -59,6 +72,86 @@ class MainActivity : BaseActivity() {
     override fun initPrams() {
         val withAppendedPath = Uri.parse("wss://dev-sdk-tcp.imtmm.com:7502").buildUpon()
         Log.e("11111111111111", "initPrams() called${withAppendedPath}")
+        checkPermission()
+
+    }
+
+    private fun checkPermission() {
+        if (com.lzf.easyfloat.permission.PermissionUtils.checkPermission(this)) {
+            showAppFloat()
+        } else {
+            AlertDialog.Builder(this)
+                .setMessage("使用浮窗功能，需要您授权悬浮窗权限。")
+                .setPositiveButton("去开启") { _, _ ->
+                    showAppFloat()
+                }
+                .setNegativeButton("取消") { _, _ -> }
+                .show()
+        }
+    }
+
+    private fun showAppFloat() {
+        val gravity = Gravity.END.or(Gravity.BOTTOM)
+        EasyFloat.with(this.applicationContext)
+            .setShowPattern(ShowPattern.ALL_TIME)
+            .setSidePattern(SidePattern.RESULT_SIDE)
+            .setImmersionStatusBar(true)
+            .setGravity(gravity, -20, -100)
+            .setLayout(R.layout.layout_btn_login) {
+                val layout_btn_login = it?.findViewById<ShapeTextView>(R.id.tvLoginAction)
+                layout_btn_login?.setOnClickListener {
+                    loginout()
+                }
+                val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
+                    "退出登录"
+                } else {
+                    "登录"
+                }
+                layout_btn_login?.text = loginText
+//                // 解决 ListView 拖拽滑动冲突
+//                it.findViewById<ListView>(R.id.lv_test).apply {
+//                    adapter = MyAdapter(
+//                        this@MainActivity,
+//                        arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "...")
+//                    )
+//
+//                    // 监听 ListView 的触摸事件，手指触摸时关闭拖拽，手指离开重新开启拖拽
+//                    setOnTouchListener { _, event ->
+//                        logger.e("listView: ${event.action}")
+//                        EasyFloat.appFloatDragEnable(event?.action == MotionEvent.ACTION_UP)
+//                        false
+//                    }
+//                }
+            }
+            .registerCallback {
+                drag { _, motionEvent ->
+//                    DragUtils.registerDragClose(motionEvent, object : OnTouchRangeListener {
+//                        override fun touchInRange(inRange: Boolean, view: BaseSwitchView) {
+//                            setVibrator(inRange)
+//                            view.findViewById<TextView>(com.lzf.easyfloat.R.id.tv_delete).text =
+//                                if (inRange) "松手删除" else "删除浮窗"
+//
+//                            view.findViewById<ImageView>(com.lzf.easyfloat.R.id.iv_delete)
+//                                .setImageResource(
+//                                    if (inRange) com.lzf.easyfloat.R.drawable.icon_delete_selected
+//                                    else com.lzf.easyfloat.R.drawable.icon_delete_normal
+//                                )
+//                        }
+//
+//                        override fun touchUpInRange() {
+//                            EasyFloat.dismiss()
+//                        }
+//                    }, showPattern = ShowPattern.ALL_TIME)
+                }
+            }
+            .show()
+        val btnLogin = EasyFloat.getFloatView()?.findViewById<ShapeTextView>(R.id.tvLoginAction)
+        val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
+            "退出登录"
+        } else {
+            "登录"
+        }
+        btnLogin?.text = loginText
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -70,6 +163,20 @@ class MainActivity : BaseActivity() {
         }
 
         mBinding.tvLeft.text = loginText
+        checkPermission()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
+            "退出登录"
+        } else {
+            "登录"
+        }
+
+        mBinding.tvLeft.text = loginText
+        mBinding.tvTitle.text = "聊天" + "(${LoginManager.INSTANCE.getUserPhone()})"
+        checkPermission()
     }
 
     override fun initViews() {
@@ -97,13 +204,14 @@ class MainActivity : BaseActivity() {
 
         mBinding.tvLeft.setOnClickListener {
             loginout()
+//            checkPermission()
         }
 
         mBinding.tvRight.setOnClickListener {
             createGroup()
         }
 
-        mBinding.tvTitle.text = "聊天"+"(${LoginManager.INSTANCE.getUserPhone()})"
+        mBinding.tvTitle.text = "聊天" + "(${LoginManager.INSTANCE.getUserPhone()})"
 
         TmApplication.instance().imSdk?.setCurrentLanguage(LanguageType.SimplifiedChinese)
 
@@ -192,7 +300,8 @@ class MainActivity : BaseActivity() {
 
         val hideSelector = UnSelectPart(hideConversationIds)
         val folderSelector = SelectPart(mutableListOf(FOLDER_ID))
-        val selector = conversationViewModel?.getCurrentSelector()?.or(folderSelector)?.and(hideSelector)
+        val selector =
+            conversationViewModel?.getCurrentSelector()?.or(folderSelector)?.and(hideSelector)
         selector?.let { conversationViewModel.replace(it) }
     }
 
@@ -243,6 +352,7 @@ class MainActivity : BaseActivity() {
 //        })
 
         if (LoginManager.INSTANCE.getUserId().isBlank()) {
+            hideLoading()
             LoginActivity.newInstance(this)
         } else {
             LoginManager.INSTANCE.setUserId("")
@@ -255,6 +365,14 @@ class MainActivity : BaseActivity() {
             }, 1000)
             mBinding.tvLeft.text = "登陆"
         }
+
+        val btnLogin = EasyFloat.getFloatView()?.findViewById<ShapeTextView>(R.id.tvLoginAction)
+        val loginText = if (LoginManager.INSTANCE.getUserId().isNotBlank()) {
+            "退出登录"
+        } else {
+            "登录"
+        }
+        btnLogin?.text = loginText
 
     }
 

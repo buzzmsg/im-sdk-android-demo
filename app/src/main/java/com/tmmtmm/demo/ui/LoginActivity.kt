@@ -69,6 +69,8 @@ class LoginActivity : BaseActivity() {
                 LoginManager.INSTANCE.setUserId(value?.auid ?: "")
                 LoginManager.INSTANCE.setToken(value?.token ?: "")
 //                TmApplication.instance().setIMDelegate()
+//                val authCode = LoginManager.INSTANCE.getAuthCode()
+//                TmApplication.instance().imSdk?.setAuthCode(authCode)
                 TmApplication.instance().imSdk?.initUser(value?.auid ?: "")
                 if (ActivityUtils.isActivityExistsInStack(MainActivity::class.java)) {
                     finish()
