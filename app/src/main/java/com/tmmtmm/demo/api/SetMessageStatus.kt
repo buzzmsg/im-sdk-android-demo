@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName
 import com.tmmtmm.demo.BuildConfig
 import com.tmmtmm.demo.exception.TmException
 import com.tmmtmm.demo.exception.TmmError
-import com.tmmtmm.demo.manager.LoginManager
 
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -42,7 +41,7 @@ object SetMessageStatus {
             val requestBody: RequestBody =
                 requestSetMessageStatus.toJson().toString()
                     .toRequestBody("application/json".toMediaType())
-            val url = BuildConfig.SDK_TEST_API + api
+            val url = BuildConfig.DEMO_TEST_API + api
             val req =
                 Request.Builder().url(url)
                     .post(requestBody)

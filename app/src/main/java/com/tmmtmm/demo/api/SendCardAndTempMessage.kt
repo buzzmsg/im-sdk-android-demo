@@ -71,7 +71,7 @@ object SendCardAndTempMessage {
             val requestBody: RequestBody =
                 sendCardAndTempMessageRequest.toJson().toString()
                     .toRequestBody("application/json".toMediaType())
-            val url = BuildConfig.SDK_TEST_API + api
+            val url = BuildConfig.DEMO_TEST_API + api
             val req =
                 Request.Builder().url(url)
                     .post(requestBody)

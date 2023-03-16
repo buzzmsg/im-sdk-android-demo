@@ -33,18 +33,18 @@ android {
             signingConfig signingConfigs.only
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
+            buildConfigField "String", "DEMO_TEST_API", "\"https://sti.buzzmsg.com\""
             buildConfigField "String", "SDK_CLIENT_API", "\"https://sci.buzzmsg.com\""
-            buildConfigField "String", "SDK_TEST_API", "\"https://sti.buzzmsg.com\""
-            buildConfigField "String", "WEBSOCKET_API", "\"wss://ws.buzzmsg.com/wsConnect\""
+            buildConfigField "String", "SDK_WEBSOCKET_API", "\"wss://ws.buzzmsg.com/wsConnect\""
         }
 
         debug {
             debuggable true
             minifyEnabled false
 
+            buildConfigField "String", "DEMO_TEST_API", "\"https://ssi.buzzmsg.com\""
             buildConfigField "String", "SDK_CLIENT_API", "\"https://sci.buzzmsg.com\""
-            buildConfigField "String", "SDK_TEST_API", "\"https://ssi.buzzmsg.com\""
-            buildConfigField "String", "WEBSOCKET_API", "\"wss://ws.buzzmsg.com/wsConnect\""
+            buildConfigField "String", "SDK_WEBSOCKET_API", "\"wss://ws.buzzmsg.com/wsConnect\""
         }
 
         create("dev") {
@@ -52,9 +52,9 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.only
 
+            buildConfigField "String", "DEMO_TEST_API", "\"https://demo-sdk-test-api.buzzmsg.com\""
             buildConfigField "String", "SDK_CLIENT_API", "\"https://dev-sdk-api.buzzmsg.com\""
-            buildConfigField "String", "SDK_TEST_API", "\"https://dev-sdk-ser-api.buzzmsg.com\""
-            buildConfigField "String", "WEBSOCKET_API", "\"wss://dev-sdk-tcp.buzzmsg.com/wsConnect\""
+            buildConfigField "String", "SDK_WEBSOCKET_API", "\"wss://dev-sdk-tcp.buzzmsg.com/wsConnect\""
         }
 
     }

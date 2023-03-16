@@ -126,7 +126,7 @@ class TmApplication : Application() {
         return IMConfig(
             env = BuildConfig.BUILD_TYPE.getEnvironmentType(),
             apiHost = com.tmmtmm.demo.BuildConfig.SDK_CLIENT_API,
-            wsHost = com.tmmtmm.demo.BuildConfig.WEBSOCKET_API,
+            wsHost = com.tmmtmm.demo.BuildConfig.SDK_WEBSOCKET_API,
             deviceId = "EF85FBC97E93B993"
         )
     }

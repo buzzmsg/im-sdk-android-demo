@@ -35,7 +35,7 @@ object GetAuth {
             val requestBody: RequestBody =
                 requestGetAuth.toJson().toString()
                     .toRequestBody("application/json".toMediaType())
-            val url = com.tmmtmm.demo.BuildConfig.SDK_TEST_API + api
+            val url = com.tmmtmm.demo.BuildConfig.DEMO_TEST_API + api
             val req =
                 Request.Builder().url(url)
                     .post(requestBody)
