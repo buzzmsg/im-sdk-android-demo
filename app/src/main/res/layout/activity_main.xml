@@ -73,38 +73,60 @@
         android:layout_marginBottom="60dp"
         />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnAddFolder"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="20dp"
-        android:layout_marginStart="20dp"
-        android:text="添加折叠会话"
-        android:textSize="12sp"/>
+        >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddFolder"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            android:text="添加折叠会话"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAddFolderMarker"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnAddFolder"
+            app:layout_constraintEnd_toStartOf="@id/btnRemoveFolder"
+            android:text="添加副标题和标记"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRemoveFolder"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"
+            android:text="移除折叠会话"
+            android:textSize="12sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnMoreAction"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"
+            android:text="更多操作"
+            android:textSize="12sp"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnAddFolderMarker"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnAddFolder"
-        app:layout_constraintEnd_toStartOf="@id/btnRemoveFolder"
-        android:layout_marginBottom="20dp"
-        android:text="添加副标题和标记"
-        android:textSize="12sp"/>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnRemoveFolder"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="移除折叠会话"
-        android:textSize="12sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

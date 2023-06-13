@@ -6,11 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.Gravity
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.SeekBar
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
 import com.allen.library.shape.ShapeTextView
 import com.blankj.utilcode.constant.PermissionConstants
@@ -22,18 +17,18 @@ import com.im.sdk.constant.enums.LanguageType
 import com.im.sdk.dto.IMAvatar
 import com.im.sdk.view.ConversationView
 import com.im.sdk.view.IMConversationViewModel
+import com.im.sdk.view.selector.SelectAll
 import com.im.sdk.view.selector.SelectPart
 import com.im.sdk.view.selector.SelectorFactory
+import com.im.sdk.view.selector.UnReadSelectPart
 import com.im.sdk.view.selector.UnSelectPart
 import com.im.sdk.view.vo.IMConversationMarker
 import com.im.sdk.view.vo.IMConversationSubTitle
 import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.interfaces.OnSelectListener
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
-import com.lzf.easyfloat.interfaces.OnTouchRangeListener
-import com.lzf.easyfloat.utils.DragUtils
-import com.lzf.easyfloat.widget.BaseSwitchView
 import com.tmmtmm.demo.R
 import com.tmmtmm.demo.base.BaseActivity
 import com.tmmtmm.demo.base.TmApplication
@@ -50,6 +45,8 @@ class MainActivity : BaseActivity() {
 //    private val mAdapter = BaseBinderAdapter()
 
     private var hideConversationIds = mutableListOf<String>("1471471477_1471471478")
+
+    private var conversationViewModel: IMConversationViewModel? = null
 
     companion object {
 
@@ -80,7 +77,7 @@ class MainActivity : BaseActivity() {
         if (com.lzf.easyfloat.permission.PermissionUtils.checkPermission(this)) {
             showAppFloat()
         } else {
-            AlertDialog.Builder(this)
+            android.app.AlertDialog.Builder(this)
                 .setMessage("使用浮窗功能，需要您授权悬浮窗权限。")
                 .setPositiveButton("去开启") { _, _ ->
                     showAppFloat()
@@ -223,7 +220,7 @@ class MainActivity : BaseActivity() {
             SelectorFactory.unPartOf(hideConversationIds)
         }
 
-        val conversationViewModel = TmApplication.instance().imSdk?.createConversationViewModel(
+        conversationViewModel = TmApplication.instance().imSdk?.createConversationViewModel(
             selector
         )
 
@@ -252,7 +249,7 @@ class MainActivity : BaseActivity() {
                 )
                 markerList.add(marker)
 
-                conversationViewModel.setConversationMarker(markerList)
+                conversationViewModel?.setConversationMarker(markerList)
             }
 
             override fun onShowConversationSubTitle(aChatIds: List<String>) {
@@ -261,7 +258,7 @@ class MainActivity : BaseActivity() {
                 val subNameDto = IMConversationSubTitle(aChatId = FOLDER_ID, subTitle = "屏蔽的")
                 subNameList.add(subNameDto)
 
-                conversationViewModel.setConversationSubTitle(subNameList)
+                conversationViewModel?.setConversationSubTitle(subNameList)
             }
         })
 
@@ -276,6 +273,32 @@ class MainActivity : BaseActivity() {
         mBinding.btnAddFolderMarker.click {
             addFolderMarkerAndSubTitle(conversationViewModel)
         }
+
+        mBinding.btnMoreAction.setOnClickListener {
+            XPopup.Builder(this)
+                .hasStatusBarShadow(false) //.dismissOnBackPressed(false)
+                .isDestroyOnDismiss(true) //对于只使用一次的弹窗对象，推荐设置这个
+                .isDarkTheme(true) //                        .isViewMode(true)
+                //.moveUpToKeyboard(false)   //是否移动到软键盘上面，默认为true
+                .atView(mBinding.btnMoreAction)
+                .asAttachList(
+                    arrayOf<String>("重置","筛选未读回话"), intArrayOf()
+                ) { position, text ->
+                    when (position) {
+                        0 -> {
+                            showOriginConversations()
+                        }
+
+                        1 -> {
+                            showUnReadConversations()
+                        }
+
+                        else -> {}
+                    }
+
+                }
+                .show()
+        }
     }
 
     override fun fetchData() {
@@ -287,22 +310,35 @@ class MainActivity : BaseActivity() {
         val drawable = ResourcesCompat.getDrawable(resources, applicationInfo.icon, theme)
         val avatar = ImageUtils.drawable2Bytes(drawable)
         val image = IMAvatar(avatar)
-        conversationViewModel?.setFolder(
-            aChatId = FOLDER_ID,
-            content = "共${hideConversationIds.size}条会话",
-            name = FOLDER_NAME,
-            folderIcon = image
-        )
+//        conversationViewModel?.setFolder(
+//            aChatId = FOLDER_ID,
+//            content = "共${hideConversationIds.size}条会话",
+//            name = FOLDER_NAME,
+//            folderIcon = image
+//        )
 
         LoginManager.INSTANCE.setFolder(FOLDER_ID)
 
 //        conversationViewModel?.updateSelector(unSelectAChatIds = hideConversationIds)
 
-        val hideSelector = UnSelectPart(hideConversationIds)
-        val folderSelector = SelectPart(mutableListOf(FOLDER_ID))
+        val hideIds = mutableListOf<String>("1471471478_15828136849", "1471471479_15828136849")
+        val hideSelector = UnSelectPart(hideIds)
+        val folderSelector = SelectPart(mutableListOf())
         val selector =
-            conversationViewModel?.getCurrentSelector()?.or(folderSelector)?.and(hideSelector)
+            conversationViewModel?.getCurrentSelector()?.and(hideSelector)?.or(folderSelector)
         selector?.let { conversationViewModel.replace(it) }
+    }
+
+    private fun showOriginConversations() {
+        val selector = SelectAll()
+        selector.let { conversationViewModel?.replace(it) }
+    }
+
+    private fun showUnReadConversations() {
+        val unReadSelector = UnReadSelectPart()
+        val selector = conversationViewModel?.getCurrentSelector()?.and(unReadSelector)
+        selector?.let { conversationViewModel?.replace(it) }
+
     }
 
 

@@ -8,7 +8,6 @@ import android.content.Intent
 import androidx.core.app.ActivityCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.im.sdk.view.mediapreview.dialog.DialogFileOperate
 import com.im.sdk.view.mediapreview.view.DownloadFileView
 import com.im.sdk.view.vo.StrategyVo
 import com.tmmtmm.demo.R
@@ -34,7 +33,7 @@ class DownloadFileActivity : BaseActivity() {
     }
 
     private var amid = ""
-    private var dialog: DialogFileOperate? = null
+//    private var dialog: DialogFileOperate? = null
 
     private lateinit var binding: ActivityDownloadFileLayoutBinding
 
@@ -52,47 +51,47 @@ class DownloadFileActivity : BaseActivity() {
             iconColor = R.color.black
         )
         binding.downFileView.removeAllViews()
-        val downFileView = TmApplication.instance().imSdk?.createDownloadFileView(amid, this)
-        binding.downFileView.addView(downFileView)
-        downFileView?.setMediaDelegate(object : DownloadFileView.MediaDelegate {
-            override fun onMediaPreview(strategyVo: StrategyVo) {
-                MediaPreviewActivity.newInstance(this@DownloadFileActivity, strategyVo)
-            }
+//        val downFileView = TmApplication.instance().imSdk?.createDownloadFileView(amid, this)
+//        binding.downFileView.addView(downFileView)
+//        downFileView?.setMediaDelegate(object : DownloadFileView.MediaDelegate {
+//            override fun onMediaPreview(strategyVo: StrategyVo) {
+//                MediaPreviewActivity.newInstance(this@DownloadFileActivity, strategyVo)
+//            }
+//
+//            override fun onOpenPdf(filePath: String, fileName: String, amid: String) {
+//                ToastUtils.showShort("open pdf")
+//            }
+//
+//            override fun onOpenApk(filePath: String) {
+//                AppUtils.installApp(filePath)
+//            }
+//
+//            override fun onOpenOtherFile(filePath: String) {
+//                val intent = OpenFileUtil.openFile(filePath)
+//                if (intent != null) {
+//                    ActivityCompat.startActivity(this@DownloadFileActivity, intent, null)
+//                }
+//            }
+//        })
 
-            override fun onOpenPdf(filePath: String, fileName: String, amid: String) {
-                ToastUtils.showShort("open pdf")
-            }
 
-            override fun onOpenApk(filePath: String) {
-                AppUtils.installApp(filePath)
-            }
-
-            override fun onOpenOtherFile(filePath: String) {
-                val intent = OpenFileUtil.openFile(filePath)
-                if (intent != null) {
-                    ActivityCompat.startActivity(this@DownloadFileActivity, intent, null)
-                }
-            }
-        })
-
-
-        binding.toolbar.setNavigationOnClickListener { finish() }
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.add -> {
-                    if (dialog == null) {
-                        dialog = DialogFileOperate.newInstance(
-                            amid,
-                            downFileView?.filePath ?: "",
-                            downFileView?.fileName ?: "",
-                        )
-                    }
-                    if (dialog?.isVisible == true) return@setOnMenuItemClickListener true
-                    dialog?.showNow(supportFragmentManager, DialogFileOperate::class.java.name)
-                }
-            }
-            true
-        }
+//        binding.toolbar.setNavigationOnClickListener { finish() }
+//        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.add -> {
+//                    if (dialog == null) {
+//                        dialog = DialogFileOperate.newInstance(
+//                            amid,
+//                            downFileView?.filePath ?: "",
+//                            downFileView?.fileName ?: "",
+//                        )
+//                    }
+//                    if (dialog?.isVisible == true) return@setOnMenuItemClickListener true
+//                    dialog?.showNow(supportFragmentManager, DialogFileOperate::class.java.name)
+//                }
+//            }
+//            true
+//        }
     }
 
     override fun initViews() {
@@ -106,8 +105,6 @@ class DownloadFileActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        dialog?.dismiss()
-        dialog = null
     }
 
 }

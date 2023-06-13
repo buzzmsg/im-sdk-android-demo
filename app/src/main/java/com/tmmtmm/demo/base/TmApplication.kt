@@ -122,6 +122,14 @@ class TmApplication : Application() {
                 val auids = datas.map { it.aUid }.toMutableList()
                 setUserinfo(auids)
             }
+
+            override fun onShowConversationInfo(aChatIds: List<String>) {
+
+            }
+
+            override fun onConversationDeleted(aChatId: String) {
+
+            }
         })
     }
 

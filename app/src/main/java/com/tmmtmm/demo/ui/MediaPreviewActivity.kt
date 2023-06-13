@@ -16,7 +16,6 @@ import com.im.sdk.view.mediapreview.dialog.IMDialogMediaOperate
 import com.im.sdk.view.mediapreview.model.ActionFinishCallback
 import com.im.sdk.view.mediapreview.model.MediaActionImpl
 import com.im.sdk.view.mediapreview.model.MediaActionVo
-import com.im.sdk.view.mediapreview.utils.SaveFile
 import com.im.sdk.view.mediapreview.view.PagerTransitionView
 import com.im.sdk.view.vo.IMMediaMoreActionVo
 import com.im.sdk.view.vo.MediaPreviewType
@@ -96,33 +95,33 @@ class MediaPreviewActivity : AppCompatActivity() {
     }
 
     private fun setPreviewDelegate() {
-        mediaPreview?.setPreviewDelegate(object : PagerTransitionView.PreviewDelegate {
-            override fun finish() {
-                mediaPreview = null
-                this@MediaPreviewActivity.finish()
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-            }
-
-            override fun syncOriginalDownLoadStatus() {
-            }
-
-            override fun dragValue(dragValue: Float) {
-                allBtnShowType(dragValue)
-            }
-
-            override fun itemLongClickListener() {
-
-            }
-
-            override fun itemClickListener() {
-                switchViewShowType()
-            }
-
-            override fun indicatorData(currentIndex: Int, totalCount: Int) {
-                mBinding.tvIndicator.text =
-                    String.format("%s%s%s", "$currentIndex", "/", "$totalCount")
-            }
-        })
+//        mediaPreview?.setPreviewDelegate(object : PagerTransitionView.PreviewDelegate {
+//            override fun finish() {
+//                mediaPreview = null
+//                this@MediaPreviewActivity.finish()
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+//            }
+//
+//            override fun syncOriginalDownLoadStatus() {
+//            }
+//
+//            override fun dragValue(dragValue: Float) {
+//                allBtnShowType(dragValue)
+//            }
+//
+//            override fun itemLongClickListener() {
+//
+//            }
+//
+//            override fun itemClickListener() {
+//                switchViewShowType()
+//            }
+//
+//            override fun indicatorData(currentIndex: Int, totalCount: Int) {
+//                mBinding.tvIndicator.text =
+//                    String.format("%s%s%s", "$currentIndex", "/", "$totalCount")
+//            }
+//        })
     }
 
 

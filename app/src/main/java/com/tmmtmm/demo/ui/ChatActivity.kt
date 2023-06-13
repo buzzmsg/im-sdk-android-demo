@@ -7,6 +7,7 @@ import android.view.View
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.im.sdk.dto.IMRedPacketInfo
 import com.im.sdk.view.ChatView
 import com.im.sdk.view.vo.IMFileData
 import com.im.sdk.view.vo.IMLocationVo
@@ -195,13 +196,16 @@ class ChatActivity : BaseActivity() {
 
             }
 
+            override fun onRedPacketMessageClick(aMid: String, redModel: IMRedPacketInfo) {
+            }
+
             override fun onReferenceMessageClick(amid: String, messageBody: CharSequence) {
 
             }
 
-            override fun onWebUrlLinkClick(amid: String, url: String?) {
-
+            override fun onTextRegexClick(amid: String, id: String, content: String?) {
             }
+
 
             override fun onTransferMessageClick(amid: String, orderId: String) {
 
@@ -217,11 +221,28 @@ class ChatActivity : BaseActivity() {
 
             }
 
-            override fun onShowCustomMessageView(amid: String, content: String): View? {
+            override fun onShowCustomMessageView(
+                amid: String,
+                content: String,
+                sendTime: Long
+            ): View? {
                 val customView = CustomView(this@ChatActivity)
                 customView.bindData(content)
                 return customView
             }
+
+            override fun onUpdateCardMessageContent(
+                amid: String,
+                aChatId: String,
+                oldContent: String
+            ) {
+            }
+
+//            override fun onShowCustomMessageView(amid: String, content: String): View? {
+//                val customView = CustomView(this@ChatActivity)
+//                customView.bindData(content)
+//                return customView
+//            }
 
             override fun onCloseKeyBoard() {
                 KeyboardUtils.hideSoftInput(this@ChatActivity)
