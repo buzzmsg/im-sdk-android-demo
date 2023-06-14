@@ -310,23 +310,35 @@ class MainActivity : BaseActivity() {
         val drawable = ResourcesCompat.getDrawable(resources, applicationInfo.icon, theme)
         val avatar = ImageUtils.drawable2Bytes(drawable)
         val image = IMAvatar(avatar)
-//        conversationViewModel?.setFolder(
-//            aChatId = FOLDER_ID,
-//            content = "共${hideConversationIds.size}条会话",
-//            name = FOLDER_NAME,
-//            folderIcon = image
-//        )
+        conversationViewModel?.setFolder(
+            aChatId = FOLDER_ID,
+            content = "共${hideConversationIds.size}条会话",
+            name = FOLDER_NAME,
+            folderIcon = image
+        )
 
         LoginManager.INSTANCE.setFolder(FOLDER_ID)
 
 //        conversationViewModel?.updateSelector(unSelectAChatIds = hideConversationIds)
 
-        val hideIds = mutableListOf<String>("1471471478_15828136849", "1471471479_15828136849")
-        val hideSelector = UnSelectPart(hideIds)
-        val folderSelector = SelectPart(mutableListOf())
+        hideConversationIds = mutableListOf("1471471478_1471471479")
+        val hideSelector = UnSelectPart(hideConversationIds)
+        val folderSelector = SelectPart(mutableListOf(FOLDER_ID))
         val selector =
             conversationViewModel?.getCurrentSelector()?.and(hideSelector)?.or(folderSelector)
         selector?.let { conversationViewModel.replace(it) }
+    }
+
+    private fun removeFolder(conversationViewModel: IMConversationViewModel?) {
+        conversationViewModel?.removeFolder(FOLDER_ID)
+//        conversationViewModel?.updateSelector()
+        val hideSelector = SelectPart(hideConversationIds)
+        val selector = conversationViewModel?.getCurrentSelector()?.or(hideSelector)
+        if (selector != null) {
+            conversationViewModel.replace(selector)
+        }
+
+        LoginManager.INSTANCE.setFolder("")
     }
 
     private fun showOriginConversations() {
@@ -360,17 +372,6 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private fun removeFolder(conversationViewModel: IMConversationViewModel?) {
-        conversationViewModel?.removeFolder(FOLDER_ID)
-//        conversationViewModel?.updateSelector()
-        val hideSelector = SelectPart(hideConversationIds)
-        val selector = conversationViewModel?.getCurrentSelector()?.or(hideSelector)
-        if (selector != null) {
-            conversationViewModel.replace(selector)
-        }
-
-        LoginManager.INSTANCE.setFolder("")
-    }
 
     private fun loginout() {
         showLoading()

@@ -145,7 +145,7 @@ class TmApplication : Application() {
     private fun getUiSetting(): IMUiSetting {
         val imUiSetting = IMUiSetting()
         imUiSetting.showChatBrowsedTag(false)
-        imUiSetting.setConversationMenu(false)
+        imUiSetting.setConversationMenu(true)
         imUiSetting.showRightAvatar(true)
         imUiSetting.showLeftAvatarBySingleChat(true)
         imUiSetting.showChatBackToBottom(false)
